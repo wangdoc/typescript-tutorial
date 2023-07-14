@@ -187,8 +187,6 @@ $ tsc app.ts --outDir dist
 
 上面命令会在`dist`子目录下生成`app.js`。
 
-注意，`--outDir`与`--outFile`不能同时使用。
-
 **（3）--target**
 
 为了保证编译结果能在各种 JavaScript 引擎运行，tsc 默认会将 TypeScript 代码编译成很低版本的 JavaScript，即3.0版本（以`es3`表示）。这通常不是我们想要的结果。
@@ -332,4 +330,5 @@ $ ts-node
 
 要退出这个 REPL 环境，可以按下 Ctrl + d，或者输入`.exit`。
 
-如果只是想简单运行 TypeScript 代码看看结果，ts-node 不失为一个简单的方法。
+如果只是想简单运行 TypeScript 代码看看结果，ts-node 不失为一个便捷的方法。
+
