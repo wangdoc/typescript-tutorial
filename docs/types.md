@@ -1,6 +1,8 @@
 # TypeScript 的类型系统
 
-TypeScript 首先继承了 JavaScript 的类型，在这个基础上，发展出自己的类型系统。
+本章是 TypeScript 类型系统的总体介绍。
+
+TypeScript 继承了 JavaScript 的类型，在这个基础上，定义了一套自己的类型系统。
 
 ## 基本类型
 
@@ -19,17 +21,17 @@ JavaScript 语言（注意，不是 TypeScript）将值分成8种类型。
 
 TypeScript 继承了 JavaScript 的类型设计，以上8种类型可以看作 TypeScript 的基本类型。
 
-注意，上面所有类型的名称都是小写字母，首字母大写的`Number`、`String`、`Boolean`等都是 JavaScript 语言内置的对象，而不是类型名称。
+注意，上面所有类型的名称都是小写字母，首字母大写的`Number`、`String`、`Boolean`等在 JavaScript  语言中都是内置对象，而不是类型名称。
 
 另外，undefined 和 null 既可以作为值，也可以作为类型，取决于在哪里使用它们。
 
-这8种基本类型作为 TypeScript 类型系统的基础，组合起来就可以形成复杂类型。
+这8种基本类型是 TypeScript 类型系统的基础，复杂类型由它们组合而成。
 
 以下是它们的简单介绍。
 
 ### boolean 类型
 
-`boolean`类型只有`true`和`false`两个布尔值。
+`boolean`类型只包含`true`和`false`两个布尔值。
 
 ```typescript
 const x:boolean = true;
@@ -81,7 +83,7 @@ const y:bigint = 3.14; // 报错
 
 上面示例中，`bigint`类型赋值为整数和小数，都会报错。
 
-注意，bigint 类型是 ES2020 标准引入的。如果使用这个类型，TypeScript 编译的目标 JavaScript 版本不能低于 ES2020（编译参数`--target`不低于`es2020`）。
+注意，bigint 类型是 ES2020 标准引入的。如果使用这个类型，TypeScript 编译的目标 JavaScript 版本不能低于 ES2020（即编译参数`target`不低于`es2020`）。
 
 ### symbol 类型
 
@@ -111,7 +113,7 @@ const z:object = (n:number) => n + 1;
 
 undefined 和 null 是两种独立类型，它们各自都只有一个值。
 
-undefined 类型只包含一个值`undefined`，表示未定义（即还给出定义，以后可能会有定义）。
+undefined 类型只包含一个值`undefined`，表示未定义（即还未给出定义，以后可能会有定义）。
 
 ```typescript
 let x:undefined = undefined;
@@ -192,7 +194,7 @@ s.charAt(1) // 'e'
 
 ### 包装对象类型与字面量类型
 
-由于包装对象的存在，导致每一种原始类型都有包装对象和字面量两种情况。
+由于包装对象的存在，导致每一个原始类型的值都有包装对象和字面量两种情况。
 
 ```javascript
 'hello' // 字面量
@@ -303,7 +305,7 @@ obj = 1; // 报错
 
 大多数时候，我们使用对象类型，只希望包含真正的对象，不希望包含原始类型。所以，建议总是使用小写类型`object`，不使用大写类型`Object`。
 
-注意，无论是大写的`Object`类型，还是小写的`object`类型，都只能表示 JavaScript 内置的原型对象（即`Object.prototype`），用户自定义的属性都不存在于这两个类型之中。
+注意，无论是大写的`Object`类型，还是小写的`object`类型，都只包含 JavaScript  内置对象原生的属性和方法，用户自定义的属性和方法都不存在于这两个类型之中。
 
 ```typescript
 const o1:Object = { foo: 0 };
@@ -341,12 +343,12 @@ JavaScript 的行为是，变量如果等于`undefined`就表示还没有赋值�
 
 ```typescript
 const obj:object = undefined;
-obj.toString() // 错误，但能通过编译
+obj.toString() // 编译不报错，运行就报错
 ```
 
 上面示例中，变量`obj`等于`undefined`，编译不会报错。但是，实际执行时，调用`obj.toString()`就报错了，因为`undefined`不是对象，没有这个方法。
 
-为了避免这种情况，及早发现错误，TypeScript 提供了一个编译选项`--strictNullChecks`。只要打开这个选项，`undefined`和`null`就不能赋值给其他类型的变量（除了`any`类型和`unknown`类型）。
+为了避免这种情况，及早发现错误，TypeScript 提供了一个编译选项`strictNullChecks`。只要打开这个选项，`undefined`和`null`就不能赋值给其他类型的变量（除了`any`类型和`unknown`类型）。
 
 下面是 tsc 命令打开这个编译选项的例子。
 
@@ -372,10 +374,10 @@ age = undefined; // 报错
 }
 ```
 
-打开`--strictNullChecks`以后，`undefined`和`null`这两种值也不能互相赋值了。
+打开`strictNullChecks`以后，`undefined`和`null`这两种值也不能互相赋值了。
 
 ```typescript
-// 打开 --strictNullChecks
+// 打开 strictNullChecks
 
 let x:undefined = null; // 报错
 let y:null = undefined; // 报错
@@ -383,7 +385,7 @@ let y:null = undefined; // 报错
 
 上面示例中，`undefined`类型的变量赋值为`null`，或者`null`类型的变量赋值为`undefind`，都会报错。
 
-总之，打开`--strictNullChecks`以后，`undefined`和`null`只能赋值给自身，或者`any`类型和`unknown`类型的变量。
+总之，打开`strictNullChecks`以后，`undefined`和`null`只能赋值给自身，或者`any`类型和`unknown`类型的变量。
 
 ```typescript
 let x:any     = undefined;
@@ -406,7 +408,7 @@ x = 'world'; // 报错
 TypeScript 推断类型时，遇到`const`命令声明的变量，如果代码里面没有注明类型，就会推断该变量是值类型。
 
 ```typescript
-// x 的类型是 “https”
+// x 的类型是 "https"
 const x = 'https';
 
 // y 的类型是 string
@@ -432,9 +434,9 @@ const x = { foo: 1 };
 const x:5 = 4 + 1; // 报错
 ```
 
-上面示例中，等号左侧的类型是数值`5`，等号右侧`4 + 1`的类型，TypeScript 推测为`number`。由于`5`是`number`的子类型，子类型不能赋值为父类型的值，所以报错了。
+上面示例中，等号左侧的类型是数值`5`，等号右侧`4 + 1`的类型，TypeScript 推测为`number`。由于`5`是`number`的子类型，`number`是`5`的父类型，父类型不能赋值给子类型，所以报错了（详见本章后文）。
 
-但是，反过来是可以的，父类型可以赋值为子类型的值。
+但是，反过来是可以的，子类型可以赋值给父类型。
 
 ```typescript
 let x:5 = 5;
@@ -444,7 +446,7 @@ x = y; // 报错
 y = x; // 正确
 ```
 
-上面示例中，子类型`x`不能赋值为父类型`y`，但是反过来是可以的。
+上面示例中，变量`x`属于子类型，变量`y`属于父类型。`y`不能赋值为子类型`x`，但是反过来是可以的。
 
 如果一定要让子类型可以赋值为父类型的值，就要用到类型断言（详见《类型断言》一章）。
 
@@ -483,7 +485,7 @@ let rainbowColor:'赤'|'橙'|'黄'|'绿'|'青'|'蓝'|'紫';
 
 上面的示例都是由值类型组成的联合类型，非常清晰地表达了变量的取值范围。其中，`true|false`其实就是布尔类型`boolean`。
 
-前面提到，打开编译选项`--strictNullChecks`后，其他类型的变量不能赋值为`undefined`或`null`。这时，如果某个变量确实可能包含空值，就可以采用联合类型的写法。
+前面提到，打开编译选项`strictNullChecks`后，其他类型的变量不能赋值为`undefined`或`null`。这时，如果某个变量确实可能包含空值，就可以采用联合类型的写法。
 
 ```typescript
 let name:string|null;
@@ -504,9 +506,9 @@ let x:
   | 'four';
 ```
 
-上面示例中，联合类型的第一个成员`one`前面，也可以加上竖杠。
+上面示例中，联合类型的第一个成员`one`前面，加上了竖杠。
 
-如果一个变量有多种类型，读取该变量时，往往需要进行“类型缩小”（type narrowing），区分该值到底属于哪一种类型，然后再进一步理。
+如果一个变量有多种类型，读取该变量时，往往需要进行“类型缩小”（type narrowing），区分该值到底属于哪一种类型，然后再进一步处理。
 
 ```typescript
 function printId(
@@ -518,7 +520,7 @@ function printId(
 
 上面示例中，参数变量`id`可能是数值，也可能是字符串，这时直接对这个变量调用`toUpperCase()`方法会报错，因为这个方法只存在于字符串，不存在于数值。
 
-解决方法就是对参数`id`做一下类型缩小，确定它的类型以后再进行处理。这在 TypeScript 里面叫做“类型缩小”。
+解决方法就是对参数`id`做一下类型缩小，确定它的类型以后再进行处理。
 
 ```typescript
 function printId(
@@ -600,11 +602,11 @@ type Age = number;
 let age:Age = 55;
 ```
 
-上面示例中，`type`命令为`number`类型生成一个别名`Age`。这样就能像使用`number`一样，使用`Age`当作类型。
+上面示例中，`type`命令为`number`类型定义了一个别名`Age`。这样就能像使用`number`一样，使用`Age`作为类型。
 
 别名可以让类型的名字变得更有意义，也能增加代码的可读性，还可以使复杂类型用起来更方便，便于以后修改变量的类型。
 
-别名不允许有重名。
+别名不允许重名。
 
 ```typescript
 type Color = 'red';
@@ -711,6 +713,15 @@ type T = typeof Date(); // 报错
 
 上面示例会报错，原因是 typeof 的参数不能是一个值的运算式，而`Date()`需要运算才知道结果。
 
+另外，`typeof`命令的参数不能是类型。
+
+```typescript
+type Age = number;
+type MyAge = typeof Age; // 报错
+```
+
+上面示例中，`Age`是一个类型别名，用作`typeof`命令的参数就会报错。
+
 typeof 是一个很重要的 TypeScript 运算符，有些场合不知道某个变量`foo`的类型，这时使用`typeof foo`就可以获得它的类型。
 
 ## 块级类型声明
@@ -728,3 +739,32 @@ if (true) {
 ```
 
 上面示例中，存在两个代码块，其中分别有一个类型`T`的声明。这两个声明都只在自己的代码块内部有效，在代码块外部无效。
+
+## 类型的兼容
+
+TypeScript 的类型存在兼容关系，某些类可以兼容其他类。
+
+```typescript
+type T = number|string;
+
+let a:number = 1;
+let b:T = a;
+```
+
+上面示例中，变量`a`和`b`的类型是不一样的，但是变量`a`赋值给变量`b`并不会报错。这时，我们就认为，变量`b`兼容变量`a`。
+
+TypeScript
+为这种情况定义了一个专门术语。如果类型`A`的值可以赋值给类型`B`，那么类型`A`就称为类型`B`的子类型（subtype）。在上例中，类型`number`就是类型`number|string`的子类型。
+
+TypeScript 的一个规则是，凡是可以使用父类型的地方，都可以使用子类型，但是反过来不行。
+
+```typescript
+let a:'hi' = 'hi';
+let b:string = 'hello';
+
+b = a; // 正确
+a = b; // 报错
+```
+
+上面示例中，`hi`是`string`的子类型，`string`是`hi`的父类型。所以，变量`a`可以赋值给变量`b`，但是反过来就会报错。
+
