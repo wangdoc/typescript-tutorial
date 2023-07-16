@@ -14,7 +14,7 @@ TypeScript 数组有一个根本特征：所有成员的类型必须相同，但
 let arr:number[] = [1, 2, 3];
 ```
 
-上面示例中，数组`arr`的类型是`number[]`，其中`number`表示成员类型是`number`。
+上面示例中，数组`arr`的类型是`number[]`，其中`number`表示数组成员类型是`number`。
 
 如果数组成员的类型比较复杂，可以写在圆括号里面。
 
@@ -26,7 +26,7 @@ let arr:(number|string)[];
 
 这个例子里面的圆括号是必须的，否则因为竖杠（`|`）的优先级低于`[]`，TypeScript 会把`number|string[]`理解成`number`和`string[]`的联合类型。
 
-如果数组成员可以是任意类型，则写成`any[]`。当然，这种写法是应该避免的。
+如果数组成员可以是任意类型，写成`any[]`。当然，这种写法是应该避免的。
 
 ```typescript
 let arr:any[];
@@ -73,7 +73,7 @@ arr // [1, 2]
 
 上面示例中，数组增加成员或减少成员，都是可以的。
 
-正是由于成员数量可以动态变化，所以  TypeScript 不会对数组边界进行检查，如果越界访问数组并不会报错。
+正是由于成员数量可以动态变化，所以  TypeScript 不会对数组边界进行检查，越界访问数组并不会报错。
 
 ```typescript
 let arr:number[] = [1, 2, 3];
@@ -98,13 +98,11 @@ type Names = string[];
 type Name = Names[number]; // string
 ```
 
-上面示例中，`Names[number]`表示元组`Names`所有数值索引的成员类型，所以返回`string`。
+上面示例中，`Names[number]`表示数组`Names`所有数值索引的成员类型，所以返回`string`。
 
 ## 数组的类型推断
 
-如果数组变量没有声明类型，TypeScript 就会推断数组成员的类型。
-
-这时，推断行为会因为值的不同，而有所不同。
+如果数组变量没有声明类型，TypeScript 就会推断数组成员的类型。这时，推断行为会因为值的不同，而有所不同。
 
 如果变量的初始值是空数组，那么  TypeScript 会推断数组类型是`any[]`。
 
@@ -150,9 +148,9 @@ arr[0] = 2;
 
 上面示例中，修改`const`命令声明的数组的成员是允许的。
 
-但是，很多时候确实有声明只读数组的需求，即不允许变动数组成员。
+但是，很多时候确实有声明为只读数组的需求，即不允许变动数组成员。
 
-TypeScript 允许声明只读数组，方法是在在数组类型前面加上`readonly`关键字。
+TypeScript 允许声明只读数组，方法是在数组类型前面加上`readonly`关键字。
 
 ```typescript
 const arr:readonly number[] = [0, 1];
@@ -232,3 +230,4 @@ var multi:number[][] =
 ```
 
 上面示例中，变量`multi`的类型是`number[][]`，表示它是一个二维数组，最底层的数组成员类型是`number`。
+
