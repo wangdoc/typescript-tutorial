@@ -1,0 +1,20 @@
+{
+  "name": "typescript-tutorial",
+  "version": "1.0.0",
+  "description": "TypeScript 开源教程，介绍基本概念和用法，面向初学者。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "server": "loppo server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "loppo": "^0.6.25",
+    "loppo-theme-wangdoc": "^0.6.4"
+  }
+}

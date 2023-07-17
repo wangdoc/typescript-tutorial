@@ -1,0 +1,10 @@
+dir: docs
+output: dist
+site: TypeScript 教程
+theme: wangdoc
+customization: false
+themeDir: loppo-theme
+direction: ltr
+id: typescript
+hasComments: true
+isTutorial: true

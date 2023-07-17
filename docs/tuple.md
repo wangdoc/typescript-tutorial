@@ -2,7 +2,7 @@
 
 ## 简介
 
-元组（tuple）是 TypeScript 特有的数据类型，JavaScript 没有这种类型。它表示成员类型可以自由设置的数组，即各个成员的类型可以不同。
+元组（tuple）是 TypeScript 特有的数据类型，JavaScript 没有单独区分这种类型。它表示成员类型可以自由设置的数组，即数组的各个成员的类型可以不同。
 
 元组必须明确声明每个成员的类型。
 
@@ -38,7 +38,7 @@ let a = [1, true];
 let a:[number, number?] = [1];
 ```
 
-上面示例中，元组`a`的第二个成员就是可选的，可以省略。
+上面示例中，元组`a`的第二个成员是可选的，可以省略。
 
 注意，问号只能用于元组的尾部成员，也就是说，所有可选成员必须在必选成员之后。
 
@@ -51,11 +51,9 @@ type myTuple = [
 ];
 ```
 
-上面示例中，元组`myTuple`的最后两个成员是可选的。也就是说，两个成员、三个成员、四个成员都有可能。
+上面示例中，元组`myTuple`的最后两个成员是可选的。也就是说，它的成员数量可能有两个、三个和四个。
 
-由于需要声明每个成员的类型，所以大多数情况下，元组的成员数量是有限的。从类型声明就可以明确知道，元组包含多少个成员。
-
-如果元组的成员数量是明确的，越界的成员就会报错。
+由于需要声明每个成员的类型，所以大多数情况下，元组的成员数量是有限的，从类型声明就可以明确知道，元组包含多少个成员，越界的成员会报错。
 
 ```typescript
 let x:[string, string] = ['a', 'b'];
@@ -65,7 +63,7 @@ x[2] = 'c'; // 报错
 
 上面示例中，变量`x`是一个只有两个成员的元组，如果对第三个成员赋值就报错了。
 
-但是，可以使用扩展运算符（`...`），表示不限成员数量的元组。
+但是，使用扩展运算符（`...`），可以表示不限成员数量的元组。
 
 ```typescript
 type NamedNums = [
@@ -113,7 +111,7 @@ type Tuple = [string, number, Date];
 type TupleEl = Tuple[number];  // string|number|Date
 ```
 
-上面示例中，`Tuple[number]`表示元组`Tuple`的所有数值索引的成员类型，所以返回`string|number|Date`，即这个类型有三种可能。
+上面示例中，`Tuple[number]`表示元组`Tuple`的所有数值索引的成员类型，所以返回`string|number|Date`，即这个类型是三种值的联合类型。
 
 ## 只读元组
 
@@ -135,8 +133,8 @@ type t = Readonly<[number, string]>
 type t1 = readonly [number, number];
 type t2 = [number, number];
 
-const x:t2 = [1, 2];
-const y:t1 = x; // 正确
+let x:t2 = [1, 2];
+let y:t1 = x; // 正确
 
 x = y; // 报错
 ```
@@ -159,7 +157,7 @@ distanceFromOrigin(point); // 报错
 
 读者可能注意到了，上例中`[3, 4] as const`的写法，在上一章讲到，生成的是只读数组，其实生成的同时也是只读元组。因为它生成的实际上是一个只读的“值类型”`readonly [3, 4]`，把它解读成只读数组或只读元组都可以。
 
-上面示例报错的解决方法，就是使用类型断言，详见《类型断言》一章。
+上面示例报错的解决方法，就是使用类型断言，在最后一行将传入的参数断言为普通元组，详见《类型断言》一章。
 
 ```typescript
 distanceFromOrigin(
@@ -172,9 +170,7 @@ distanceFromOrigin(
 如果没有可选成员和扩展运算符，TypeScript 会推断出元组的成员数量（即元组长度）。
 
 ```typescript
-function f(
-  point: [number, number]
-) {
+function f(point: [number, number]) {
   if (point.length === 3) {  // 报错
     // ...
   }
@@ -204,11 +200,11 @@ const myTuple:[...string[]]
   = ['a', 'b', 'c'];
 
 if (myTuple.length === 4) { // 正确
-  // ...  
+  // ...
 }
 ```
 
-上面示例中，`myTuple`只有三个成员，但是 TypeScript 推断不出它的成员数量，因为它把`myTuple`当成数组看待，而数组的成员数量是不确定的。
+上面示例中，`myTuple`只有三个成员，但是 TypeScript 推断不出它的成员数量，因为它的类型用到了扩展运算符，TypeScript 把`myTuple`当成数组看待，而数组的成员数量是不确定的。
 
 一旦扩展运算符使得元组的成员数量无法推断，TypeScript 内部就会把该元组当成数组处理。
 
@@ -260,3 +256,4 @@ const arr = [1, 2] as const;
 ```
 
 上面这种写法也可以，因为 TypeScript 会认为`arr`的类型是`readonly [1, 2]`，这是一个只读的值类型，可以当作数组，也可以当作元组。
+
