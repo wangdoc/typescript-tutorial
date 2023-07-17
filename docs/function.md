@@ -71,7 +71,7 @@ f = function (y:number) {
 
 上面示例中，函数类型里面的参数名为`x`，实际的函数定义里面，参数名为`y`，两者并不相同。
 
-如果有多个变量被赋值为同一种类型的函数，写法二用起来就很麻烦。因此，往往用`type`命令为函数类型定义一个别名，便于指定给其他变量。
+如果函数的类型定义很冗长，或者多个函数使用同一种类型，写法二用起来就很麻烦。因此，往往用`type`命令为函数类型定义一个别名，便于指定给其他变量。
 
 ```typescript
 type MyFunc = (txt:string) => void;
@@ -83,7 +83,7 @@ const hello:MyFunc = function (txt) {
 
 上面示例中，`type`命令为函数类型定义了一个别名`MyFunc`，后面使用就很方便，变量可以指定为这个类型。
 
-变量所赋值的函数的参数个数，可以少于指定类型，但是不能多于指定类型，即这种情况下，TypeScript 允许省略参数。
+函数的实际参数个数，可以少于类型指定的参数个数，但是不能多于，即 TypeScript 允许省略参数。
 
 ```typescript
 let myFunc:
@@ -96,9 +96,9 @@ myFunc = (
 ) => a + b + c; // 报错
 ```
 
-上面示例中，变量`myFunc`的类型只能接受两个参数，如果被赋值只有一个参数的函数，并不报错。但是，被赋值为有三个参数的函数，就会报错。
+上面示例中，变量`myFunc`的类型只能接受两个参数，如果被赋值为只有一个参数的函数，并不报错。但是，被赋值为有三个参数的函数，就会报错。
 
-这是因为 JavaScript 函数在声明时往往有多余的参数，实际使用时可以只传入一部分参数。比如，数组的`forEach()`方法的参数是一个函数，该函数默认有三个参数`(item, index, array) => void`，实际上往往只使用第一个参数`(item) => any`。因此，TypeScript 允许参数较少的函数，兼容于参数较多的函数。
+这是因为 JavaScript 函数在声明时往往有多余的参数，实际使用时可以只传入一部分参数。比如，数组的`forEach()`方法的参数是一个函数，该函数默认有三个参数`(item, index, array) => void`，实际上往往只使用第一个参数`(item) => void`。因此，TypeScript 允许函数传入的参数不足。
 
 ```typescript
 let x = (a:number) => 0;
@@ -110,7 +110,7 @@ x = y; // 报错
 
 上面示例中，函数`x`只有一个参数，函数`y`有两个参数，`x`可以赋值给`y`，反过来就不行。
 
-如果一个变量要套用另一个函数的类型，有一个小技巧，就是使用`typeof`运算符。
+如果一个变量要套用另一个函数类型，有一个小技巧，就是使用`typeof`运算符。
 
 ```typescript
 function add(
@@ -159,7 +159,7 @@ add = function (x, y) {
 function f(x:number) {
   console.log(x);
 }
- 
+
 f.version = '1.0';
 ```
 
@@ -221,7 +221,7 @@ function greet(
 ):void {
   fn('world');
 }
-``` 
+```
 
 上面示例中，函数`greet()`的参数`fn`是一个函数，类型就用箭头函数表示。这时，`fn`的返回值类型要写在箭头右侧，而不是写在参数列表的圆括号后面。
 
@@ -266,13 +266,13 @@ f(); // OK
 f(10); // OK
 ```
 
-上面示例中，虽然参数`x`后面有问号，表示该参数可以省略，不一定需要给出。
+上面示例中，虽然参数`x`后面有问号，表示该参数可以省略。
 
 参数名带有问号，表示该参数的类型实际上是`原始类型|undefined`，它有可能为`undefined`。比如，上例的`x`虽然类型声明为`number`，但是实际上是`number|undefined`。
 
 ```typescript
-function f(x?:number) { 
-  return x; 
+function f(x?:number) {
+  return x;
 }
 
 f(undefined) // 正确
@@ -301,7 +301,7 @@ let myFunc:
 
 上面示例中，可选参数在必选参数前面，就报错了。
 
-如果前部参数有可能为空，这时只能显示注明该参数类型可能为`undefined`。
+如果前部参数有可能为空，这时只能显式注明该参数类型可能为`undefined`。
 
 ```typescript
 let myFunc:
@@ -361,7 +361,7 @@ function createPoint(
 ```typescript
 // 报错
 function f(x?: number = 0) {
-  // ... 
+  // ...
 }
 ```
 
@@ -401,7 +401,7 @@ function f(
 ) {
   // ...
 }
- 
+
 function sum(
   { a, b, c }: {
      a: number;
@@ -532,10 +532,10 @@ function f():void {
 }
 ```
 
-如果打开了`--strictNullChecks`编译选项，那么 void 类型只允许返回`undefined`。如果返回`null`，就会报错。这是因为 JavaScript 规定，如果函数没有返回值，就等同于返回`undefined`。
+如果打开了`strictNullChecks`编译选项，那么 void 类型只允许返回`undefined`。如果返回`null`，就会报错。这是因为 JavaScript 规定，如果函数没有返回值，就等同于返回`undefined`。
 
 ```typescript
-// --strictNullChecks=true
+// 打开编译选项 strictNullChecks
 
 function f():void {
   return undefined; // 正确
@@ -550,7 +550,7 @@ function f():void {
 
 ```typescript
 type voidFunc = () => void;
- 
+
 const f:voidFunc = () => {
   return 123;
 };
@@ -606,7 +606,7 @@ const f3 = function ():void {
 ```typescript
 let foo:void = undefined;
 
-// 没有打开 --strictNullChecks 的情况下
+// 没有打开 strictNullChecks 的情况下
 let bar:void = null;
 ```
 
@@ -763,10 +763,7 @@ function add(
 ):number|any[] {
   if (typeof x === 'number' && typeof y === 'number') {
     return x + y;
-  } else 
-
- 
-  if (Array.isArray(x) && Array.isArray(y)) {
+  } else if (Array.isArray(x) && Array.isArray(y)) {
     return [...x, ...y];
   }
 
@@ -801,7 +798,7 @@ function f(x:string): 0|1;
 function f(x:any):any {
   // ...
 }
- 
+
 const a:0|1 = f('hi'); // 报错
 ```
 
@@ -827,7 +824,7 @@ class StringBuilder {
 }
 ```
 
-上面示例中，方法`add()`也使用了函数重载。    
+上面示例中，方法`add()`也使用了函数重载。
 
 函数重载也可以用来精确描述函数参数与返回值之间的对应关系。
 
@@ -891,7 +888,25 @@ const d = new Date();
 
 上面示例中，`date()`就是一个构造函数，使用`new`命令调用，返回 Date 对象的实例。
 
-构造函数的类型声明，采用对象形式。
+构造函数的类型写法，就是在参数列表前面加上`new`命令。
+
+```typescript
+class Animal {
+  numLegs:number = 4;
+}
+
+type AnimalConstructor = new () => Animal;
+
+function create(c:AnimalConstructor):Animal {
+  return new c();
+}
+
+const a = create(Animal);
+```
+
+上面示例中，类型`AnimalConstructor`就是一个构造函数，而函数`create()`需要传入一个构造函数。在 JavaScript 中，类（class）本质上是构造函数，所以`Animal`这个类可以传入`create()`。
+
+构造函数还有另一种类型写法，就是采用对象形式。
 
 ```typescript
 type F = {
@@ -912,20 +927,3 @@ type F = {
 
 上面示例中，F 既可以当作普通函数执行，也可以当作构造函数使用。
 
-下面是构造函数的一个例子。
-
-```typescript
-class Animal {
-  numLegs: number = 4;
-}
-
-function create(c:new () => Animal):Animal {
-  return new c();
-}
-
-const a = create(Animal);
-```
-
-上面示例中，函数`create()`的参数`c`是一个构造函数。在 JavaScript 中，类（class）本质上是构造函数，所以可以传入`create()`。
-
-不过，构造函数在 TypeScript 里面实际上只能用类（class）的形式来实现，详见《Class》一章。

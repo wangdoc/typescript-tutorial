@@ -27,7 +27,7 @@ x === y // false
 
 ```typescript
 // 正确
-const x:unique symbol = Symbol(); 
+const x:unique symbol = Symbol();
 
 // 报错
 let y:unique symbol = Symbol();
@@ -38,12 +38,12 @@ let y:unique symbol = Symbol();
 `const`命令为变量赋值 Symbol 值时，变量类型默认就是`unique symbol`，所以类型可以省略不写。
 
 ```typescript
-const x:unique symbol = Symbol(); 
+const x:unique symbol = Symbol();
 // 等同于
 const x = Symbol();
 ```
 
-每个声明为`unique symbol`类型的变量，它们的值都是不一样的，其实属于两个类型。
+每个声明为`unique symbol`类型的变量，它们的值都是不一样的，其实属于两个值类型。
 
 ```typescript
 const a:unique symbol = Symbol();
@@ -85,7 +85,7 @@ const b:typeof a = a; // 正确
 
 ```typescript
 const a:unique symbol = Symbol.for('foo');
-const b:unique symbol = Symbol.for('foo'); 
+const b:unique symbol = Symbol.for('foo');
 ```
 
 上面示例中，变量`a`和`b`是两个不同的值类型，但是它们的值其实是相等的。
@@ -161,3 +161,4 @@ const x = Symbol();
 // 类型为 symbol
 let y = x;
 ```
+
