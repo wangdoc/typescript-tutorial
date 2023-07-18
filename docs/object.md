@@ -7,9 +7,9 @@
 对象类型的最简单声明方法，就是使用大括号表示对象，在大括号内部声明每个属性和方法的类型。
 
 ```typescript
-const obj:{  
+const obj:{
   x:number;
-  y:number;  
+  y:number;
 } = { x: 1, y: 1 };
 ```
 
@@ -36,9 +36,9 @@ type MyObj = {
 一旦声明了类型，对象赋值时，就不能缺少指定的属性，也不能有多余的属性。
 
 ```typescript
-type MyObj = {  
+type MyObj = {
   x:number;
-  y:number;  
+  y:number;
 };
 
 const o1:MyObj = { x: 1 }; // 报错
@@ -50,9 +50,9 @@ const o2:MyObj = { x: 1, y: 1, z: 1 }; // 报错
 读写不存在的属性也会报错。
 
 ```typescript
-const obj:{  
+const obj:{
   x:number;
-  y:number;  
+  y:number;
 } = { x: 1, y: 1 };
 
 console.log(obj.z); // 报错
@@ -83,13 +83,13 @@ const obj:{
   add(x:number, y:number): number;
   // 或者写成
   // add: (x:number, y:number) => number;
-} = { 
-  x: 1, 
-  y: 1, 
+} = {
+  x: 1,
+  y: 1,
   add(x, y) {
     return x + y;
-  } 
-}; 
+  }
+};
 ```
 
 上面示例中，对象`obj`有一个方法`add()`，需要定义它的参数类型和返回值类型。
@@ -110,9 +110,9 @@ type Name = User['name']; // string
 
 ```typescript
 // 写法一
-type MyObj = {  
+type MyObj = {
   x:number;
-  y:number;  
+  y:number;
 };
 
 const obj:MyObj = { x: 1, y: 1 };
@@ -123,7 +123,7 @@ interface MyObj {
   y: number;
 }
 
-const obj:MyObj = { x: 1, y: 1 }; 
+const obj:MyObj = { x: 1, y: 1 };
 ```
 
 上面示例中，写法一是`type`命令的用法，写法二是`interface`命令的用法。`interface`命令的详细解释，以及与`type`命令的区别，详见《Interface》一章。
@@ -148,9 +148,9 @@ const obj:MyInterface = { // 正确
 如果某个属性是可选的（即可以忽略），需要在属性名后面加一个问号。
 
 ```typescript
-const obj: {  
+const obj: {
   x: number;
-  y?: number;  
+  y?: number;
 } = { x: 1 };
 ```
 
@@ -200,11 +200,11 @@ if (user.lastName !== undefined) {
 }
 ```
 
-上面示例中，`lastName`是可选属性，需要判断是否为`undefined`以后，才能使用。建议可以使用下面的写法。
+上面示例中，`lastName`是可选属性，需要判断是否为`undefined`以后，才能使用。建议使用下面的写法。
 
 ```typescript
 // 写法一
-let firstName = (user.firstName === undefined) 
+let firstName = (user.firstName === undefined)
   ? 'Foo' : user.firstName;
 let lastName = (user.lastName === undefined)
   ? 'Bar' : user.lastName;
@@ -286,7 +286,7 @@ interface Person {
   name: string;
   age: number;
 }
- 
+
 interface ReadonlyPerson {
   readonly name: string;
   readonly age: number;
@@ -344,12 +344,12 @@ const obj:MyObj = {
   foo: 'a',
   bar: 'b',
   baz: 'c',
-}; 
+};
 ```
 
 上面示例中，类型`MyObj`的属性名类型就采用了表达式形式，写在方括号里面。`[property: string]`的`property`表示属性名，这个是可以随便起的，它的类型是`string`，即属性名类型为`string`。也就是说，不管这个对象有多少属性，只要属性名为字符串，且属性值也是字符串，就符合这个类型声明。
 
-属性名（即上例的`property`）的类型有三种可能，除了上例的`string`，还有`number`和`symbol`。
+JavaScript 对象的属性名（即上例的`property`）的类型有三种可能，除了上例的`string`，还有`number`和`symbol`。
 
 ```typescript
 type T1 = {
@@ -430,7 +430,7 @@ const {id, name, price} = product;
 const {id, name, price}:{
   id: string;
   name: string;
-  price: number 
+  price: number
 } = product;
 ```
 
@@ -520,7 +520,7 @@ function getSum(obj:myObj) {
 }
 ```
 
-上面示例中，函数`getSum()`要求传入参数的类型是`myObj`，但是实际上所有与`myObj`兼容的对象都可以传入。这会导致`const v = obj[n]`这一行会报错，原因是`obj[n]`取出的属性值不一定是数值（`number`），使得变量`v`的类型是`any`。如果不允许变量类型推断为`any`，代码就会报错。如果写成下面这样，就不会报错。
+上面示例中，函数`getSum()`要求传入参数的类型是`myObj`，但是实际上所有与`myObj`兼容的对象都可以传入。这会导致`const v = obj[n]`这一行报错，原因是`obj[n]`取出的属性值不一定是数值（`number`），使得变量`v`的类型被推断为`any`。如果项目设置为不允许变量类型推断为`any`，代码就会报错。写成下面这样，就不会报错。
 
 ```typescript
 type MyObj = {
@@ -569,7 +569,7 @@ const point:{
 
 上面示例中，等号右边是一个变量，就不会触发严格字面量检查，从而不报错。
 
-TypeScript 对字面量进行严格检查的目的，主要是防止拼写错误。一般来说，字面量大多数来自手写，容易出现拼写错误，或者误用了 API。
+TypeScript 对字面量进行严格检查的目的，主要是防止拼写错误。一般来说，字面量大多数来自手写，容易出现拼写错误，或者误用 API。
 
 ```typescript
 type Options = {
@@ -603,7 +603,7 @@ const Obj:Options = myOptions;
 ```typescript
 const Obj:Options = {
   title: '我的网页',
-  darkmode: true, 
+  darkmode: true,
 } as Options;
 ```
 
@@ -638,7 +638,7 @@ computeDistance({x: 1, y: 2}); // 正确
 
 上面示例中，对象字面量传入函数`computeDistance()`时，不能有多余的属性，否则就通不过严格字面量检查。
 
-编译器选项`suppressExcessPropertyErrors`，可以在`tsconfig.json`文件里面关闭多余属性检查。
+编译器选项`suppressExcessPropertyErrors`，可以关闭多余属性检查。下面是它在 tsconfig.json 文件里面的写法。
 
 ```typescript
 {
@@ -745,9 +745,9 @@ d = 'hello';
 d = 2;
 ```
 
-上面示例中，各类类型的值（除了`null`和`undefined`）都可以赋值给空对象类型，跟`Object`类型的行为是一样的。
+上面示例中，各种类型的值（除了`null`和`undefined`）都可以赋值给空对象类型，跟`Object`类型的行为是一样的。
 
-由于空对象是`Object`类型的简写，所以它不会有严格字面量检查，赋值时总是允许多余的属性，只是不能读取这些属性。
+因为`Object`可以接受各种类型的值，而空对象是`Object`类型的简写，所以它不会有严格字面量检查，赋值时总是允许多余的属性，只是不能读取这些属性。
 
 ```typescript
 interface Empty { }
@@ -769,3 +769,4 @@ const a:WithoutProperties = { prop: 1 };
 ```
 
 上面的示例中，`[key: string]: never`表示字符串属性名是不存在的，因此其他对象进行赋值时就会报错。
+

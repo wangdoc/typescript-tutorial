@@ -50,20 +50,20 @@ function add(x, y) {
   return x + y;
 }
 
-add(1, [1, 2, 3]) // 正确
+add(1, [1, 2, 3]) // 不报错
 ```
 
 上面示例中，函数`add()`的参数变量`x`和`y`，都没有足够的信息，TypeScript 无法推断出它们的类型，就会认为这两个变量和函数返回值的类型都是`any`。以至于后面就不再对函数`add()`进行类型检查了，怎么用都可以。
 
 这显然是很糟糕的情况，所以对于那些类型不明显的变量，一定要显式声明类型，防止被推断为`any`。
 
-TypeScript 提供了一个编译选项`--noImplicitAny`，打开该选项，只要推断出`any`类型就会报错。
+TypeScript 提供了一个编译选项`noImplicitAny`，打开该选项，只要推断出`any`类型就会报错。
 
 ```bash
 $ tsc --noImplicitAny app.ts
 ```
 
-上面命令使用了`--noImplicitAny`编译选项进行编译，这时上面的函数`add()`就会报错。
+上面命令使用了`noImplicitAny`编译选项进行编译，这时上面的函数`add()`就会报错。
 
 ### 污染问题
 
@@ -73,10 +73,10 @@ $ tsc --noImplicitAny app.ts
 let x:any = 'hello';
 let y:number;
 
-y = x; // 正确
+y = x; // 不报错
 
-y * 123 // 正确
-y.toFixed() // 正确
+y * 123 // 不报错
+y.toFixed() // 不报错
 ```
 
 上面示例中，变量`x`的类型是`any`，实际的值是一个字符串。变量`y`的类型是`number`，表示这是一个数值变量，但是它被赋值为`x`，这时并不会报错。然后，变量`y`继续进行各种数值运算，TypeScript 也检查不出错误，问题就这样留到运行时才会暴露。
@@ -207,9 +207,9 @@ function f():never {
   throw new Error('Error');
 }
 
-let v1:number = f(); // 正确
-let v2:string = f(); // 正确
-let v3:string = f(); // 正确
+let v1:number = f(); // 不报错
+let v2:string = f(); // 不报错
+let v3:string = f(); // 不报错
 ```
 
 上面示例中，函数`f()`会抛错，所以返回值类型可以写成`never`，即不可能返回任何值。各种其他类型的变量都可以赋值为`f()`的运行结果（`never`类型）。
