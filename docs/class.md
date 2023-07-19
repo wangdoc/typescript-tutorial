@@ -17,7 +17,7 @@ class Point {
 }
 ```
 
-上面声明时，属性`x`和`y`的类型都是`number`。
+上面声明中，属性`x`和`y`的类型都是`number`。
 
 如果不给出类型，TypeScript 会认为`x`和`y`的类型都是`any`。
 
@@ -43,7 +43,7 @@ class Point {
 
 TypeScript 有一个配置项`strictPropertyInitialization`，只要打开，就会检查属性是否设置了初值，如果没有就报错。
 
-如果你打开了这个设置，但是某些情况下，不是在声明时赋值或在构造函数里面赋值，为了防止这个设置报错，可以使用非空断言。
+如果你打开了这个设置，但是某些情况下，不是在声明时赋值或在构造方法里面赋值，为了防止这个设置报错，可以使用非空断言。
 
 ```typescript
 class Point {
@@ -69,7 +69,7 @@ a.id = 'bar'; // 报错
 
 上面示例中，`id`属性前面有 readonly 修饰符，实例对象修改这个属性就会报错。
 
-readonly 属性的初始值，可以写在顶层属性，也可以写在构造函数里面。
+readonly 属性的初始值，可以写在顶层属性，也可以写在构造方法里面。
 
 ```typescript
 class A {
@@ -237,7 +237,7 @@ class C {
 
 另外，如果`set`方法的参数没有指定类型，那么会推断为与`get`方法返回值类型一致。
 
-（3）`get`方法与`set`方法的类型必须一致，要么都为公开方法，要么都为私有方法。
+（3）`get`方法与`set`方法的可访问性必须一致，要么都为公开方法，要么都为私有方法。
 
 ### 属性索引
 
@@ -247,7 +247,7 @@ class C {
 class MyClass {
   [s:string]: boolean |
     ((s:string) => boolean);
- 
+
   get(s:string) {
     return this[s] as boolean;
   }
@@ -256,25 +256,47 @@ class MyClass {
 
 上面示例中，`[s:string]`表示所有属性名类型为字符串的属性，它们的属性值要么是布尔值，要么是返回布尔值的函数。
 
-注意，由于类的方法是一种特殊属性（属性值为函数的属性），所以属性索引必须同时给出属性和方法两种类型。
+注意，由于类的方法是一种特殊属性（属性值为函数的属性），所以属性索引的类型定义也涵盖了方法。如果一个对象同时定义了属性索引和方法，那么前者必须包含后者的类型。
 
 ```typescript
 class MyClass {
   [s:string]: boolean;
- 
+  f() { // 报错
+    return true;
+  }
+}
+```
+
+上面示例中，属性索引的类型里面不包括方法，导致后面的方法`f()`定义直接报错。正确的写法是下面这样。
+
+```typescript
+class MyClass {
+  [s:string]: boolean | (() => boolean);
+  f() {
+    return true;
+  }
+}
+```
+
+属性存取器等同于方法，也必须包括在属性索性里面。
+
+```typescript
+class MyClass {
+  [s:string]: boolean;
+
   get(s:string) { // 报错
     return this[s] as boolean;
   }
 }
 ```
 
-上面示例中，属性索引没有给出方法的类型，导致`get()`方法报错。
+上面示例中，属性索引没有给出方法的类型，导致`get()`方法报错。正确的写法就是本节一开始的那个例子。
 
 ## 类的 interface 接口
 
 ### implements 关键字
 
-interface 接口或 type 别名，可以用对象的形式，为 class 指定一组检查条件。然后，类使用 implements 关键字，表示当前类能够通过这些外部类型条件。
+interface 接口或 type 别名，可以用对象的形式，为 class 指定一组检查条件。然后，类使用 implements 关键字，表示当前类满足这些外部类型条件的限制。
 
 ```typescript
 interface Country {
@@ -301,7 +323,7 @@ interface 只是指定检查条件，如果不满足这些条件就会报错。�
 interface A {
   get(name:string): boolean;
 }
- 
+
 class B implements A {
   get(s) { // s 的类型是 any
     return true;
@@ -389,7 +411,7 @@ interface Foo {
 
 ### 实现多个接口
 
-类可以实现多个接口，每个接口之间使用逗号分隔。
+类可以实现多个接口（其实是接受多重限制），每个接口之间使用逗号分隔。
 
 ```typescript
 class Car implements MotorVehicle, Flyable, Swimmable {
@@ -397,7 +419,7 @@ class Car implements MotorVehicle, Flyable, Swimmable {
 }
 ```
 
-上面示例中，`Car`类同时实现了`MotorVehicle`、`Flyable`、`Swimmable`三个接口。这意味着，它必须部署这三个接口声明的所有属性和方法。
+上面示例中，`Car`类同时实现了`MotorVehicle`、`Flyable`、`Swimmable`三个接口。这意味着，它必须部署这三个接口声明的所有属性和方法，满足它们的所有条件。
 
 但是，同时实现多个接口并不是一个好的写法，容易使得代码难以管理，可以使用两种方法替代。
 
@@ -507,7 +529,7 @@ const green:Color = new Color('green');
 
 上面示例中，定义了一个类`Color`。它的类名就代表一种类型，实例对象`green`就属于该类型。
 
-对于引用实例对象的变量来说，既可以声明类型为 Class，也可以声明类型为 Interface，因为两者都代表实例类型。
+对于引用实例对象的变量来说，既可以声明类型为 Class，也可以声明类型为 Interface，因为两者都代表实例对象的类型。
 
 ```typescript
 interface MotorVehicle {
@@ -560,7 +582,7 @@ function createPoint(
   PointClass:typeof Point,
   x:number,
   y:number
-):Point { 
+):Point {
   return new PointClass(x, y);
 }
 ```
@@ -671,7 +693,7 @@ const cust:Customer = new Person();
 
 上面示例中，`Person`类添加了一个属性`age`，跟`Customer`类的结构不再相同。但是这种情况下，TypeScript 依然认为，`Person`属于`Customer`类型。
 
-这是因为根据“结构类型原则”，只要`Person`类具有`name`属性，就满足`Customer`类型的实例结构，所以代替它。反过来就不行，如果`Customer`类多出一个属性，就会报错。
+这是因为根据“结构类型原则”，只要`Person`类具有`name`属性，就满足`Customer`类型的实例结构，所以可以代替它。反过来就不行，如果`Customer`类多出一个属性，就会报错。
 
 ```typescript
 class Person {
@@ -716,7 +738,7 @@ obj instanceof Person // false
 
 ```typescript
 class Empty {}
- 
+
 function fn(x:Empty) {
   // ...
 }
@@ -758,7 +780,7 @@ class A {
   private name = 'a';
 }
 
-class B extends A {  
+class B extends A {
 }
 
 const a:A = new B();
@@ -775,7 +797,7 @@ class B extends A {
 const a:A = new B();
 ```
 
-上面示例中，`A`和`B`都有私有成员（或保护成员）`name`，这时只有在`B`继承`A`的情况下，`B`才兼容`A`。
+上面示例中，`A`和`B`都有私有成员（或保护成员）`name`，这时只有在`B`继承`A`的情况下（`class B extends A`），`B`才兼容`A`。
 
 ## 类的继承
 
@@ -787,7 +809,7 @@ class A {
     console.log('Hello, world!');
   }
 }
- 
+
 class B extends A {
 }
 
@@ -820,9 +842,7 @@ class B extends A {
 }
 ```
 
-上面示例中，子类`B`定义了一个方法`greet()`，覆盖了基类`A`的同名方法。
-
-其中，参数`name`省略时，就调用基类`A`的`greet()`方法，这里可以写成`super.greet()`。使用`super`关键字指代基类是常见做法。
+上面示例中，子类`B`定义了一个方法`greet()`，覆盖了基类`A`的同名方法。其中，参数`name`省略时，就调用基类`A`的`greet()`方法，这里可以写成`super.greet()`，使用`super`关键字指代基类是常见做法。
 
 但是，子类的同名方法不能与基类的类型定义相冲突。
 
@@ -832,7 +852,7 @@ class A {
     console.log('Hello, world!');
   }
 }
- 
+
 class B extends A {
   // 报错
   greet(name:string) {
@@ -895,7 +915,7 @@ interface GreeterConstructor {
   new (): Greeter;
 }
 
-function getGreeterBase(): GreeterConstructor {
+function getGreeterBase():GreeterConstructor {
   return Math.random() >= 0.5 ? A : B;
 }
 
@@ -1034,7 +1054,7 @@ class B extends A {
 ```typescript
 class A {
   private x = 10;
- 
+
   f(obj:A) {
     console.log(obj.x);
   }
@@ -1052,7 +1072,7 @@ a.f(a) // 10
 class A {
   private x = 1;
 }
- 
+
 const a = new A();
 a['x'] // 1
 
@@ -1069,7 +1089,7 @@ if ('x' in a) { // 正确
 class A {
   #x = 1;
 }
- 
+
 const a = new A();
 a['x'] // 报错
 ```
@@ -1083,9 +1103,9 @@ a['x'] // 报错
 ```typescript
 class Singleton {
   private static instance?: Singleton;
- 
+
   private constructor() {}
- 
+
   static getInstance() {
     if (!Singleton.instance) {
       Singleton.instance = new Singleton();
@@ -1101,7 +1121,7 @@ const s = Singleton.getInstance();
 
 ### protected
 
-`protected`修饰符表示该成员是保护成员，只能在类的内部使用该成员，实例无法使用该成员，但是子类可以使用。
+`protected`修饰符表示该成员是保护成员，只能在类的内部使用该成员，实例无法使用该成员，但是子类内部可以使用。
 
 ```typescript
 class A {
@@ -1131,7 +1151,7 @@ class A {
 }
 
 class B extends A {
-  x = 2; 
+  x = 2;
 }
 ```
 
@@ -1272,7 +1292,7 @@ class MyClass {
 }
 ```
 
-`public`和`protected`静态成员可以被继承。
+`public`和`protected`的静态成员可以被继承。
 
 ```typescript
 class A {
@@ -1294,7 +1314,7 @@ B.getY() // 1
 
 ## 泛型类
 
-类也可以写成泛型，使用类型参数。
+类也可以写成泛型，使用类型参数。关于泛型的详细介绍，请看《泛型》一章。
 
 ```typescript
 class Box<Type> {
@@ -1304,11 +1324,11 @@ class Box<Type> {
     this.contents = value;
   }
 }
- 
+
 const b:Box<string> = new Box('hello!');
 ```
 
-上面示例中，类`Box`有类型参数`Type`，因此属于泛型类。新建实例时，变量的类型声明需要带有类型参数的值，不过本例的`Box<string>`可以省略不写，因为可以从等号右边推断得到。
+上面示例中，类`Box`有类型参数`Type`，因此属于泛型类。新建实例时，变量的类型声明需要带有类型参数的值，不过本例等号左边的`Box<string>`可以省略不写，因为可以从等号右边推断得到。
 
 注意，静态成员不能使用泛型的类型参数。
 
@@ -1318,7 +1338,7 @@ class Box<Type> {
 }
 ```
 
-上面示例中，静态属性`defaultContents`的类型写成类型参数`Type`会报错。因为这意味着调用时必须给出类型参数`Box<string>.defaultContents`，并且类型参数发生变化，这个属性也会跟着变，这并不是好的做法。
+上面示例中，静态属性`defaultContents`的类型写成类型参数`Type`会报错。因为这意味着调用时必须给出类型参数（即写成`Box<string>.defaultContents`），并且类型参数发生变化，这个属性也会跟着变，这并不是好的做法。
 
 ## 抽象类，抽象成员
 
@@ -1431,9 +1451,7 @@ const b = {
 b.getName() // 'b'
 ```
 
-上面示例中，变量`a`和`b`的`getName()`是同一个方法，但是执行结果不一样，原因就是它们内部的`this`指向不一样的对象。
-
-如果`getName()`在变量`a`上运行，`this`指向`a`；如果在`b`上运行，`this`指向`b`。
+上面示例中，变量`a`和`b`的`getName()`是同一个方法，但是执行结果不一样，原因就是它们内部的`this`指向不一样的对象。如果`getName()`在变量`a`上运行，`this`指向`a`；如果在`b`上运行，`this`指向`b`。
 
 有些场合需要给出`this`类型，但是 JavaScript 函数通常不带有`this`参数，这时 TypeScript 允许函数增加一个名为`this`的参数，放在参数列表的第一位，用来描述函数内部的`this`关键字的类型。
 
@@ -1496,7 +1514,7 @@ class Rectangle {
     public width:number,
     public height:number
   ) {}
- 
+
   getAreaFunction() {
     return function () {
       return this.width * this.height; // 报错
@@ -1548,8 +1566,9 @@ class FileSystemObject {
 }
 ```
 
-上面示例中，两个方法的返回值类型都是布尔值，写成`this is Type`的形式，可以精确表示返回值。
+上面示例中，两个方法的返回值类型都是布尔值，写成`this is Type`的形式，可以精确表示返回值。`is`运算符的介绍详见《类型断言》一章。
 
 ## 参考链接
 
 - [TypeScript Constructor in Interface](http://fritzthecat-blog.blogspot.com/2018/06/typescript-constructor-in-interface.html)
+

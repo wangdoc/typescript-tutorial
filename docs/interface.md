@@ -2,7 +2,7 @@
 
 ## 简介
 
-interface 是对象的模板，可以看作是一种类型约定，中文译为“接口”。使用了这个模板的对象，就拥有了指定的类型结构。
+interface 是对象的模板，可以看作是一种类型约定，中文译为“接口”。使用了某个模板的对象，就拥有了指定的类型结构。
 
 ```typescript
 interface Person {
@@ -92,7 +92,7 @@ interface A {
 ```typescript
 interface MyObj {
   [prop: string]: number;
- 
+
   a: boolean;      // 编译错误
 }
 ```
@@ -105,7 +105,7 @@ interface MyObj {
 interface A {
   [prop: number]: string;
 }
- 
+
 const obj:A = ['a', 'b', 'c'];
 ```
 
@@ -141,7 +141,7 @@ interface A {
 
 // 写法二
 interface B {
-  f: (x: boolean) => string; 
+  f: (x: boolean) => string;
 }
 
 // 写法三
@@ -154,7 +154,7 @@ interface C {
 
 ```typescript
 const f = 'f';
- 
+
 interface A {
   [f](x: boolean): string;
 }
@@ -238,7 +238,7 @@ interface 可以使用`extends`关键字，继承其他 interface。
 interface Shape {
   name: string;
 }
- 
+
 interface Circle extends Shape {
   radius: number;
 }
@@ -254,11 +254,11 @@ interface 允许多重继承。
 interface Style {
   color: string;
 }
- 
+
 interface Shape {
   name: string;
 }
- 
+
 interface Circle extends Style, Shape {
   radius: number;
 }
@@ -274,7 +274,7 @@ interface Circle extends Style, Shape {
 interface Foo {
   id: string;
 }
- 
+
 interface Bar extends Foo {
   id: number; // 报错
 }
@@ -288,7 +288,7 @@ interface Bar extends Foo {
 interface Foo {
   id: string;
 }
- 
+
 interface Bar {
   id: number;
 }
@@ -401,7 +401,7 @@ interface Document {
   foo: string;
 }
 
-document.foo = 'hello'; 
+document.foo = 'hello';
 ```
 
 上面示例中，接口`Document`增加了一个自定义属性`foo`，从而就可以在`document`对象上使用自定义属性。
@@ -510,7 +510,7 @@ declare const s: Circle | Rectangle;
 s.area;   // bigint | number
 ```
 
-上面示例中，接口`Circle`和`Rectangle`组成一个联合类型`Circle | Rectangle`。因此，这个联合类型的同名属性`area`，也是一个联合类型。本例中的`declare`命令表示变量`s`的具体定义，由其他脚本文件给出，详见《d.ts 文件》一章。
+上面示例中，接口`Circle`和`Rectangle`组成一个联合类型`Circle | Rectangle`。因此，这个联合类型的同名属性`area`，也是一个联合类型。本例中的`declare`命令表示变量`s`的具体定义，由其他脚本文件给出，详见《declare 命令》一章。
 
 ## interface 与 type 的异同
 
@@ -518,7 +518,7 @@ s.area;   // bigint | number
 
 很多对象类型即可以用 interface 表示，也可以用 type 表示。而且，两者往往可以换用，几乎所有的 interface 命令都可以改写为 type 命令。
 
-它们的相似之处，首先表示在都能为对象类型起名。
+它们的相似之处，首先表现在都能为对象类型起名。
 
 ```typescript
 type Country = {
@@ -549,8 +549,8 @@ type Animal = {
   name: string
 }
 
-type Bear = Animal & { 
-  honey: boolean 
+type Bear = Animal & {
+  honey: boolean
 }
 ```
 
@@ -692,4 +692,5 @@ type AorBwithName = AorB & {
 
 上面示例中，类型`AorB`是一个联合类型，`AorBwithName`则是为`AorB`添加一个属性。这两种运算，`interface`都没法表达。
 
-综上所述，如果有复杂的类型运算，那么没有选择只有使用`type`；一般情况下，`interface`灵活性比较高，便于扩充类型或自动合并，建议优先使用。
+综上所述，如果有复杂的类型运算，那么没有其他选择只能使用`type`；一般情况下，`interface`灵活性比较高，便于扩充类型或自动合并，建议优先使用。
+
