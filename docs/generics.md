@@ -30,9 +30,9 @@ function getFirst<T>(arr:T[]):T {
 }
 ```
 
-上面示例中，函数`getFirst()`的函数名后面尖括号的部分`<T>`，就是类型参数放在一对尖括号（`<>`）里面。本例只有一个类型参数`T`，可以将其视为类型声明需要的变量，具体的类型由调用时输入的参数类型决定。
+上面示例中，函数`getFirst()`的函数名后面尖括号的部分`<T>`，就是类型参数，参数要放在一对尖括号（`<>`）里面。本例只有一个类型参数`T`，可以将其理解为类型声明需要的变量，需要在调用时传入具体的参数类型。
 
-参数类型是`T[]`，返回值类型是`T`，就清楚地表示了两者之间的关系。比如，输入的参数类型是`number[]`，那么 T 的值就是`number`，因此返回值类型也是`number`。
+上例的函数`getFirst()`的参数类型是`T[]`，返回值类型是`T`，就清楚地表示了两者之间的关系。比如，输入的参数类型是`number[]`，那么 T 的值就是`number`，因此返回值类型也是`number`。
 
 函数调用时，需要提供类型参数。
 
@@ -72,9 +72,7 @@ comb<number|string>([1, 2], ['a', 'b']) // 正确
 
 上面示例中，类型参数是一个联合类型，使得两个参数都符合类型参数，就不报错了。这种情况下，类型参数是不能省略不写的。
 
-类型参数的名字，可以随便取，但是必须为合法的标识符。习惯上，类型参数的第一个字符往往采用大写字母。
-
-一般会使用`T`（type 的第一个字母）作为类型参数的名字。如果有多个类型参数，则使用 T 后面的 U、V 等字母命名，各个参数之间使用逗号“,”分隔。
+类型参数的名字，可以随便取，但是必须为合法的标识符。习惯上，类型参数的第一个字符往往采用大写字母。一般会使用`T`（type 的第一个字母）作为类型参数的名字。如果有多个类型参数，则使用 T 后面的 U、V 等字母命名，各个参数之间使用逗号（“,”）分隔。
 
 下面是多个类型参数的例子。
 
@@ -114,16 +112,16 @@ function id<T>(arg:T):T {
 那么对于变量形式定义的函数，泛型有下面两种写法。
 
 ```typescript
-// 写法一 
+// 写法一
 let myId:<T>(arg:T) => T = id;
 
 // 写法二
-let myId:{ <T>(arg:T):T } = id;
+let myId:{ <T>(arg:T): T } = id;
 ```
 
 ### 接口的泛型写法
 
-泛型函数也可以采用 inteface 的写法。
+interface 也可以采用泛型的写法。
 
 ```typescript
 interface Box<Type> {
@@ -139,7 +137,7 @@ let box:Box<string>;
 
 ```typescript
 interface Comparator<T> {
-  compareTo(value:T):number;
+  compareTo(value:T): number;
 }
 
 class Rectangle implements Comparator<Rectangle> {
@@ -156,19 +154,19 @@ class Rectangle implements Comparator<Rectangle> {
 
 ```typescript
 interface Fn {
-  <Type>(arg:Type):Type;
+  <Type>(arg:Type): Type;
 }
 
-function id<Type>(arg:Type):Type {
+function id<Type>(arg:Type): Type {
   return arg;
 }
- 
+
 let myId:Fn = id;
 ```
 
-上面示例中，类型参数定义在接口内部，所以使用这个接口时（最后一行），不需要给出类型参数的值。
+上面示例中，`Fn`的类型参数`Type`的具体类型，需要函数`id`在使用时提供。所以，最后一行的赋值语句不需要给出`Type`的具体类型。
 
-除了声明时不需要给出加类型参数，第二种写法还有一个区别。那就是它的类型参数定义在某个方法之上，其他属性和方法不能使用该类型参数。前面的第一种写法，类型参数定义在整个接口，接口内部的所有属性和方法都可以使用该类型参数。
+此外，第二种写法还有一个差异之处。那就是它的类型参数定义在某个方法之中，其他属性和方法不能使用该类型参数。前面的第一种写法，类型参数定义在整个接口，接口内部的所有属性和方法都可以使用该类型参数。
 
 ### 类的泛型写法
 
@@ -211,10 +209,10 @@ const b = new Container<number>(0);
 
 ```typescript
 class C<NumType> {
-  value!:NumType;
-  add!:(x: NumType, y: NumType) => NumType;
+  value!: NumType;
+  add!: (x: NumType, y: NumType) => NumType;
 }
- 
+
 let foo = new C<number>();
 
 foo.value = 0;
@@ -228,27 +226,29 @@ foo.add = function (x, y) {
 JavaScript 的类本质上是一个构造函数，因此也可以把泛型类写成构造函数。
 
 ```typescript
-type Class<T> = new (...args: any[]) => T;
+type MyClass<T> = new (...args: any[]) => T;
 
 // 或者
-interface Class<T> {
-  new(...args: any[]):T;
+interface MyClass<T> {
+  new(...args: any[]): T;
 }
 
 // 用法实例
 function createInstance<T>(
-  AnyClass:Class<T>,
-  ...args:any[]
+  AnyClass: MyClass<T>,
+  ...args: any[]
 ):T {
   return new AnyClass(...args);
 }
 ```
 
-泛型类描述的是类的实例，不包括静态属性，因为静态属性定义在类的本身。因此，类的静态属性不能引用类型参数。
+上面示例中，函数`createInstance()`的第一个参数`AnyClass`是构造函数（也可以是一个类），它的类型是`MyClass<T>`，这里的`T`是`createInstance()`的类型参数，在该函数调用时再指定具体类型。
+
+注意，泛型类描述的是类的实例，不包括静态属性和静态方法，因为这两者定义在类的本身。因此，它们不能引用类型参数。
 
 ```typescript
 class C<T> {
-  static data:T;  // 报错
+  static data: T;  // 报错
   constructor(public value:T) {}
 }
 ```
@@ -260,7 +260,7 @@ class C<T> {
 type 命令定义的类型别名，也可以使用泛型。
 
 ```typescript
-type Nullable<T> = T | undefined | null; 
+type Nullable<T> = T | undefined | null;
 ```
 
 上面示例中，`Nullable<T>`是一个泛型，只要传入一个类型，就可以得到这个类型与`undefined`和`null`的一个联合类型。
@@ -271,7 +271,6 @@ type Nullable<T> = T | undefined | null;
 type Container<T> = { value: T };
 
 const a: Container<number> = { value: 0 };
-
 const b: Container<string> = { value: 'b' };
 ```
 
@@ -321,7 +320,7 @@ class Generic<T = string> {
 }
 ```
 
-上面示例中，类`Generic`有一个类型参数`T`，默认值为`string`。这意味着，实例方法`add()`的参数`t`的类型，默认是`string`。
+上面示例中，类`Generic`有一个类型参数`T`，默认值为`string`。这意味着，属性`list`默认是一个字符串数组，方法`add()`的默认参数是一个字符串。
 
 ```typescript
 const g = new Generic();
@@ -368,12 +367,12 @@ let arr:Array<number> = [1, 2, 3];
 ```typescript
 interface Array<Type> {
 
-  length:number;
- 
-  pop():Type | undefined;
- 
+  length: number;
+
+  pop(): Type|undefined;
+
   push(...items:Type[]): number;
- 
+
   // ...
 }
 ```
@@ -386,13 +385,13 @@ TypeScript 默认还提供一个`ReadonlyArray<T>`接口，表示只读数组。
 
 ```typescript
 function doStuff(
-  values: ReadonlyArray<string>
+  values:ReadonlyArray<string>
 ) {
   values.push('hello!');  // 报错
 }
 ```
 
-上面示例中，参数`values`的类型是`ReadonlyArray<string>`，表示不能修改这个数组，所以函数体内部新增数组成员就会报错。因此，如果不希望函数内部改动参数数组，就可以将该参数数组声明为`ReadonlyArray`类型。
+上面示例中，参数`values`的类型是`ReadonlyArray<string>`，表示不能修改这个数组，所以函数体内部新增数组成员就会报错。因此，如果不希望函数内部改动参数数组，就可以将该参数数组声明为`ReadonlyArray<T>`类型。
 
 ## 类型参数的约束条件
 
@@ -407,13 +406,14 @@ function comp<Type>(a:Type, b:Type) {
 }
 ```
 
-上面示例中，类型参数 Type 有一个隐藏的约束条件：Type 必须是对象，且存在`length`属性。如果不满足这个条件，就会报错。
+上面示例中，类型参数 Type 有一个隐藏的约束条件：它必须存在`length`属性。如果不满足这个条件，就会报错。
 
-TypeScript 提供了一种语法，允许在类型参数上面写明约束条件，如果不满足条件，编译时就会报错。这样也可以有良好的语义，对类型参数进行了说明。
+TypeScript 提供了一种语法，允许在类型参数上面写明约束条件，如果不满足条件，编译时就会报错。这样也可以有良好的语义，对类型参数进行说明。
 
 ```typescript
 function comp<T extends { length: number }>(
-  a:T, b:T
+  a: T,
+  b: T
 ) {
   if (a.length >= b.length) {
     return a;
@@ -470,7 +470,7 @@ type Result = Fn<'hello'> // ["hello", "world"]
 <T extends U, U extends T>  // 报错
 ```
 
-上面示例中，`T`的约束条件不能是`T`自身，因此多个类型参数也不能互相约束（即`T`的约束条件是`U`、`U`的约束条件是`T`），因为互相约束就意味着约束条件就是类型参数自身。
+上面示例中，`T`的约束条件不能是`T`自身。同理，多个类型参数也不能互相约束（即`T`的约束条件是`U`、`U`的约束条件是`T`），因为互相约束就意味着约束条件就是类型参数自身。
 
 ## 使用注意点
 
@@ -491,7 +491,7 @@ function filter<
 >(
   arr:T[],
   func:Fn
-):T[] {
+): T[] {
   return arr.filter(func);
 }
 ```
@@ -502,7 +502,7 @@ function filter<
 function filter<T>(
   arr:T[],
   func:(arg:T) => boolean
-):T[] {
+): T[] {
   return arr.filter(func);
 }
 ```
@@ -511,7 +511,7 @@ function filter<T>(
 
 **（3）类型参数需要出现两次。**
 
-如果类型参数只出现一次，那么很可能是不必要的。
+如果类型参数在定义后只出现一次，那么很可能是不必要的。
 
 ```typescript
 function greet<Str extends string>(
@@ -535,14 +535,15 @@ function greet(s:string) {
 
 **（4）泛型可以嵌套。**
 
-类型参数可以是另一个类型参数。
+类型参数可以是另一个泛型。
 
 ```typescript
 type OrNull<Type> = Type|null;
- 
+
 type OneOrMany<Type> = Type|Type[];
- 
+
 type OneOrManyOrNull<Type> = OrNull<OneOrMany<Type>>;
 ```
 
 上面示例中，最后一行的泛型`OrNull`的类型参数，就是另一个泛型`OneOrMany`。
+
