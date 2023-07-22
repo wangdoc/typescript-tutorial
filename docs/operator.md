@@ -31,20 +31,20 @@ interface T {
 type KeyT = keyof T; // 0 | 'a' | 'b'
 ```
 
-由于 JavaScript 对象的键名只有三种类型，所以对于任意键名的联合类型就是`string|number|symbol`。
+由于 JavaScript 对象的键名只有三种类型，所以对于任意对象的键名的联合类型就是`string|number|symbol`。
 
 ```typescript
 // string | number | symbol
 type KeyT = keyof any;
 ```
 
-对于上面三种类型以外的类型使用 keyof 运算符，返回`never`类型，表示不可能有这样类型的键名。
+对于没有自定义键名的类型使用 keyof 运算符，返回`never`类型，表示不可能有这样类型的键名。
 
 ```typescript
 type KeyT = keyof object;  // never
 ```
 
-上面示例中，由于不可能有`object`类型的键名，所以`keyof object`返回`never`类型。
+上面示例中，由于`object`类型没有自身的属性，也就没有键名，所以`keyof object`返回`never`类型。
 
 由于 keyof 返回的类型是`string|number|symbol`，如果有些场合只需要其中的一种类型，那么可以采用交叉类型的写法。
 
@@ -54,9 +54,7 @@ type Capital<T extends string> = Capitalize<T>;
 type MyKeys<Obj extends object> = Capital<keyof Obj>; // 报错
 ```
 
-上面示例中，类型`Capital`只接受字符串作为类型参数，传入`keyof Obj`会报错，原因是这时的类型参数是`string|number|symbol`，跟字符串不兼容。
-
-采用下面的交叉类型写法，就不会报错。
+上面示例中，类型`Capital`只接受字符串作为类型参数，传入`keyof Obj`会报错，原因是这时的类型参数是`string|number|symbol`，跟字符串不兼容。采用下面的交叉类型写法，就不会报错。
 
 ```typescript
 type MyKeys<Obj extends object> = Capital<string & keyof Obj>;
@@ -89,12 +87,12 @@ type KeyT = keyof T;
 如果 keyof 运算符用于数组或元组类型，得到的结果可能出人意料。
 
 ```typescript
+type Result = keyof ['a', 'b', 'c'];
 // 返回 number | "0" | "1" | "2"
 // | "length" | "pop" | "push" | ···
-type Result = keyof ['a', 'b', 'c'];
 ```
 
-上面示例中，keyof 会返回数组的所有属性名，包括字符串属性名和继承的属性名。
+上面示例中，keyof 会返回数组的所有键名，包括数字键名和继承的键名。
 
 对于联合类型，keyof 返回成员共有的键名。
 
@@ -102,8 +100,8 @@ type Result = keyof ['a', 'b', 'c'];
 type A = { a: string; z: boolean };
 type B = { b: string; z: boolean };
 
-// 'z'
-type KeyT = keyof (A | B); 
+// 返回 'z'
+type KeyT = keyof (A | B);
 ```
 
 对于交叉类型，keyof 返回所有键名。
@@ -113,7 +111,7 @@ type A = { a: string; x: boolean };
 type B = { b: string; y: number };
 
 // 返回 'a' | 'x' | 'b' | 'y'
-type KeyT = keyof (A & B); 
+type KeyT = keyof (A & B);
 
 // 相当于
 keyof (A & B) ≡ keyof A | keyof B
@@ -229,7 +227,7 @@ JavaScript 语言中，`in`运算符用来确定对象是否包含某个属性�
 ```javascript
 const obj = { a: 123 };
 
-if ('a' in obj) 
+if ('a' in obj)
   console.log('found a');
 ```
 
@@ -298,7 +296,7 @@ type A = Person[keyof Obj];
 type T = Person['notExisted']; // 报错
 ```
 
-如果对象的属性是索引类型，那么方括号运算符的参数可以是属性名的类型。
+方括号运算符的参数也可以是属性名的索引类型。
 
 ```typescript
 type Obj = {
@@ -367,7 +365,7 @@ interface Animal {
 interface Dog extends Animal {
   woof(): void;
 }
- 
+
 // number
 type T1 = Dog extends Animal ? number : string;
 
@@ -396,21 +394,21 @@ type T2 = RegExp extends Animal ? number : string;
 
 ```typescript
 // 示例一
-type ToArray<Type> = 
+type ToArray<Type> =
   Type extends any ? Type[] : never;
 
 // string[]|number[]
 type T = ToArray<string|number>;
 
 // 示例二
-type ToArray<Type> = 
+type ToArray<Type> =
   [Type] extends [any] ? Type[] : never;
 
 // (string | number)[]
 type T = ToArray<string|number>;
 ```
 
-上面的示例一，传入的类型参数是联合类型，所以会被展开，返回的也是联合类型。示例二是`extends`两侧的运算数都放在方括号里面，所以传入的联合类型不会展示，返回的是一个数组。
+上面的示例一，传入`ToArray<Type>`的类型参数是一个联合类型，所以会被展开，返回的也是联合类型。示例二是`extends`两侧的运算数都放在方括号里面，所以传入的联合类型不会展开，返回的是一个数组。
 
 条件运算符还可以嵌套使用。
 
@@ -446,11 +444,11 @@ type Flatten<Type> =
   Type extends Array<infer Item> ? Item : Type;
 ```
 
-上面示例中，`Type`是外部传入的类型参数，如果传入的是一个数组（`Array`），那么可以从该数组推断出它的成员类型，写成`infer Item`，表示`Item`这个类型参数是从当前信息中推断出来的。
+上面示例中，`Type`是外部传入的类型参数，如果它是数组`Array<T>`的子类型，那么就将类型变量`Item`推断为`T`，即`Item`代表数组的成员类型，写成`infer Item`，表示`Item`这个类型参数是从当前信息中推断出来的。
 
 一旦定义了`Item`，后面的代码就可以使用这个类型参数了。
 
-下面是这个泛型`Flatten<Type>`的用法。
+下面是上例的泛型`Flatten<Type>`的用法。
 
 ```typescript
 // string
@@ -460,7 +458,7 @@ type Str = Flatten<string[]>;
 type Num = Flatten<number>;
 ```
 
-上面示例中，第一个例子`Flatten<string[]>`传入的类型参数是`string[]`，可以推断出`Item`的类型是`string`，所以返回的是`string`。第二个例子`Flatten<number>`传入的类型参数是`number`，它不是数组，所以直接返回本身。
+上面示例中，第一个例子`Flatten<string[]>`传入的类型参数是`string[]`，可以推断出`Item`的类型是`string`，所以返回的是`string`。第二个例子`Flatten<number>`传入的类型参数是`number`，它不是数组的子类型，所以直接返回自身。
 
 如果不用`infer`定义类型参数，那么就要传入两个类型参数。
 
@@ -469,7 +467,7 @@ type Flatten<Type, Item> =
   Type extends Array<Item> ? Item : Type;
 ```
 
-上面是不用`infer`的写法，每次使用`Fleatten`的时候，都要传入两个参数，就非常麻烦。
+上面是不用`infer`的写法，每次使用`Fleatten`的时候，都要传入两个参数，就比较麻烦。
 
 下面的例子使用`infer`，推断函数的参数类型和返回值类型。
 
@@ -482,22 +480,23 @@ type ReturnPromise<T> =
 
 上面示例中，如果`T`是函数，就返回这个函数的 Promise 版本，否则原样返回。`infer A`表示该函数的参数类型为`A`，`infer R`表示该函数的返回值类型为`R`。
 
-如果不使用`infer`，就不得不把`ReturnPromise<T>`写成`ReturnPromise<T, A, R>`，这样就很麻烦。
+如果不使用`infer`，就不得不把`ReturnPromise<T>`写成`ReturnPromise<T, A, R>`，这样就很麻烦，相当于开发者必须人肉推断编译器可以完成的工作。
 
 下面是`infer`提取对象指定属性的例子。
 
 ```typescript
 type MyType<T> =
-  T extends { 
+  T extends {
     a: infer M,
-    b: infer N 
+    b: infer N
   } ? [M, N] : never;
 
+// 用法示例
+type T = MyType<{ a: string; b: number }>;
 // [string, number]
-type T = MyType<{ a: string; b: number }>; 
 ```
 
-上面示例中，`infer`可以提取参数对象的属性`a`和属性`b`的值。
+上面示例中，`infer`提取了参数对象的属性`a`和属性`b`的类型。
 
 下面是`infer`通过正则匹配提取类型参数的例子。
 
@@ -517,7 +516,7 @@ type Bar = Str extends `foo-${infer rest}` ? rest : never // 'bar'
 
 ```typescript
 function isFish(
-  pet:Fish|Bird
+  pet: Fish|Bird
 ):pet is Fish {
   return (pet as Fish).swim !== undefined;
 }
@@ -553,7 +552,7 @@ if (isCat(x)) {
 }
 ```
 
-上面示例中，需要保证`x`有`meow()`方法，`isCat()`的返回值是`a is Cat`与`if`结合，就能起到类型保护的作用，确保`x`是 Cat 类型。
+上面示例中，函数`isCat()`的返回类型是`a is Cat`，它是一个布尔值。后面的`if`语句就用这个返回值进行判断，从而起到类型保护的作用，确保`x`是 Cat 类型，从而`x.meow()`不会报错（假定`Cat`类型拥有`meow()`方法）。
 
 `is`运算符还有一种特殊用法，就是用在类（class）的内部，描述类的方法的返回值。
 
@@ -571,7 +570,7 @@ class Student {
 }
 ```
 
-上面示例中，`isStudent()`方法的返回值类型，取决于该方法内部的`this`是否为`Student`对象。
+上面示例中，`isStudent()`方法的返回值类型，取决于该方法内部的`this`是否为`Student`对象。如果是的，就返回布尔值`true`，否则返回`false`。
 
 注意，`this is T`这种写法，只能用来描述方法的返回值类型，而不能用来描述属性的类型。
 
@@ -590,17 +589,17 @@ type Greeting = `hello ${World}`;
 
 上面示例中，类型`Greeting`是一个模板字符串，里面引用了另一个字符串类型`world`，因此`Greeting`实际上是字符串`hello world`。
 
-注意，模板字符串可以引用的类型一共6种，分别是 string、number、bigint、boolean、null、undefined。引用其他类型会报错。
+注意，模板字符串可以引用的类型一共6种，分别是 string、number、bigint、boolean、null、undefined。引用这6种以外的类型会报错。
 
 ```typescript
-type N = 123;
-type O = { n : 123 };
+type Num = 123;
+type Obj = { n : 123 };
 
-type T1 = `${N} received`; // 正确
-type T2 = `${O} received`; // 报错
+type T1 = `${Num} received`; // 正确
+type T2 = `${Obj} received`; // 报错
 ```
 
-上面示例中，模板字符串引用数值类型（`N`）是可以的，但是引用对象类型（`O`）就会报错。
+上面示例中，模板字符串引用数值类型的别名`Num`是可以的，但是引用对象类型的别名`Obj`就会报错。
 
 模板字符串里面引用的类型，如果是一个联合类型，那么它返回的也是一个联合类型，即模板字符串可以展开联合类型。
 
@@ -625,3 +624,4 @@ type V = `${T}${U}`;
 ```
 
 上面示例中，`T`和`U`都是联合类型，各自有两个成员，模板字符串里面引用了这两个类型，最后得到的就是一个4个成员的联合类型。
+
