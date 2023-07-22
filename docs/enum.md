@@ -20,7 +20,7 @@ if (color === BLUE) {/* */}
 throw new Error('wrong color');
 ```
 
-上面示例中，常量`RED`、`GREEN`、`BLUE`是相关的，而且它们具体等于什么值并不重要，只要不相等就可以了。
+上面示例中，常量`RED`、`GREEN`、`BLUE`是相关的，意为变量`color`的三个可能的取值。它们具体等于什么值其实并不重要，只要不相等就可以了。
 
 TypeScript 就设计了 Enum 结构，用来将相关常量放在一个容器里面，方便使用。
 
@@ -37,7 +37,7 @@ enum Color {
 使用时，调用 Enum 的某个成员，与调用对象属性的写法一样，可以使用点运算符，也可以使用方括号运算符。
 
 ```typescript
-let c = Color.Green; // 1 
+let c = Color.Green; // 1
 // 等同于
 let c = Color['Green']; // 1
 ```
@@ -76,10 +76,10 @@ let Color = {
 Enum 结构比较适合的场景是，成员的值不重要，名字更重要，从而增加代码的可读性和可维护性。
 
 ```typescript
-enum Operator {  
-  ADD, 
-  DIV, 
-  MUL, 
+enum Operator {
+  ADD,
+  DIV,
+  MUL,
   SUB
 }
 
@@ -87,19 +87,19 @@ function compute(
   op:Operator,
   a:number,
   b:number
-) {  
-  switch (op) {  
-    case Operator.ADD:  
+) {
+  switch (op) {
+    case Operator.ADD:
       return a + b;
-    case Operator.DIV:  
-      return a / b;  
+    case Operator.DIV:
+      return a / b;
     case Operator.MUL:
       return a * b;
     case Operator.SUB:
-      return a - b;  
+      return a - b;
     default:
-      throw new Error('wrong operator');  
-  }  
+      throw new Error('wrong operator');
+  }
 }
 
 compute(Operator.ADD, 1, 3) // 4
@@ -110,16 +110,16 @@ compute(Operator.ADD, 1, 3) // 4
 Enum 作为类型有一个缺点，就是输入任何数值都不报错。
 
 ```typescript
-enum Bool { 
+enum Bool {
   No,
-  Yes 
+  Yes
 }
 
 function foo(noYes:Bool) {
   // ...
 }
 
-func(33);  // 不报错
+foo(33);  // 不报错
 ```
 
 上面代码中，函数`foo`的参数`noYes`只有两个可用的值，但是输入任意数值，编译都不会报错。
@@ -146,7 +146,7 @@ enum Foo {
   B,
   C,
 }
- 
+
 const Bar = {
   A: 0,
   B: 1,
@@ -173,7 +173,7 @@ enum Color {
   Blue
 }
 
-// 等同于 
+// 等同于
 enum Color {
   Red = 0,
   Green = 1,
@@ -288,13 +288,13 @@ const y = 1 /* Color.Green */;
 const z = 2 /* Color.Blue */;
 ```
 
-上面示例中，由于 Enum 结构前面加了`const`关键字，所以编译产物里面就没有生成对应的对象，而是把所有 Enum 成员出现的场合，都替换成对应的常量。 
+上面示例中，由于 Enum 结构前面加了`const`关键字，所以编译产物里面就没有生成对应的对象，而是把所有 Enum 成员出现的场合，都替换成对应的常量。
 
-如果希望加上`const`关键词后，运行时还能访问 Enum 结构（即编译后依然将 Enum 转成对象），需要在编译时打开`preserveConstEnums`参数。
+如果希望加上`const`关键词后，运行时还能访问 Enum 结构（即编译后依然将 Enum 转成对象），需要在编译时打开`preserveConstEnums`编译选项。
 
 ## 同名 Enum 的合并
 
-多个同名的 Enum 结构合并成一个 Enum 结构。
+多个同名的 Enum 结构会自动合并。
 
 ```typescript
 enum Foo {
@@ -404,7 +404,7 @@ enum Foo {
 }
 ```
 
-上面示例中，`A`之前没有其他成员，所以可以不设置初始值，默认等于`0`；`C`之前有一个字符串成员，必须有初始值，不赋值就报错了。
+上面示例中，`A`之前没有其他成员，所以可以不设置初始值，默认等于`0`；`C`之前有一个字符串成员，必须`C`必须有初始值，不赋值就报错了。
 
 Enum 成员可以是字符串和数值混合赋值。
 
@@ -515,9 +515,9 @@ type Foo = keyof typeof MyEnum;
 注意，这里的`typeof`是必需的，否则`keyof MyEnum`相当于`keyof number`。
 
 ```typescript
+type Foo = keyof MyEnum;
 // "toString" | "toFixed" | "toExponential" |
 // "toPrecision" | "valueOf" | "toLocaleString"
-type Foo = keyof MyEnum;
 ```
 
 上面示例中，类型`Foo`等于类型`number`的所有原生属性名组成的联合类型。
@@ -553,7 +553,7 @@ enum Weekdays {
   Sunday
 }
 
-console.log(Weekdays[3]) // Wednesday 
+console.log(Weekdays[3]) // Wednesday
 ```
 
 上面示例中，Enum 成员`Wednesday`的值等于3，从而可以从成员值`3`取到对应的成员名`Wednesday`，这就叫反向映射。
@@ -603,3 +603,4 @@ var MyEnum;
     MyEnum["B"] = "b";
 })(MyEnum || (MyEnum = {}));
 ```
+

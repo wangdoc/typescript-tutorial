@@ -10,3 +10,5 @@
 - interface.md: interface
 - class.md: 类
 - generics.md: 泛型
+- enum.md: Enum 类型
+- assert.md: 类型断言

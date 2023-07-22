@@ -13,9 +13,9 @@ let bar:T = foo; // 报错
 
 上面示例中，最后一行报错，原因是 TypeScript 推断变量`foo`的类型是`string`，而变量`bar`的类型是`'a'|'b'|'c'`，前者是后者的父类型。父类型不能赋值给子类型，所以就报错了。
 
-这时，TypeScript 提供了“类型断言”这样一种手段，允许开发者在代码中“断言”某个值的类型，提示编译器此处的值是什么类型。TypeScript 一旦发现存在类型断言，就不再对该值进行类型推断，而是直接采用断言给出的类型。
+TypeScript 提供了“类型断言”这样一种手段，允许开发者在代码中“断言”某个值的类型，告诉编译器此处的值是什么类型。TypeScript 一旦发现存在类型断言，就不再对该值进行类型推断，而是直接采用断言给出的类型。
 
-这种做法的实质是，允许开发者在某个位置“绕过”编译器的类型推断，使其能够通过类型检查，避免编译器报错。这样虽然削弱了 TypeScript 类型系统的严格性，但是为开发者带来了方便，毕竟开发者比编译器更了解自己的代码。
+这种做法的实质是，允许开发者在某个位置“绕过”编译器的类型推断，让本来通不过类型检查的代码能够通过，避免编译器报错。这样虽然削弱了 TypeScript 类型系统的严格性，但是为开发者带来了方便，毕竟开发者比编译器更了解自己的代码。
 
 回到上面的例子，解决方法就是进行类型断言，在赋值时断言变量`foo`的类型。
 
@@ -65,7 +65,7 @@ const p:{ x: number } = { x: 0, y: 0 };
 // 正确
 const p0:{ x: number } =
   { x: 0, y: 0 } as { x: number };
-  
+
 // 正确
 const p1:{ x: number } =
   { x: 0, y: 0 } as { x: number; y: number };
@@ -83,7 +83,7 @@ if (username) {
 }
 ```
 
-上面示例中，变量`username`的类型是`HTMLElement|null`，排除了`null`的情况以后，HTMLElement 类型是没有`value`属性的。如果`username`是一个输入框，那么就可以通过类型断言，将它的类型改成`HTMLInputElement`，就可以读取`value`属性。
+上面示例中，变量`username`的类型是`HTMLElement | null`，排除了`null`的情况以后，HTMLElement 类型是没有`value`属性的。如果`username`是一个输入框，那么就可以通过类型断言，将它的类型改成`HTMLInputElement`，就可以读取`value`属性。
 
 注意，上例的类型断言的圆括号是必需的，否则`username`会被断言成`HTMLInputElement.value`，从而报错。
 
@@ -118,12 +118,12 @@ const s2:string = value as string; // 正确
 
 ```typescript
 const s1:number|string = 'hello';
-const s2:number = s1 as number; 
+const s2:number = s1 as number;
 ```
 
 上面示例中，变量`s1`是联合类型，可以断言其为联合类型里面的一种具体类型，再将其赋值给变量`s2`。
 
-## 类型断言的前提
+## 类型断言的条件
 
 类型断言并不意味着，可以把某个值断言为任意类型。
 
@@ -167,10 +167,10 @@ const m:string = n as unknown as string; // 正确
 如果没有声明变量类型，let 命令声明的变量，会被类型推断为 TypeScript 内置的基本类型之一；const 命令声明的变量，则被推断为值类型常量。
 
 ```typescript
-// 类型推断为 string
+// 类型推断为基本类型 string
 let s1 = 'JavaScript';
 
-// 类型推断为 JavaScript
+// 类型推断为字符串 “JavaScript”
 const s2 = 'JavaScript';
 ```
 
@@ -181,7 +181,7 @@ const s2 = 'JavaScript';
 ```typescript
 let s = 'JavaScript';
 
-type Lang = 
+type Lang =
   |'JavaScript'
   |'TypeScript'
   |'Python';
@@ -228,7 +228,13 @@ let s = 'JavaScript';
 setLang(s as const); // 报错
 ```
 
-上面示例中，`as const`断言用于变量`s`，就报错了。
+上面示例中，`as
+const`断言用于变量`s`，就报错了。下面的写法可以更清晰地看出这一点。
+
+```typescript
+let s1 = 'JavaScript';
+let s2 = s1 as const; // 报错
+```
 
 另外，`as const`也不能用于表达式。
 
@@ -286,7 +292,7 @@ const a2 = [1, 2, 3] as const;
 由于`as const`会将数组变成只读元组，所以很适合用于函数的 rest 参数。
 
 ```typescript
-function add(x: number, y: number) {
+function add(x:number, y:number) {
   return x + y;
 }
 
@@ -311,8 +317,8 @@ Enum 成员也可以使用`as const`断言。
 
 ```typescript
 enum Foo {
-    X,
-    Y,
+  X,
+  Y,
 }
 let e1 = Foo.X;            // Foo
 let e2 = Foo.X as const;   // Foo.X
@@ -326,16 +332,17 @@ let e2 = Foo.X as const;   // Foo.X
 
 ```typescript
 function f(x?:number|null) {
-  validateNumber(x);
+  validateNumber(x); // 自定义函数，确保 x 是数值
   console.log(x!.toFixed());
 }
 
-function validateNumber(e？:number|null) {
-  // 如果 e 不是数值，就抛出错误
+function validateNumber(e?:number|null) {
+  if (typeof e !== 'number')
+    throw new Error('Not a number');
 }
 ```
 
-上面示例中，变量`x`的类型是`number|null`，即可能为空。如果为空，就不存在`.toFixed()`方法，编译时会报错。但是，开发者有时可以确认，变量`x`不会为空，这时就可以使用非空断言，为函数体内部的变量`x`加上后缀`!`，编译就不会报错了。
+上面示例中，函数`f()`的参数`x`的类型是`number|null`，即可能为空。如果为空，就不存在`x.toFixed()`方法，这样写会报错。但是，开发者可以确认，经过`validateNumber()`的前置检验，变量`x`肯定不会为空，这时就可以使用非空断言，为函数体内部的变量`x`加上后缀`!`，`x!.toFixed()`编译就不会报错了。
 
 非空断言在实际编程中很有用，有时可以省去一些额外的判断。
 
@@ -348,7 +355,7 @@ root.addEventListener('click', e => {
 });
 ```
 
-上面示例中，`getElementById()`有可能返回空值`null`，即变量`root`可能为空，这时对它调用`addEventListener()`方法就会报错，通不过编译。但是一般来说，开发者可以确认`root`元素肯定会在网页中存在，这时就可以使用非空断言。
+上面示例中，`getElementById()`有可能返回空值`null`，即变量`root`可能为空，这时对它调用`addEventListener()`方法就会报错，通不过编译。但是，开发者如果可以确认`root`元素肯定会在网页中存在，这时就可以使用非空断言。
 
 ```typescript
 const root = document.getElementById('root')!;
@@ -356,13 +363,13 @@ const root = document.getElementById('root')!;
 
 上面示例中，`getElementById()`方法加上后缀`!`，表示这个方法肯定返回非空结果。
 
-非空断言会造成安全隐患，只有在确定一个表达式的值不为空时才能使用。比较保险的做法还是手动检查一下是否为空。
+不过，非空断言会造成安全隐患，只有在确定一个表达式的值不为空时才能使用。比较保险的做法还是手动检查一下是否为空。
 
 ```typescript
 const root = document.getElementById('root');
 
 if (root === null) {
-  throw Error('Unable to find DOM element #root');
+  throw new Error('Unable to find DOM element #root');
 }
 
 root.addEventListener('click', e => {
@@ -387,7 +394,7 @@ class Point {
 
 上面示例中，属性`x`和`y`会报错，因为 TypeScript 认为它们没有初始化。
 
-这时就可以使用非空断言，表示这两个属性肯定有值，这样就不会报错了。
+这时就可以使用非空断言，表示这两个属性肯定会有值，这样就不会报错了。
 
 ```typescript
 class Point {
@@ -507,8 +514,8 @@ function assertIsDefined<T>(
 const assertIsNumber = (
   value:unknown
 ):asserts value is number => {
-    if (typeof value !== 'number')
-      throw Error('Not a number');
+  if (typeof value !== 'number')
+    throw Error('Not a number');
 };
 
 // 写法二
@@ -516,8 +523,8 @@ type AssertIsNumber =
   (value:unknown) => asserts value is number;
 
 const assertIsNumber:AssertIsNumber = (value) => {
-    if (typeof value !== 'number')
-      throw Error('Not a number');
+  if (typeof value !== 'number')
+    throw Error('Not a number');
 };
 ```
 
@@ -568,7 +575,8 @@ function loadPerson(): Person | null {
 let person = loadPerson();
 
 function assert(
-  condition:unknown, message:string
+  condition: unknown,
+  message: string
 ):asserts condition {
   if (!condition) throw new Error(message);
 }
@@ -585,3 +593,4 @@ console.log(person.name);
 - [Const Assertions in Literal Expressions in TypeScript](https://mariusschulz.com/blog/const-assertions-in-literal-expressions-in-typescript), Marius Schulz
 - [Assertion Functions in TypeScript](https://mariusschulz.com/blog/assertion-functions-in-typescript), Marius Schulz
 - [Assertion functions in TypeScript](https://blog.logrocket.com/assertion-functions-typescript/), Matteo Di Pirro
+
