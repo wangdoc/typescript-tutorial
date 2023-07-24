@@ -164,7 +164,7 @@ let t = new Shapes.Triangle();
 
 // 写法二
 import * as shapes from "./shapes";
-let t = new shapes.Shapes.Triangle(); // shapes.Shapes?
+let t = new shapes.Shapes.Triangle();
 ```
 
 不过，更好的方法还是建议使用模块，采用模块的输出和输入。
@@ -300,3 +300,4 @@ namespace E {
 ```
 
 上面示例中，同名 Enum 与命名空间有同名成员，结果报错。
+

@@ -12,6 +12,8 @@
 - generics.md: 泛型
 - enum.md: Enum 类型
 - assert.md: 类型断言
+- module.md: 模块
+- namespace.md: namespace
 - operator.md: 运算符
 - mapping.md: 类型映射
 - utility.md: 类型工具

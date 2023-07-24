@@ -54,7 +54,7 @@ class A {} // "hi, this is class A {}"
 
 上面的代码就可以顺利通过编译了，代码含义这里先不解释。大家只要理解，类`A`在执行前会先执行装饰器`simpleDecorator()`，并且会向装饰器自动传入参数就可以了。
 
-装饰器有多种形式，基本上只要在`@`符号后面添加表达式都是可以。下面都是合法的装饰器。
+装饰器有多种形式，基本上只要在`@`符号后面添加表达式都是可以的。下面都是合法的装饰器。
 
 ```typescript
 @myFunc
@@ -63,7 +63,7 @@ class A {} // "hi, this is class A {}"
 @libraryModule.prop
 @someObj.method(123)
 
-@(wrap(dict['prop'])) 
+@(wrap(dict['prop']))
 ```
 
 注意，`@`后面的表达式，最终执行后得到的应该是一个函数。
@@ -108,17 +108,18 @@ type Decorator = (
     name: string | symbol;
     addInitializer(initializer: () => void): void;
 
-    // Don’t always exist:
+    // 以下属性只在某些使用场合存在:
     static: boolean;
     private: boolean;
     access: {get: () => unknown, set: (value: unknown) => void};
   }
-) => void | ReplacementValue; // only fields differ
+) => void | ReplacementValue;
 ```
 
-上面代码中，`Decorator`是装饰器的类型定义。它是一个函数，接受`value`和`context`两个参数。
+上面代码中，`Decorator`是装饰器的类型定义。它是一个函数，使用时会接收到`value`和`context`两个参数。
 
-其中，`value`参数是所装饰的对象，`context`是装饰器的上下文对象，TypeScript 提供一个原生接口`ClassMethodDecoratorContext`，描述这个对象。
+- `value`：所装饰的对象。
+- `context`：上下文对象，TypeScript 提供一个原生接口`ClassMethodDecoratorContext`，描述这个对象。
 
 ```typescript
 function decorator(
@@ -128,6 +129,8 @@ function decorator(
   // ...
 }
 ```
+
+上面是一个装饰器函数，其中第二个参数`context`的类型就可以写成`ClassMethodDecoratorContext`。
 
 `context`对象有以下属性。
 

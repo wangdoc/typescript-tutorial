@@ -6,7 +6,7 @@
 
 模块本身就是一个作用域，不属于全局作用域。模块内部的变量、函数、类只在内部可见，对于模块外部是不可见的。暴露给外部的接口，必须用 export 命令声明；如果其他文件要使用模块的接口，必须用 import 命令来输入。
 
-如果一个文件不包含 export 语句，但是希望把它当作一个模块（即内部变量对外不可见），可以在文件中添加一行语句。
+如果一个文件不包含 export 语句，但是希望把它当作一个模块（即内部变量对外不可见），可以在脚本头部添加一行语句。
 
 ```typescript
 export {};
@@ -33,20 +33,12 @@ export { Bool };
 假定上面的模块文件为`a.ts`，另一个文件`b.ts`就可以使用 import 语句，输入这个类型。
 
 ```typescript
-import { Bool } from './a.js';
+import { Bool } from './a';
 
 let foo:Bool = true;
 ```
 
-上面示例中，import 语句加载的是一个类型。注意，它是从文件`a.js`加载，而不是从`a.ts`加载，因为在代码运行环境是 JS 环境，所以要写成从 JS 文件加载，否则报错。
-
-TypeScript 允许加载模块时，省略模块文件的后缀名，它会自动定位。
-
-```typescript
-import { Bool } from './a';
-```
-
-上面示例中，模块名写成`./a`，TypeScript 会自动定位到`./a.ts`。
+上面示例中，import 语句加载的是一个类型。注意，加载文件写成`./a`，没有写脚本文件的后缀名。TypeScript 允许加载模块时，省略模块文件的后缀名，它会自动定位，将`./a`定位到`./a.ts`。
 
 编译时，可以两个脚本同时编译。
 
@@ -85,7 +77,7 @@ export interface A {
 export let a = 123;
 
 // b.ts
-import { A, a } from './a.js';
+import { A, a } from './a';
 ```
 
 上面示例中，文件`a.ts`的 export 语句输出了一个类型`A`和一个正常接口`a`，另一个文件`b.ts`则在同一条语句中输入了类型和正常接口。
@@ -95,19 +87,19 @@ import { A, a } from './a.js';
 第一个方法是在 import 语句输入的类型前面加上`type`关键字。
 
 ```typescript
-import { type A, a } from './a.js';
+import { type A, a } from './a';
 ```
 
-上面示例中，import 语句输入的类型`A`前面有`type`关键字，表示这是一个类型。     
+上面示例中，import 语句输入的类型`A`前面有`type`关键字，表示这是一个类型。
 
 第二个方法是使用 import type 语句，这个语句只能输入类型，不能输入正常接口。
 
 ```typescript
 // 正确
-import type { A } from './a.js';
+import type { A } from './a';
 
 // 报错
-import type { a } from './a.js';
+import type { a } from './a';
 ```
 
 上面示例中，import type 输入类型`A`是正确的，但是输入正常接口`a`就会报错。
@@ -153,7 +145,7 @@ export type { Point };
 上面示例中，由于使用了 export type 语句，输出的并不是 Point 这个类，而是 Point 代表的实例类型。输入时，只能作为类型输入。
 
 ```typescript
-import type { Point } from './module.js';
+import type { Point } from './module';
 
 const p:Point = { x: 0, y: 0 };
 ```
@@ -162,7 +154,7 @@ const p:Point = { x: 0, y: 0 };
 
 ## importsNotUsedAsValues
 
-输入类型的 import 语句，编译时怎么处理？
+输入类型的 import 语句，编译时怎么处理呢？
 
 TypeScript 提供了`importsNotUsedAsValues`编译设置项，有三个可能的值。
 
@@ -175,7 +167,7 @@ TypeScript 提供了`importsNotUsedAsValues`编译设置项，有三个可能的
 请看示例，下面是一个输入类型的 import 语句。
 
 ```typescript
-import { TypeA } from './a.js';
+import { TypeA } from './a';
 ```
 
 上面示例中，`TypeA`是一个类型。
@@ -185,7 +177,7 @@ import { TypeA } from './a.js';
 `preserve`的编译结果会保留该语句，但会把删掉类型的部分。
 
 ```typescript
-import './a.js';
+import './a';
 ```
 
 上面示例中，编译后的 import 语句不从`a.js`输入任何接口，但是会引发`a.js`的执行，因此会保留`a.js`里面的副作用。
@@ -202,14 +194,14 @@ CommonJS 是 Node.js 的专用模块格式，与 ES 模块格式不兼容。
 
 ### import = 语句
 
-TypeScript 使用 import = 语句输入 CommonJS 模块。
+TypeScript 使用`import =`语句输入 CommonJS 模块。
 
 ```typescript
 import fs = require('fs');
 const code = fs.readFileSync('hello.ts', 'utf8');
 ```
 
-上面示例中，使用 import = 语句和`require()`命令输入了一个 CommonJS 模块。模块本身的用法跟 Node.js 是一样的。
+上面示例中，使用`import =`语句和`require()`命令输入了一个 CommonJS 模块。模块本身的用法跟 Node.js 是一样的。
 
 除了使用`import =`语句，TypeScript 还允许使用`import * as [接口名] from "模块文件"`输入 CommonJS 模块。
 
@@ -221,7 +213,7 @@ import fs = require('fs');
 
 ### export = 语句
 
-TypeScript 使用 export = 语句，输出 CommonJS 模块的对象，等同于 CommonJS 的`module.exports`对象。
+TypeScript 使用`export =`语句，输出 CommonJS 模块的对象，等同于 CommonJS 的`module.exports`对象。
 
 ```typescript
 let obj = { foo: 123 };
@@ -229,7 +221,7 @@ let obj = { foo: 123 };
 export = obj;
 ```
 
-export = 语句输出的对象，只能使用 import = 语句加载。
+`export = `语句输出的对象，只能使用`import =`语句加载。
 
 ```typescript
 import obj = require('./a');
@@ -249,7 +241,7 @@ import { TypeA } from './a';
 
 模块定位有两种方法，一种称为 Classic 方法，另一种称为 Node 方法。可以使用编译参数`moduleResolution`，指定使用哪一种方法。
 
-没有指定定位方法时，就看原始脚本采用什么模块格式。如果模块格式是 CommonJS，即编译时指定`--module commonjs`，那么模块定位采用 Node 方法，否则采用 Classic 方法（模块格式为 es2015、 esnext、amd, system, umd 等等）。
+没有指定定位方法时，就看原始脚本采用什么模块格式。如果模块格式是 CommonJS（即编译时指定`--module commonjs`），那么模块定位采用 Node 方法，否则采用 Classic 方法（模块格式为 es2015、 esnext、amd, system, umd 等等）。
 
 ### 相对模块，非相对模块
 
@@ -288,15 +280,15 @@ Node 方法就是模拟 Node.js 的模块加载方法。
 2. 当前目录的子目录`node_modules`，是否存在文件`package.json`，该文件的`types`字段是否指定了入口文件，如果是的就加载该文件。
 3. 当前目录的子目录`node_modules`里面，是否包含子目录`@types`，在该目录中查找文件`b.d.ts`。
 4. 当前目录的子目录`node_modules`里面，是否包含子目录`b`，在该目录中查找`index.ts`、`index.tsx`、`index.d.ts`。
-5. 进入上一层目录，重复上面4步，直到找到为止。 
+5. 进入上一层目录，重复上面4步，直到找到为止。
 
 ### 路径映射
 
-TypeScript 允许开发者在`tsconfig.json`文件里面，手动指定模块的路径。
+TypeScript 允许开发者在`tsconfig.json`文件里面，手动指定脚本模块的路径。
 
-（1）baseUrl 
+（1）baseUrl
 
-`baseUrl`字段可以手动指定模块的基准目录。
+`baseUrl`字段可以手动指定脚本模块的基准目录。
 
 ```typescript
 {
@@ -310,7 +302,7 @@ TypeScript 允许开发者在`tsconfig.json`文件里面，手动指定模块的
 
 （2）paths
 
-`paths`字段指定非相对模块与实际脚本的映射。
+`paths`字段指定非相对路径的模块与实际脚本的映射。
 
 ```typescript
 {
@@ -373,3 +365,4 @@ $ tsc app.ts moduleA.ts --noResolve
 ## 参考链接
 
 - [tsconfig 之 importsNotUsedAsValues 属性](https://blog.51cto.com/u_13028258/5754309)
+
