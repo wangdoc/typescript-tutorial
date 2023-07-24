@@ -34,7 +34,7 @@ type C = Awaited<boolean | Promise<number>>;
 `Awaited<Type>`的实现如下。
 
 ```typescript
-type Awaited<T> = 
+type Awaited<T> =
   T extends null | undefined ? T :
   T extends object & {
     then(
@@ -56,7 +56,7 @@ type Awaited<T> =
 type T1 = ConstructorParameters<
   new (x: string, y: number) => object
 >; // [x: string, y: number]
- 
+
 type T2 = ConstructorParameters<
   new (x?: string) => object
 >; // [x?: string | undefined]
@@ -88,7 +88,7 @@ type T2 = ConstructorParameters<Function>; // 报错
 
 `any`类型和`never`类型是两个特殊值，分别返回`unknown[]`和`never`。
 
-```typescript     
+```typescript
 type T1 = ConstructorParameters<any>;  // unknown[]
 
 type T2 = ConstructorParameters<never>; // never
@@ -262,12 +262,14 @@ function toHex(this: Number) {
 type T = OmitThisParameter<typeof toHex>; // () => string
 ```
 
+上面示例中，`OmitThisParameter<T>`给出了函数`toHex()`的类型，并将其中的`this`参数删除。
+
 如果函数没有 this 参数，则返回原始函数类型。
 
 `OmitThisParameter<Type>`的实现如下。
 
 ```typescript
-type OmitThisParameter<T> = 
+type OmitThisParameter<T> =
   unknown extends ThisParameterType<T> ? T :
   T extends (...args: infer A) => infer R ?
   (...args: A) => R : T;
@@ -281,7 +283,7 @@ type OmitThisParameter<T> =
 type T1 = Parameters<() => string>; // []
 
 type T2 = Parameters<(s:string) => void>; // [s:string]
- 
+
 type T3 = Parameters<<T>(arg: T) => T>;    // [arg: unknown]
 
 type T4 = Parameters<
@@ -459,7 +461,7 @@ interface Person {
   age: number;
 }
 
-const worker: Readonly<Partial<Person>> 
+const worker: Readonly<Partial<Person>>
   = { name: '张三' };
 
 worker.name = '李四'; // 报错
@@ -605,7 +607,7 @@ type T2 = ReturnType<never>; // never
 ```typescript
 type ReturnType<
   T extends (...args: any) => any
-> = 
+> =
   T extends (...args: any) => infer R ? R : any;
 ```
 
@@ -644,7 +646,7 @@ interface HelperThisValue {
 
 let helperFunctions:
   { [name: string]: Function } &
-  ThisType<HelperThisValue> 
+  ThisType<HelperThisValue>
 = {
   hello: function() {
     this.logError("Error: Something wrong!"); // 正确
@@ -662,7 +664,7 @@ let helperFunctions:
 下面是另一个例子。
 
 ```typescript
-let obj: ThisType<{ x: number }> & 
+let obj: ThisType<{ x: number }> &
   { getX: () => number };
 
 obj = {
@@ -734,10 +736,11 @@ type A = 'HELLO';
 
 // "hELLO"
 type B = Uncapitalize<A>;
-``` 
+```
 
 上面示例中，`Uncapitalize<T>`将 HELLO 转为 hELLO。
 
 ## 参考链接
 
 - [What is TypeScript's ThisType used for?](https://stackoverflow.com/questions/55029032/what-is-typescripts-thistype-used-for)
+

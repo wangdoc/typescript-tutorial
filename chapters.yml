@@ -13,3 +13,5 @@
 - enum.md: Enum 类型
 - assert.md: 类型断言
 - operator.md: 运算符
+- mapping.md: 类型映射
+- utility.md: 类型工具

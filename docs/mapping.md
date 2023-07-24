@@ -18,7 +18,7 @@ type B = {
 };
 ```
 
-上面示例中，这两个类型的属性结构是一样的，但是属性的类型不一样。如果属性数量多的话，写起来就很麻烦。
+上面示例中，这两个类型的属性结构是一样的，但是属性的类型不一样。如果属性数量多的话，逐个写起来就很麻烦。
 
 使用类型映射，就可以从类型`A`得到类型`B`。
 
@@ -65,8 +65,6 @@ type ToBoolean<Type> = {
 ```
 
 上面示例中，定义了一个泛型，可以将其他对象的所有属性值都改成 boolean 类型。
-
-由于对象的属性名，只有 string、number、symbol 三种可能，所以 keyof 运算符返回的联合类型，应该是`string | number | symbol`的子类型。
 
 下面是另一个例子。
 
@@ -145,12 +143,12 @@ type Readonly<T> = {
 
 ```typescript
 type T = { a: string; b: number };
- 
-// { 
+
+type ReadonlyT = Readonly<T>;
+// {
 //   readonly a: string;
 //   readonly b: number;
 // }
-type ReadonlyT = Readonly<T>;
 ```
 
 ## 映射修饰符
@@ -178,7 +176,7 @@ type B = {
 
 如果要删改可选和只读这两个特性，并不是很方便。为了解决这个问题，TypeScript 引入了两个映射修饰符，用来在映射时添加或移除某个属性的`?`修饰符和`readonly`修饰符。
 
-- `+`修饰符：写成`+？`或`+readonly`，为映射属性添加`?`修饰符或`readonly`修饰符。
+- `+`修饰符：写成`+?`或`+readonly`，为映射属性添加`?`修饰符或`readonly`修饰符。
 - `–`修饰符：写成`-?`或`-readonly`，为映射属性移除`?`修饰符或`readonly`修饰符。
 
 下面是添加或移除可选属性的例子。
@@ -248,7 +246,7 @@ type B<T> = {
 
 ### 语法
 
-TypeScript 4.1 引入了键名重映射（key remapping），允许将键名指定为其他类型。
+TypeScript 4.1 引入了键名重映射（key remapping），允许改变键名。
 
 ```typescript
 type A = {
@@ -281,12 +279,12 @@ interface Person {
 }
 
 type Getters<T> = {
-    [P in keyof T
-      as `get${Capitalize<string & P>}`]: () => T[P];
+  [P in keyof T
+    as `get${Capitalize<string & P>}`]: () => T[P];
 };
- 
+
 type LazyPerson = Getters<Person>;
-// 等同于         
+// 等同于
 type LazyPerson = {
   getName: () => string;
   getAge: () => number;
@@ -313,20 +311,20 @@ type User = {
 }
 
 type Filter<T> = {
-    [K in keyof T
-      as T[K] extends string ? K : never]: string
+  [K in keyof T
+    as T[K] extends string ? K : never]: string
 }
 
 type FilteredUser = Filter<User> // { name: string }
 ```
 
-上面示例中，映射`K in keyof T`获取类型`T`的每一个属性以后，然后使用`as Type`修改键名的类型。
+上面示例中，映射`K in keyof T`获取类型`T`的每一个属性以后，然后使用`as Type`修改键名。
 
-它的键盘重映射`as T[K] extends string ? K : never]`，使用了条件运算符。如果属性值`T[K]`的类型是字符串，那么属性名不变，否则属性名类型改为`never`，即这个属性名不存在。这样就等于过滤了不符合条件的属性，只保留属性值为字符串的属性。
+它的键名重映射`as T[K] extends string ? K : never]`，使用了条件运算符。如果属性值`T[K]`的类型是字符串，那么属性名不变，否则属性名类型改为`never`，即这个属性名不存在。这样就等于过滤了不符合条件的属性，只保留属性值为字符串的属性。
 
 ### 联合类型的映射
 
-由于键名重映射可以修改键名类型，所以原始键名的类型不必是`string|number|symbol`，任意的联合类型都可以。
+由于键名重映射可以修改键名类型，所以原始键名的类型不必是`string|number|symbol`，任意的联合类型都可以用来进行键名重映射。
 
 ```typescript
 type S = {
@@ -340,7 +338,7 @@ type C = {
   radius: number,
 };
 
-type MyEvents<Eevnts extends { kind: string }> = {
+type MyEvents<Events extends { kind: string }> = {
   [E in Events as E['kind']]: (event: E) => void;
 }
 
@@ -357,3 +355,4 @@ type Config = {
 ## 参考链接
 
 - [Mapped Type Modifiers in TypeScript](https://mariusschulz.com/blog/mapped-type-modifiers-in-typescript), Marius Schulz
+
