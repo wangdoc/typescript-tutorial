@@ -106,12 +106,13 @@ type Decorator = (
   context: {
     kind: string;
     name: string | symbol;
-    addInitializer(initializer: () => void): void;
-
-    // 以下属性只在某些使用场合存在:
-    static: boolean;
-    private: boolean;
-    access: {get: () => unknown, set: (value: unknown) => void};
+    addInitializer?(initializer: () => void): void;
+    static?: boolean;
+    private?: boolean;
+    access: {
+      get?(): unknown;
+      set?(value: unknown): void;
+    };
   }
 ) => void | ReplacementValue;
 ```
@@ -132,26 +133,28 @@ function decorator(
 
 上面是一个装饰器函数，其中第二个参数`context`的类型就可以写成`ClassMethodDecoratorContext`。
 
-`context`对象有以下属性。
+`context`对象的属性，根据所装饰对象的不同而不同，其中只有两个属性（`kind`和`name`）是必有的，其他都是可选的。
 
-（1）`kind`：字符串，表示装饰器类型，可能取以下的值。
+（1）`kind`：字符串，表示所装饰对象的类型，可能取以下的值。
 
 - 'class'
 - 'method'
 - 'getter'
 - 'setter'
-- 'accessor'
 - 'field'
+- 'accessor'
 
-这表示一共有六种类型的装饰器。
+这表示一共有六种类型的装饰器。本章只介绍前五种装饰器，最后一种`accessor`暂时略过。
 
 （2）`name`：字符串或者 Symbol 值，所装饰对象的名字，比如类名、属性名等。
 
-（3）`addInitializer()`：函数，用来在类的初始化阶段，对方法进行一些处理。以前，这些处理通常放在构造函数里面，早于方法本身执行，现在改为放在装饰器的`context`对象里面，具体例子请参阅《方法装饰器》一节。
+（3）`addInitializer()`：函数，用来添加类的初始化逻辑。以前，这些逻辑通常放在构造函数里面，对方法进行初始化，现在改成以函数形式传入`addInitializer()`方法。注意，`addInitializer()`没有返回值。
 
-注意，`addInitializer()`函数没有返回值。
+（4）`private`：布尔值，表示所装饰的对象是否为类的私有成员。
 
-（4）`private`：布尔值，表示所装饰的方法或属性，是否为私有。
+（5）`static`：布尔值，表示所装饰的对象是否为类的静态成员。
+
+（6）`access`：一个对象，包含了某个值的 get 和 set 方法。
 
 ## 类装饰器
 
@@ -168,49 +171,41 @@ type ClassDecorator = (
 ) => Function | void;
 ```
 
-请看下面的例子。
+类装饰器接受两个参数：`value`（当前类本身）和`context`（上下文对象）。其中，`context`对象的`kind`属性固定为字符串`class`。
+
+类装饰器一般用来对类进行操作，可以不返回任何值，请看下面的例子。
 
 ```typescript
-class InstanceCollector {
-  instances = new Set();
-  install = (value:any, {kind}:any) => {
-    if (kind === 'class') {
-      const _this = this;
-      return function (...args:any[]) {
-        const inst = new value(...args);
-        _this.instances.add(inst);
-        return value;
-      } as unknown as typeof MyClass;
-    }
-    return;
-  };
+function Greeter(value, context) {
+  if (context.kind === 'class') {
+    value.prototype.greet = function () {
+      console.log('你好');
+    };
+  }
 }
 
-const collector = new InstanceCollector();
+@Greeter
+class User {}
 
-@collector.install
-class MyClass {}
-
-const inst1 = new MyClass();
-const inst2 = new MyClass();
-const inst3 = new MyClass();
-
-collector.instances // new Set([inst1, inst2, inst3])
+let u = new User();
+u.greet(); // "你好"
 ```
 
-上面示例中，类装饰器`@collector.install`将所有实例加入一个集合变量`collector.instances`。
+上面示例中，类装饰器`@Greeter`在类`User`的原型对象上，添加了一个`greet()`方法，实例就可以直接使用该方法。
 
-类装饰器返回的函数，会作为新的构造函数。
+类装饰器可以返回一个函数，替代当前类的构造方法。
 
 ```typescript
 function countInstances(value:any, context:any) {
   let instanceCount = 0;
+
   const wrapper = function (...args:any[]) {
     instanceCount++;
     const instance = new value(...args);
     instance.count = instanceCount;
     return instance;
   } as unknown as typeof MyClass;
+
   wrapper.prototype = value.prototype; // A
   return wrapper;
 }
@@ -223,13 +218,16 @@ inst1 instanceof MyClass // true
 inst1.count // 1
 ```
 
-上面示例实现了实例的计数。为了确保`wrapper()`的返回值是`MyClass`的示例，特别加入`A`行，确保两者的原型对象是一致的。否则，新的构造函数`wrapper`的原型对象，与`MyClass`不同，通不过`instanceof`运算符。
+上面示例中，类装饰器`@countInstances`返回一个函数，替换了类`MyClass`的构造方法。新的构造方法实现了实例的计数，每新建一个实例，计数器就会加一，并且对实例添加`count`属性，表示当前实例的编号。
 
-类装饰器也可以直接返回一个新的类。
+注意，上例为了确保新构造方法继承定义在`MyClass`的原型之上的成员，特别加入`A`行，确保两者的原型对象是一致的。否则，新的构造函数`wrapper`的原型对象，与`MyClass`不同，通不过`instanceof`运算符。
+
+类装饰器也可以返回一个新的类，替代原来所装饰的类。
 
 ```typescript
 function countInstances(value:any, context:any) {
   let instanceCount = 0;
+
   return class extends value {
     constructor(...args:any[]) {
       super(...args);
@@ -249,7 +247,7 @@ inst1.count // 1
 
 上面示例中，`@countInstances`返回一个`MyClass`的子类。
 
-下面的例子是通过类装饰器，禁止使用`new`命令调用类。
+下面的例子是通过类装饰器，禁止使用`new`命令新建类的实例。
 
 ```typescript
 function functionCallable(
@@ -295,13 +293,23 @@ type ClassMethodDecorator = (
 ) => Function | void;
 ```
 
-它的上下文对象`context`有以下属性。
+根据上面的类型，方法装饰器是一个函数，接受两个参数：`value`和`context`。
 
-- static：布尔值，表示是否为静态方法。
-- private：布尔值，表示是否为私有方法。
+参数`value`是方法本身，参数`context`是上下文对象，有以下属性。
+
+- `kind`：值固定为字符串`method`，表示当前为方法装饰器。
+- `name`：所装饰的方法名，类型为字符串或 Symbol 值。
+- `static`：布尔值，表示是否为静态方法。该属性为只读属性。
+- `private`：布尔值，表示是否为私有方法。该属性为只读属性。
 - access：函数，表示方法的存取器，但是只能用来取值（只有`get()`方法），不能用来赋值（不能定义`set()`方法）。
 
+方法装饰器会改写类的原始方法，实质等同于下面的操作。
+
 ```typescript
+function trace(decoratedMethod) {
+  // ...
+}
+
 class C {
   @trace
   toString() {
@@ -309,24 +317,13 @@ class C {
   }
 }
 
-function trace(decoratedMethod) {
-  // 此处略
-}
+// `@trace` 等同于
+// C.prototype.toString = trace(C.prototype.toString);
 ```
 
-方法装饰器的实质是执行下面的操作。
+上面示例中，`@trace`是方法`toString()`的装饰器，它的效果等同于最后一行对`toString()`的改写。
 
-```typescript
-class C {
-  toString() {
-    return 'C';
-  }
-}
-
-C.prototype.toString = trace(C.prototype.toString);
-```
-
-如果装饰器返回一个新的函数，就会替代所装饰的对象。
+如果方法装饰器返回一个新的函数，就会替代所装饰的原始函数。
 
 ```typescript
 function replaceMethod() {
@@ -383,12 +380,16 @@ function log(originalMethod:any, context:ClassMethodDecoratorContext) {
 
 const person = new Person('张三');
 person.greet()
-// "LOG: Entering method 'greet'." 
-// "Hello, my name is 张三." 
-// "LOG: Exiting method 'greet'." 
+// "LOG: Entering method 'greet'."
+// "Hello, my name is 张三."
+// "LOG: Exiting method 'greet'."
 ```
 
-下面是装饰器上下文对象的`addInitializer()`方法的例子。类的方法往往会在构造方法里面，进行`this`的绑定。
+上面示例中，装饰器`@log`的返回值是一个函数`replacementMethod`，替代了原始方法`greet()`。在`replacementMethod()`内部，通过执行`originalMethod.call()`完成了对原始方法的调用。
+
+方法装饰器的参数`context`对象里面，有一个`addInitializer()`方法。它是一个钩子方法，用来在类的初始化阶段，添加回调函数，这个回调函数就是作为`addInitializer()`的参数传入的。
+
+下面是`addInitializer()`方法的一个例子。我们知道，类的方法往往需要在构造方法里面，进行`this`的绑定。
 
 ```typescript
 class Person {
@@ -404,9 +405,14 @@ class Person {
     console.log(`Hello, my name is ${this.name}.`);
   }
 }
+
+const g = new Person('张三').greet;
+g() // "Hello, my name is 张三."
 ```
 
-上面例子中，构造方法将`greet()`方法绑定了`this`，这行代码必须放在构造方法里面。现在，它可以移到`addInitializer()`。
+上面例子中，类`Person`的构造方法内部，将`this`与`greet()`方法进行了绑定。如果没有这一行，将`greet()`赋值给变量`g`进行调用，就会报错了。
+
+`this`的绑定必须放在构造方法里面，因为这必须在类的初始化阶段完成。现在，它可以移到方法装饰器的`addInitializer()`里面。
 
 ```typescript
 function bound(
@@ -423,6 +429,8 @@ function bound(
 ```
 
 上面示例中，绑定`this`转移到了`addInitializer()`方法里面。
+
+下面再看一个例子，通过`addInitializer()`将选定的方法名，放入一个集合。
 
 ```typescript
 function collect(
@@ -449,7 +457,7 @@ const inst = new C();
 inst.@collect // new Set(['toString', Symbol.iterator])
 ```
 
-上面示例中，装饰器`@collect`会将所装饰的成员名字，加入一个 Set 集合`collectedMethodKeys`。
+上面示例中，方法装饰器`@collect`会将所装饰的成员名字，加入一个 Set 集合`collectedMethodKeys`。
 
 ## 属性装饰器
 
@@ -469,9 +477,50 @@ type ClassFieldDecorator = (
 ) => (initialValue: unknown) => unknown | void;
 ```
 
-注意，装饰器的第一个参数`value`的类型是`undefined`，这意味着这个参数实际上是不存在的，即不能从`value`获取目标属性的值。
+注意，装饰器的第一个参数`value`的类型是`undefined`，这意味着这个参数实际上没用的，装饰器不能从`value`获取所装饰属性的值，要用下文的方法获取。另外，第二个参数`context`对象的`kind`属性的值为字符串`field`，而不是“property”或“attribute”，这一点是需要注意的。
 
-如果要获取属性的值，必须使用存取器，请看下面的例子。
+属性装饰器的返回值是一个函数，该函数会自动执行，用来对所装饰属性进行初始化。该函数的参数是所装饰属性的初始值，该函数的返回值是所装饰属性的最终值。
+
+```typescript
+function logged(value, context) {
+  const { kind, name } = context;
+  if (kind === 'field') {
+    return function (initialValue) {
+      console.log(`initializing ${name} with value ${initialValue}`);
+      return initialValue;
+    };
+  }
+}
+
+class Color {
+  @logged name = 'green';
+}
+
+const color = new Color();
+// "initializing name with value green"
+```
+
+上面示例中，属性装饰器`@logged`装饰属性`name`。`@logged`的返回值是一个函数，该函数用来对属性`name`进行初始化，它的参数`initialValue`就是属性`name`的初始值`green`。新建实例对象`color`时，该函数会自动执行。
+
+属性装饰器的返回值函数，可以用来更改属性的初始值。
+
+```typescript
+function twice() {
+  return initialValue => initialValue * 2;
+}
+
+class C {
+  @twice
+  field = 3;
+}
+
+const inst = new C();
+inst.field // 6
+```
+
+上面示例中，属性装饰器`@twice`返回一个函数，该函数的返回值是属性`field`的初始值乘以2，所以属性`field`的最终值是6。
+
+属性装饰器的上下文对象`context`的`access`属性，提供所装饰属性的存取器，请看下面的例子。
 
 ```typescript
 let acc;
@@ -490,29 +539,13 @@ class Color {
 const green = new Color();
 green.name // 'green'
 
-acc.get.call(green) // 'green'
+acc.get(green) // 'green'
 
-acc.set.call(green, 'red');
+acc.set(green, 'red');
 green.name // 'red'
 ```
 
-上面示例中，`@exposeAccess`是`name`属性的装饰器，它的第二个参数就是`name`的上下文对象，其中`access`属性包含了取值器（`get`）和存值器（`set`），可以对`name`属性进行取值和赋值。
-
-下面的例子是更改属性的初始值。
-
-```typescript
-function twice() {
-  return initialValue => initialValue * 2;
-}
-
-class C {
-  @twice
-  field = 3;
-}
-
-const inst = new C();
-inst.field // 6
-```
+上面示例中，`access`包含了属性`name`的存取器，可以对该属性进行取值和赋值。
 
 ## getter 装饰器，setter 装饰器
 
