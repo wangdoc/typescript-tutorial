@@ -144,7 +144,7 @@ function decorator(
 - 'field'
 - 'accessor'
 
-这表示一共有六种类型的装饰器。本章只介绍前五种装饰器，最后一种`accessor`暂时略过，它是一个全新的语法提案。
+这表示一共有六种类型的装饰器。
 
 （2）`name`：字符串或者 Symbol 值，所装饰对象的名字，比如类名、属性名等。
 
@@ -633,9 +633,7 @@ type ClassSetterDecorator = (
 ) => Function | void;
 ```
 
-注意，getter
-装饰器的上下文对象`context`的`access`属性，只包含`get()`方法；setter
-装饰器的`access`属性，只包含`set()`方法。
+注意，getter 装饰器的上下文对象`context`的`access`属性，只包含`get()`方法；setter 装饰器的`access`属性，只包含`set()`方法。
 
 这两个装饰器要么不返回值，要么返回一个函数，取代原来的取值器或存值器。
 
@@ -738,8 +736,7 @@ type ClassAutoAccessorDecorator = (
 } | void;
 ```
 
-accessor
-装饰器的`value`参数，是一个包含`get()`方法和`set()`方法的对象。该装饰器可以不返回值，或者返回一个新的对象，用来取代原来的`get()`方法和`set()`方法。此外，装饰器返回的对象还可以包括一个`init()`方法，用来改变私有属性的初始值。
+accessor 装饰器的`value`参数，是一个包含`get()`方法和`set()`方法的对象。该装饰器可以不返回值，或者返回一个新的对象，用来取代原来的`get()`方法和`set()`方法。此外，装饰器返回的对象还可以包括一个`init()`方法，用来改变私有属性的初始值。
 
 下面是一个例子。
 
