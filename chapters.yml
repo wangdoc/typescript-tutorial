@@ -14,6 +14,7 @@
 - assert.md: 类型断言
 - module.md: 模块
 - namespace.md: namespace
+- decorator.md: 装饰器
 - operator.md: 运算符
 - mapping.md: 类型映射
 - utility.md: 类型工具

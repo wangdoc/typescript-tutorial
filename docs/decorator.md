@@ -2,7 +2,7 @@
 
 ## 简介
 
-装饰器（Decorator）是一种语法结构，用来修改类（class）的行为。
+装饰器（Decorator）是一种语法结构，用来在定义时修改类（class）的行为。
 
 在语法上，装饰器有如下几个特征。
 
@@ -144,7 +144,7 @@ function decorator(
 - 'field'
 - 'accessor'
 
-这表示一共有六种类型的装饰器。本章只介绍前五种装饰器，最后一种`accessor`暂时略过。
+这表示一共有六种类型的装饰器。本章只介绍前五种装饰器，最后一种`accessor`暂时略过，它是一个全新的语法提案。
 
 （2）`name`：字符串或者 Symbol 值，所装饰对象的名字，比如类名、属性名等。
 
@@ -275,6 +275,33 @@ robin.name // 'Robin'
 
 上面示例中，类装饰器`@functionCallable`返回一个新的构造方法，里面判断`new.target`是否不为空，如果是的，就表示通过`new`命令调用，从而报错。
 
+类装饰器的上下文对象`context`的`addInitializer()`方法，用来定义一个类的初始化函数，在类完全定义结束后执行。
+
+```typescript
+function customElement(name: string) {
+  return <Input extends new (...args: any) => any>(
+    value: Input,
+    context: ClassDecoratorContext
+  ) => {
+    context.addInitializer(function () {
+      customElements.define(name, value);
+    });
+  };
+}
+
+@customElement("hello-world")
+class MyComponent extends HTMLElement {
+  constructor() {
+    super();
+  }
+  connectedCallback() {
+    this.innerHTML = `<h1>Hello World</h1>`;
+  }
+}
+```
+
+上面示例中，类`MyComponent`定义完成后，会自动执行类装饰器`@customElement()`给出的初始化函数，该函数会将当前类注册为指定名称（本例为`<hello-world>`）的自定义 HTML 元素。
+
 ## 方法装饰器
 
 方法装饰器用来装饰类的方法（method）。它的类型描述如下。
@@ -301,7 +328,8 @@ type ClassMethodDecorator = (
 - `name`：所装饰的方法名，类型为字符串或 Symbol 值。
 - `static`：布尔值，表示是否为静态方法。该属性为只读属性。
 - `private`：布尔值，表示是否为私有方法。该属性为只读属性。
-- access：函数，表示方法的存取器，但是只能用来取值（只有`get()`方法），不能用来赋值（不能定义`set()`方法）。
+- `access`：对象，包含了方法的存取器，但是只有`get()`方法用来取值，没有`set()`方法进行赋值。
+- `addInitializer()`：为方法增加初始化函数。
 
 方法装饰器会改写类的原始方法，实质等同于下面的操作。
 
@@ -387,7 +415,35 @@ person.greet()
 
 上面示例中，装饰器`@log`的返回值是一个函数`replacementMethod`，替代了原始方法`greet()`。在`replacementMethod()`内部，通过执行`originalMethod.call()`完成了对原始方法的调用。
 
-方法装饰器的参数`context`对象里面，有一个`addInitializer()`方法。它是一个钩子方法，用来在类的初始化阶段，添加回调函数，这个回调函数就是作为`addInitializer()`的参数传入的。
+利用方法装饰器，可以将类的方法变成延迟执行。
+
+```typescript
+function delay(milliseconds: number = 0) {
+  return function (value, context) {
+    if (context.kind === "method") {
+      return function (...args: any[]) {
+        setTimeout(() => {
+          value.apply(this, args);
+        }, milliseconds);
+      };
+    }
+  };
+}
+
+class Logger {
+  @delay(1000)
+  log(msg: string) {
+    console.log(`${msg}`);
+  }
+}
+
+let logger = new Logger();
+logger.log("Hello World");
+```
+
+上面示例中，方法装饰器`@delay(1000)`将方法`log()`的执行推迟了1秒（1000毫秒）。这里真正的方法装饰器，是`delay()`执行后返回的函数，`delay()`的作用是接收参数，用来设置推迟执行的时间。这种通过高阶函数返回装饰器的做法，称为“工厂模式”，即可以像工厂那样生产出一个模子的装饰器。
+
+方法装饰器的参数`context`对象里面，有一个`addInitializer()`方法。它是一个钩子方法，用来在类的初始化阶段，添加回调函数。这个回调函数就是作为`addInitializer()`的参数传入的，它会在构造方法执行期间执行，早于属性（field）的初始化。
 
 下面是`addInitializer()`方法的一个例子。我们知道，类的方法往往需要在构造方法里面，进行`this`的绑定。
 
@@ -477,9 +533,9 @@ type ClassFieldDecorator = (
 ) => (initialValue: unknown) => unknown | void;
 ```
 
-注意，装饰器的第一个参数`value`的类型是`undefined`，这意味着这个参数实际上没用的，装饰器不能从`value`获取所装饰属性的值，要用下文的方法获取。另外，第二个参数`context`对象的`kind`属性的值为字符串`field`，而不是“property”或“attribute”，这一点是需要注意的。
+注意，装饰器的第一个参数`value`的类型是`undefined`，这意味着这个参数实际上没用的，装饰器不能从`value`获取所装饰属性的值。另外，第二个参数`context`对象的`kind`属性的值为字符串`field`，而不是“property”或“attribute”，这一点是需要注意的。
 
-属性装饰器的返回值是一个函数，该函数会自动执行，用来对所装饰属性进行初始化。该函数的参数是所装饰属性的初始值，该函数的返回值是所装饰属性的最终值。
+属性装饰器要么不返回值，要么返回一个函数，该函数会自动执行，用来对所装饰属性进行初始化。该函数的参数是所装饰属性的初始值，该函数的返回值是该属性的最终值。
 
 ```typescript
 function logged(value, context) {
@@ -549,7 +605,7 @@ green.name // 'red'
 
 ## getter 装饰器，setter 装饰器
 
-getter 装饰器和 setter 装饰器的类型描述如下。
+getter 装饰器和 setter 装饰器，是分别针对类的取值器（getter）和存值器（setter）的装饰器。它们的类型描述如下。
 
 ```typescript
 type ClassGetterDecorator = (
@@ -576,6 +632,12 @@ type ClassSetterDecorator = (
   }
 ) => Function | void;
 ```
+
+注意，getter
+装饰器的上下文对象`context`的`access`属性，只包含`get()`方法；setter
+装饰器的`access`属性，只包含`set()`方法。
+
+这两个装饰器要么不返回值，要么返回一个函数，取代原来的取值器或存值器。
 
 下面的例子是将取值器的结果，保存为一个属性，加快后面的读取。
 
@@ -609,7 +671,7 @@ function lazy(
 }
 
 const inst = new C();
-inst.value 
+inst.value
 // 正在计算……
 // '开销大的计算结果'
 inst.value
@@ -618,13 +680,121 @@ inst.value
 
 上面示例中，第一次读取`inst.value`，会进行计算，然后装饰器`@lazy`将结果存入只读属性`value`，后面再读取这个属性，就不会进行计算了。
 
+## accessor 装饰器
+
+装饰器语法引入了一个新的属性修饰符`accessor`。
+
+```typescript
+class C {
+  accessor x = 1;
+}
+```
+
+上面示例中，`accessor`修饰符等同于为属性`x`自动生成取值器和存值器，它们作用于私有属性`x`。也就是说，上面的代码等同于下面的代码。
+
+```typescript
+class C {
+  #x = 1;
+
+  get x() {
+    return this.#x;
+  }
+
+  set x(val) {
+    this.#x = val;
+  }
+}
+```
+
+`accessor`也可以与静态属性和私有属性一起使用。
+
+```typescript
+class C {
+  static accessor x = 1;
+  accessor #y = 2;
+}
+```
+
+accessor 装饰器的类型如下。
+
+```typescript
+type ClassAutoAccessorDecorator = (
+  value: {
+    get: () => unknown;
+    set(value: unknown) => void;
+  },
+  context: {
+    kind: "accessor";
+    name: string | symbol;
+    access: { get(): unknown, set(value: unknown): void };
+    static: boolean;
+    private: boolean;
+    addInitializer(initializer: () => void): void;
+  }
+) => {
+  get?: () => unknown;
+  set?: (value: unknown) => void;
+  init?: (initialValue: unknown) => unknown;
+} | void;
+```
+
+accessor
+装饰器的`value`参数，是一个包含`get()`方法和`set()`方法的对象。该装饰器可以不返回值，或者返回一个新的对象，用来取代原来的`get()`方法和`set()`方法。此外，装饰器返回的对象还可以包括一个`init()`方法，用来改变私有属性的初始值。
+
+下面是一个例子。
+
+```typescript
+class C {
+  @logged accessor x = 1;
+}
+
+function logged(value, { kind, name }) {
+  if (kind === "accessor") {
+    let { get, set } = value;
+
+    return {
+      get() {
+        console.log(`getting ${name}`);
+
+        return get.call(this);
+      },
+
+      set(val) {
+        console.log(`setting ${name} to ${val}`);
+
+        return set.call(this, val);
+      },
+
+      init(initialValue) {
+        console.log(`initializing ${name} with value ${initialValue}`);
+        return initialValue;
+      }
+    };
+  }
+}
+
+let c = new C();
+
+c.x;
+// getting x
+
+c.x = 123;
+// setting x to 123
+```
+
+上面示例中，装饰器`@logged`为属性`x`的存值器和取值器，加上了日志输出。
+
 ## 装饰器的执行顺序
 
-装饰器的执行分为两三个阶段。
+装饰器的执行分为两个阶段。
 
 （1）评估（evaluation）：计算`@`符号后面的表达式的值，得到的应该是函数。
 
-（2）应用（application）：将调用装饰器后得到的结果，应用于类的定义。其中，类装饰器在所有方法装饰器和属性装饰器之后应用。
+（2）应用（application）：将评估装饰器后得到的函数，应用于所装饰对象。
+
+也就是说，装饰器的执行顺序是，先评估所有装饰器表达式的值，再将其应用于当前类。
+
+应用装饰器时，顺序依次为方法装饰器和属性装饰器，然后是类装饰器。
 
 请看下面的例子。
 
@@ -705,4 +875,5 @@ class Person {
 ## 参考链接
 
 - [JavaScript metaprogramming with the 2022-03 decorators API](https://2ality.com/2022/10/javascript-decorators.html)
+- [TS 5.0 Beta: New Decorators Are Here!](https://plainenglish.io/blog/ts-5-0-beta-new-decorators-are-here), Bytefer
 
