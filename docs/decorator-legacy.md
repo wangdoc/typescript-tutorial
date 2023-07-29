@@ -1,18 +1,20 @@
-# 装饰器的传统语法
+# 装饰器（旧语法）
 
-本章介绍装饰器的传统语法。
+上一章介绍了装饰器的标准语法，那是在2022年通过成为标准的。但是在此之前，TypeScript 早在2014年就支持装饰器，不过使用的是旧语法。
 
-## --experimentalDecorators 编译参数 
+装饰器的旧语法与标准语法，有相当大的差异。旧语法以后会被淘汰，但是目前大量现有项目依然在使用它，本章就介绍旧语法下的装饰器。
 
-使用装饰器的传统语法，需要打开`--experimentalDecorators`编译参数。
+## experimentalDecorators 编译选项 
+
+使用装饰器的旧语法，需要打开`--experimentalDecorators`编译选项。
 
 ```bash
 $ tsc --target ES5 --experimentalDecorators
 ```
 
-除了`--experimentalDecorators`这个配置项目用来打开装饰器支持，还有另外一个配置项`--emitDecoratorMetadata`，用来产生一些元数据，供其他工具（比如 reflect-metadata ）使用。
+此外，还有另外一个编译选项`--emitDecoratorMetadata`，用来产生一些装饰器的元数据，供其他工具或某些模块（比如 reflect-metadata ）使用。
 
-这两个配置项可以在命令行设置，也可以在`tsconfig.json`文件里面进行设置。
+这两个编译选项可以在命令行设置，也可以在`tsconfig.json`文件里面进行设置。
 
 ```javascript
 {
@@ -63,9 +65,9 @@ class A {
 
 上面示例中，A 是类装饰器，B 是属性装饰器，C 是方法装饰器，D 是参数装饰器，E 是存取器装饰器。
 
-注意，构造方法没有方法装饰器，只有参数装饰器。类装饰器其实就是用来装饰构造方法。
+注意，构造方法没有方法装饰器，只有参数装饰器。类装饰器其实就是在装饰构造方法。
 
-另外，装饰器只能用于类，要么应用于一个类，要么应用于一个类的内部成员，不能用于独立的函数。
+另外，装饰器只能用于类，要么应用于类的整体，要么应用于类的内部成员，不能用于独立的函数。
 
 ```typescript
 function Decorator() {
@@ -287,9 +289,13 @@ class C {
     return x + y;
   }
 }
+
+(new C()).add(1, 2)
+// params:  1 2
+// result:  3
 ```
 
-上面示例中，方法装饰器`@logger`用来装饰`add()`方法，它的作用是将该方法的结果输出一条日志。每当`add()`调用一次，控制台就会打印出一条日志“result: ...”。
+上面示例中，方法装饰器`@logger`用来装饰`add()`方法，它的作用是让该方法输出日志。每当`add()`调用一次，控制台就会打印出参数和运行结果。
 
 ## 属性装饰器
 
@@ -356,13 +362,11 @@ class PropertyExample {
 // 输出 Property name undefined
 ```
 
-上面示例中，属性装饰器`@logProperty`内部想要获取实例属性`name`的属性描述对象，结果拿到的是`undefined`。
-
-因为上例的`target`是类的原型对象，不是实例对象，所以拿不到`name`属性，也就是说`target.name`是不存在的，所以拿到的是`undefined`。只有通过`this.name`才能拿到`name`属性，但是这时`this`还不存在。
+上面示例中，属性装饰器`@logProperty`内部想要获取实例属性`name`的属性描述对象，结果拿到的是`undefined`。因为上例的`target`是类的原型对象，不是实例对象，所以拿不到`name`属性，也就是说`target.name`是不存在的，所以拿到的是`undefined`。只有通过`this.name`才能拿到`name`属性，但是这时`this`还不存在。
 
 属性装饰器不仅无法获得实例属性的值，也不能初始化或修改实例属性，而且它的返回值也会被忽略。因此，它的作用很有限。
 
-不过，如果属性装饰器设置了当前属性的取值器（setter），然后在构造函数里面为实例属性赋值，这时可以拿到属性的值。
+不过，如果属性装饰器设置了当前属性的存取器（getter/setter），然后在构造函数里面就可以对实例属性进行读写。
 
 ```typescript
 function Min(limit:number) {
@@ -466,7 +470,7 @@ class Point {
 
 上面示例中，装饰器`@configurable(false)`关闭了所装饰属性（`x`和`y`）的属性描述对象的`configurable`键（即关闭了属性的可配置性）。
 
-下面的示例是将装饰器用来验证属性，如果赋值不满足条件就报错。
+下面的示例是将装饰器用来验证属性值，如果赋值不满足条件就报错。
 
 ```typescript
 function validator(
@@ -507,7 +511,7 @@ c.foo = 150;
 
 上面示例中，装饰器用自己定义的存值器，取代了原来的存值器，加入了验证条件。
 
-TypeScript 不允许对同一个属性的存取器（getter 和 setter）使用同一个装饰器，也就是说只能装饰两个存取器里面的一个，且必须排在前面的那一个，否则报错。
+TypeScript 不允许对同一个属性的存取器（getter 和 setter）使用同一个装饰器，也就是说只能装饰两个存取器里面的一个，且必须是排在前面的那一个，否则报错。
 
 ```typescript
 // 报错
@@ -824,3 +828,4 @@ x
 - [Deep introduction to property decorators in TypeScript](https://techsparx.com/nodejs/typescript/decorators/properties.html), by David Herron
 - [Deep introduction to accessor decorators in TypeScript](https://techsparx.com/nodejs/typescript/decorators/accessors.html), by David Herron
 - [Using Property Decorators in Typescript with a real example](https://dev.to/danywalls/using-property-decorators-in-typescript-with-a-real-example-44e), by Dany Paredes
+
