@@ -17,6 +17,7 @@
 - decorator.md: 装饰器
 - decorator-legacy.md: 装饰器（旧语法）
 - declare.md: declare 关键字
+- d.ts.md: d.ts 类型声明文件
 - operator.md: 运算符
 - mapping.md: 类型映射
 - utility.md: 类型工具

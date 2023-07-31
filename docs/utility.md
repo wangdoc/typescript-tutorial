@@ -111,6 +111,10 @@ type ConstructorParameters<
 type T1 = Exclude<'a'|'b'|'c', 'a'>; // 'b'|'c'
 type T2 = Exclude<'a'|'b'|'c', 'a'|'b'>; // 'c'
 type T3 = Exclude<string|(() => void), Function>; // string
+type T4 = Exclude<string | string[], any[]>; // string
+type T5 = Exclude<(() => void) | null, Function>; // null
+type T6 = Exclude<200 | 400, 200 | 201>; // 400
+type T7 = Exclude<number, boolean>; // number
 ```
 
 `Exclude<UnionType, ExcludedMembers>`的实现如下。
@@ -129,6 +133,9 @@ type Exclude<T, U> = T extends U ? never : T;
 type T1 = Extract<'a'|'b'|'c', 'a'>; // 'a'
 type T2 = Extract<'a'|'b'|'c', 'a'|'b'>; // 'a'|'b'
 type T3 = Extract<'a'|'b'|'c', 'a'|'d'>; // 'a'
+type T4 = Extract<string | string[], any[]>; // string[]
+type T5 = Extract<(() => void) | null, Function>; // () => void
+type T6 = Extract<200 | 400, 200 | 201>; // 200
 ```
 
 如果参数类型`Union`不包含在联合类型`UnionType`之中，则返回`never`类型。
@@ -145,7 +152,7 @@ type Extract<T, U> = T extends U ? T : never;
 
 ## `InstanceType<Type>`
 
-`InstanceType<Type>`的参数`Type`是一个构造函数，返回该构造函数对应的实例类型。
+`InstanceType<Type>`提取构造函数的返回值的类型（即实例类型），参数`Type`是一个构造函数，等同于构造函数的`ReturnType<Type>`。
 
 ```typescript
 type T = InstanceType<
@@ -154,6 +161,16 @@ type T = InstanceType<
 ```
 
 上面示例中，类型参数是一个构造函数`new () => object`，返回值是该构造函数的实例类型（`object`）。
+
+下面是一些例子。
+
+```typescript
+type A = InstanceType<ErrorConstructor>; // Error
+type B = InstanceType<FunctionConstructor>; // Function
+type C = InstanceType<RegExpConstructor>; // RegExp
+```
+
+上面示例中，`InstanceType<T>`的参数都是 TypeScript 内置的原生对象的构造函数类型，`InstanceType<T>`的返回值就是这些构造函数的实例类型。
 
 由于 Class 作为类型，代表实例类型。要获取它的构造方法，必须把它当成值，然后用`typeof`运算符获取它的构造方法类型。
 
@@ -203,6 +220,11 @@ type T1 = NonNullable<string|number|undefined>;
 
 // string[]
 type T2 = NonNullable<string[]|null|undefined>;
+
+type T3 = NonNullable<boolean>; // boolean
+type T4 = NonNullable<number|null>; // number
+type T5 = NonNullable<string|undefined>; // string
+type T6 = NonNullable<null|undefined>; // never
 ```
 
 `NonNullable<Type>`的实现如下。
@@ -574,6 +596,12 @@ type T2 = ReturnType<() => {
 }>; // { a: string; b: number }
 
 type T3 = ReturnType<(s:string) => void>; // void
+
+type T4 = ReturnType<() => () => any[]>; // () => any[]
+
+type T5 = ReturnType<typeof Math.random>; // number
+
+type T6 = ReturnType<typeof Array.isArray>; // boolean
 ```
 
 如果参数类型是泛型函数，返回值取决于泛型类型。如果泛型不带有限制条件，就会返回`unknown`。
