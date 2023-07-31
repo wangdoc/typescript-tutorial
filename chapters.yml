@@ -21,3 +21,7 @@
 - operator.md: 运算符
 - mapping.md: 类型映射
 - utility.md: 类型工具
+- comment.md: 注释指令
+- tsconfig.json.md: tsconfig.json 文件
+- tsc.md: tsc 命令
+

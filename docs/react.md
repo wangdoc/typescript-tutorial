@@ -80,3 +80,4 @@ const Button = (prop: { value: string }, context: { color: string }) => (
   <button />
 );
 ```
+

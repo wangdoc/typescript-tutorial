@@ -27,7 +27,7 @@ let isChecked = true;
 console.log(isChceked); // 报错
 ```
 
-上面示例是一个 JavaScript 脚本，`// @ts-check`告诉 TypeScript 编译器对其进行类型检查，所以最后一行会报错。
+上面示例是一个 JavaScript 脚本，`// @ts-check`告诉 TypeScript 编译器对其进行类型检查，所以最后一行会报错，提示拼写错误。
 
 ## `// @ts-ignore`
 
@@ -35,7 +35,7 @@ console.log(isChceked); // 报错
 
 ```typescript
 let x:number;
- 
+
 x = 0;
 
 // @ts-expect-error
@@ -65,9 +65,9 @@ function sayHello(somebody) {
 }
 ```
 
-上面示例中，注释里面的`@param`是一个 JSDoc 命令，表示下面的函数`sayHello()`的参数`somebody`类型为`string`。
+上面示例中，注释里面的`@param`是一个 JSDoc 声明，表示下面的函数`sayHello()`的参数`somebody`类型为`string`。
 
-TypeScript 编译器支持的大部分的 JSDoc 命令，下面介绍其中的一些。
+TypeScript 编译器支持大部分的 JSDoc 声明，下面介绍其中的一些。
 
 ### @typedef
 
@@ -210,3 +210,4 @@ class Base {
   y = 0;
 }
 ```
+

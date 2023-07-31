@@ -24,7 +24,6 @@ function getScore(value: number|string): number {
 }
 ```
 
-
 如果一个值是`any`或`unknown`，你又想对它进行处理，就必须先缩小类型。
 
 ```typescript
@@ -301,3 +300,4 @@ function isDefined<T>(x: T | undefined): x is T {
  return x !== undefined;
 }
 ```
+

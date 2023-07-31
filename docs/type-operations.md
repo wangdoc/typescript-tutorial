@@ -290,13 +290,3 @@ interface B {
 }
 ```
 
-## 字符串操作类型
-
-- Uppercase: Converts a string literal type to uppercase.
-• Lowercase: Converts a string literal type to lowercase.
-• Capitalize: Converts a first character of string literal type to uppercase.
-• Uncapitalize: Converts a first character of string literal type to lowercase.
-
-```typescript
-type FormalGreeting = Capitalize<"hello.">; // Type: "Hello."
-```

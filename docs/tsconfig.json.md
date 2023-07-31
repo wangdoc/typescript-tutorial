@@ -27,65 +27,42 @@ $ tsc -p ./dir
 }
 ```
 
-- include：读入`src`目录中的所有文件。
-- allowJs：接受 JavaScript 文件作为输入。
-- outDir：输出的编译结果放在`built`目录。
-- target：编译产物的 JS 版本为 ECMAScript 5。
+本章后面会详细介绍`tsconfig.json`的各个属性，这里简单说一下，上面示例的四个属性的含义。
 
-下面是它的一些基本属性。
+- include：指定哪些文件需要编译。
+- allowJs：指定源目录的 JavaScript 文件是否原样拷贝到编译后的目录。
+- outDir：指定编译产物存放的目录。
+- target：指定编译产物的 JS 版本。
 
-- include：指定包含哪些文件夹或文件
-- exclude：排除哪些文件夹或文件。
-
-```typescript
-{
-    "include":[
-        "./folder"
-    ],
-    "exclude":[
-        "./folder/**/*.spec.ts",
-        "./folder/someSubFolder"
-    ]
-}
-```
-
-- files：指定编译哪些文件
-
-```typescript
-{
-    "files":[
-        "./some/file.ts"
-    ]
-}
-```
-
-在运行tsc命令时，若没有使用“--project”或“-p”编译选项，那么编译器将在tsc命令的运行目录下查找是否存在文件名为“tsconfig.json”的配置文件。若存在“tsconfig.json”配置文件，则使用该配置文件来编译工程；若不存在，则继续在父级目录下查找“tsconfig.json”配置文件，直到搜索到系统根目录为止；如果最终也未能找到一个可用的“tsconfig.json”配置文件，那么就会停止编译工程。
-
-TypeScript提供了一个“--init”编译选项，在命令行上运行tsc命令并使用“--init”编译选项会初始化一个“tsconfig.json”配置文件。
+`tsconfig.json`文件可以不必手写，使用 tsc 命令的`--init`参数自动生成。
 
 ```bash
 $ tsc --init
 ```
 
-tsc命令的运行结果是在当前目录下新生成了一个“tsconfig.json”配置文件，里面有一些默认配置。
+上面命令生成的`tsconfig.json`文件，里面会有一些默认配置。
 
-你也可以使用其他项目的 tsconfig.json 文件。 @tsconfig/, such as `@tsconfig/recommended` or @tsconfig/node16.
+你也可以使用别人预先写好的 tsconfig.json 文件，npm 的`@tsconfig`名称空间下面有很多模块，都是写好的`tsconfig.json`样本，比如 `@tsconfig/recommended`和`@tsconfig/node16`。
+
+这些模块需要安装，以`@tsconfig/deno`为例。
 
 ```bash
-npm install --save-dev @tsconfig/deno
-# or
-yarn add --dev @tsconfig/deno
+$ npm install --save-dev @tsconfig/deno
+# 或者
+$ yarn add --dev @tsconfig/deno
 ```
 
-安装以后，就可以在`tsconfig.json`里面引用这个设置。
+安装以后，就可以在`tsconfig.json`里面引用这个模块，相当于继承它的设置，然后进行扩展。
 
 ```json
 {
-"extends": "@tsconfig/deno/tsconfig.json"
+  "extends": "@tsconfig/deno/tsconfig.json"
 }
 ```
 
-@tsconfig 包含的完整 tsconfig 文件目录可以查看 https://github.com/tsconfig/bases/tree/main/bases。
+`@tsconfig`空间下包含的完整 tsconfig 文件目录，可以查看 [GitHub](https://github.com/tsconfig/bases/tree/main/bases)。
+
+`tsconfig.json`的一级属性并不多，只有很少几个，但是`compilerOptions`属性有很多二级属性。下面先逐一介绍一级属性，然后再介绍`compilerOptions`的二级属性，按照首字母排序。
 
 ## exclude
 
@@ -93,16 +70,14 @@ yarn add --dev @tsconfig/deno
 
 ```typescript
 {
-    "include": ["**/*"],
-    "exclude": ["**/*.spec.ts"]
+  "include": ["**/*"],
+  "exclude": ["**/*.spec.ts"]
 }
 ```
 
 ## extends
 
-`tsconfig.json`可以继承另一个`tsconfig.json`文件的配置。
-
-如果一个项目有多个配置，可以把共同的配置写成`tsconfig.base.json`，其他的配置文件继承该文件，这样便于维护和修改。
+`tsconfig.json`可以继承另一个`tsconfig.json`文件的配置。如果一个项目有多个配置，可以把共同的配置写成`tsconfig.base.json`，其他的配置文件继承该文件，这样便于维护和修改。
 
 `extends`属性用来指定所要继承的配置文件。它可以是本地文件。
 
@@ -122,13 +97,13 @@ yarn add --dev @tsconfig/deno
 }
 ```
 
-`extends`指定的依赖会先加载，然后加载当前配置。如果当前配置与继承的配置有重名的属性，前者会覆盖后者。
+`extends`指定的`tsconfig.json`会先加载，然后加载当前的`tsconfig.json`。如果两者有重名的属性，后者会覆盖前者。
 
 ## files
 
-`files`指定编译的文件列表，如果其中有一个文件不存在，就会报错。
+`files`属性指定编译的文件列表，如果其中有一个文件不存在，就会报错。
 
-它的文件列表是一个数组，排在前面的文件先编译。
+它是一个数组，排在前面的文件先编译。
 
 ```javascript
 {
@@ -183,37 +158,7 @@ yarn add --dev @tsconfig/deno
 
 ## compileOptions
 
-`compilerOptions`属性用来定制编译行为。
-
-这个属性可以省略，这时编译器将使用默认设置。
-
-```javascript
-{
-    "compilerOptions": {
-        "rootDir": "./src",
-        "outDir": "./build",
-        "lib": [ "es2021", "esnext" ],
-        "target": "es2021",
-        "module": "esnext",
-        "esModuleInterop": true,
-        "moduleResolution": "Node"
-    }
-}
-```
-
-示例
-
-```json
-{
-  "compilerOptions": {
-    "target": "es5",
-    "moduleResolution": "node",
-    "module": "esnext",
-    "strict": true,
-    "importHelpers": true
-  }
-}
-```
+`compilerOptions`属性用来定制编译行为。这个属性可以省略，这时编译器将使用默认设置。
 
 ### allowJs
 
@@ -329,7 +274,7 @@ import { helloWorld } from "hello/world";
 
 ### emitBOM
 
-`emitBOM`设置是否在编译结果的文件头添加字节顺序标志 BOM。默认值是`false`。
+`emitBOM`设置是否在编译结果的文件头添加字节顺序标志 BOM，默认值是`false`。
 
 ### emitDeclarationOnly
 
@@ -350,7 +295,7 @@ moment(); // 报错
 
 上面示例中，根据 ES6 规范，`import * as moment`里面的`moment`是一个对象，不能当作函数调用，所以第二行报错了。
 
-解决方法就是改写上面的语句，将`import *`改成加载默认接口。
+解决方法就是改写上面的语句，改成加载默认接口。
 
 ```typescript
 import moment from 'moment'
@@ -398,7 +343,7 @@ obj.foo = undefined; // 报错
 
 ### isolatedModules
 
-`isolatedModules`设置如果当前 TypeScript 脚本作为单个模块编译，是否会因为缺少其他脚本的类型信息而报错。
+`isolatedModules`设置如果当前 TypeScript 脚本作为单个模块编译，是否会因为缺少其他脚本的类型信息而报错，主要便于非官方的编译工具（比如 Babel）正确编译单个脚本。
 
 ### jsx
 
@@ -428,7 +373,7 @@ obj.foo = undefined; // 报错
 }
 ```
 
-TypeScript 内置的类型描述文件，主要有一些，可以参考 [TypeScript 源码](https://github.com/microsoft/TypeScript/tree/main/src/lib)。
+TypeScript 内置的类型描述文件，主要有以下一些，完整的清单可以参考 [TypeScript 源码](https://github.com/microsoft/TypeScript/tree/main/src/lib)。
 
 - ES5
 - ES2015
@@ -464,9 +409,9 @@ TypeScript 内置的类型描述文件，主要有一些，可以参考 [TypeScr
 
 ```javascript
 {
-    "compilerOptions": {
-        "listFiles": true
-    }
+  "compilerOptions": {
+    "listFiles": true
+  }
 }
 ```
 
@@ -540,7 +485,7 @@ TypeScript 内置的类型描述文件，主要有一些，可以参考 [TypeScr
 ### noFallthroughCasesInSwitch
 
 `noFallthroughCasesInSwitch`设置是否对没有`break`语句（或者`return`和`throw`语句）的 switch 分支报错，即`case`代码里面必须有终结语句（比如`break`）。
-  
+
 ### noImplicitAny
 
 `noImplicitAny`设置当一个表达式没有明确的类型描述、且编译器无法推断出具体类型时，是否允许将它推断为`any`类型。
@@ -569,7 +514,7 @@ TypeScript 内置的类型描述文件，主要有一些，可以参考 [TypeScr
 
 ### outFile
 
-`outFile`设置将所有非模块的全局文件，编译在同一个文件里面。它只有在`module`属性为`None`、`System`、`AMD`时才生效，并且不能用来打包 CommonJS 或 ES6 模块。 
+`outFile`设置将所有非模块的全局文件，编译在同一个文件里面。它只有在`module`属性为`None`、`System`、`AMD`时才生效，并且不能用来打包 CommonJS 或 ES6 模块。
 
 ### paths
 
@@ -623,7 +568,7 @@ TypeScript 内置的类型描述文件，主要有一些，可以参考 [TypeScr
 
 ### resolveJsonModule
 
-`resolveJsonModule`运行 import 命令导入 JSON 文件。
+`resolveJsonModule`允许 import 命令导入 JSON 文件。
 
 ### rootDir
 
@@ -718,9 +663,9 @@ const n = fn.call(undefined, false);
 function fn(x:string) {
   console.log('Hello, ' + x.toLowerCase());
 }
- 
+
 type StringOrNumberFunc = (ns:string|number) => void;
- 
+
 // 打开 strictFunctionTypes，下面代码会报错
 let func:StringOrNumberFunc = fn;
 ```
@@ -791,7 +736,7 @@ class User {
   constructor(public username:string) {}
 }
 
-// 解决方法四：赋值断言 
+// 解决方法四：赋值断言
 class User {
   username!:string;
 
@@ -855,7 +800,7 @@ class User {
 
 ### types
 
-`types`设置`node_modules/@types`目录下需要包括在编译之中的类型模块。默认情况下，该目录下的所有类型模块，都会自动包括在编译之中。
+`types`设置`typeRoots`目录下需要包括在编译之中的类型模块。默认情况下，该目录下的所有类型模块，都会自动包括在编译之中。
 
 ```typescript
 {
@@ -894,3 +839,4 @@ try {
 ## 参考链接
 
 - [Strict Property Initialization in TypeScript](https://mariusschulz.com/blog/strict-property-initialization-in-typescript), Marius Schulz
+

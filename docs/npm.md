@@ -85,3 +85,4 @@ $ npm publish
 ## 参考链接
 
 - [How to Write a TypeScript Library](https://www.tsmean.com/articles/how-to-write-a-typescript-library/), by tsmean
+
