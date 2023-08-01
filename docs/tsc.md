@@ -4,17 +4,15 @@
 
 tsc 是 TypeScript 官方的命令行编译器，用来检查代码，并将其编译成 JavaScript 代码。
 
-tsc 默认使用当前目录下的配置文件`tsconfig.json`，但也可以接受独立的命令行参数。
+tsc 默认使用当前目录下的配置文件`tsconfig.json`，但也可以接受独立的命令行参数。命令行参数会覆盖`tsconfig.json`，比如命令行指定了所要编译的文件，那么 tsc 就会忽略`tsconfig.json`的`files`属性。
 
-如果命令行指定了所要编译的文件，那么 tsc 会忽略`tsconfig.json`的`files`属性。
-
-它的基本用法如下。
+tsc 的基本用法如下。
 
 ```bash
-# 按照 tsconfig.json 编译
+# 使用 tsconfig.json 的配置
 $ tsc
 
-# 只编译 index.ts 
+# 只编译 index.ts
 $ tsc index.ts
 
 # 编译 src 目录的所有 .ts 文件
@@ -23,7 +21,7 @@ $ tsc src/*.ts
 # 指定编译配置文件
 $ tsc --project tsconfig.production.json
 
-# 只类型生明文件，不编译出 JS 文件
+# 只生成类型声明文件，不编译出 JS 文件
 $ tsc index.js --declaration --emitDeclarationOnly
 
 # 多个 TS 文件编译成单个 JS 文件
@@ -34,7 +32,7 @@ $ tsc app.ts util.ts --target esnext --outfile index.js
 
 tsc 的命令行参数，大部分与 tsconfig.json 的属性一一对应。
 
-下面只是简单罗列主要的一些参数，详细解释可以参考《tsconfig.json 配置文件》一章。
+下面只是按照首字母排序，简单罗列出主要的一些参数，详细解释可以参考《tsconfig.json 配置文件》一章。
 
 `--all`：输出所有可用的参数。
 
@@ -46,7 +44,7 @@ tsc 的命令行参数，大部分与 tsconfig.json 的属性一一对应。
 
 `--alwaysStrict`：总是在编译产物的头部添加`use strict`。
 
-`--baseUrl`：指定非相对的模块的基准 URL。
+`--baseUrl`：指定非相对位置的模块定位的基准 URL。
 
 `--build`：启用增量编译。
 
@@ -54,7 +52,7 @@ tsc 的命令行参数，大部分与 tsconfig.json 的属性一一对应。
 
 `--declaration`：为 TS 脚本生成一个类型生成文件。
 
-`--declarationDir`：指定生成的类型声明文件的目录。
+`--declarationDir`：指定生成的类型声明文件的所在目录。
 
 `--declarationMap`：为`.d.ts`文件生成 SourceMap 文件。
 
@@ -180,8 +178,9 @@ tsc 的命令行参数，大部分与 tsconfig.json 的属性一一对应。
 
 `--typeRoots`：设置类型模块所在的目录，替代默认的`node_modules/@types`。
 
-`--types`：设置`node_modules/@types`目录下需要包括在编译之中的类型模块。
+`--types`：设置`typeRoots`目录下需要包括在编译之中的类型模块。
 
 `--version`：终端输出 tsc 的版本号。
 
 `--watch`（或者`-w`）：进入观察模式，只要文件有修改，就会自动重新编译。
+
