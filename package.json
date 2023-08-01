@@ -7,13 +7,20 @@
     "doc": "docs"
   },
   "scripts": {
-    "server": "loppo server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "loppo --site \"TypeScript 教程\" --id typescript --theme wangdoc",
+    "build-and-commit": "npm run build && npm run commit",
+    "commit": "gh-pages --dist dist --dest dist/typescript --branch master --repo git@github.com:wangdoc/website.git",
+    "chapter": "loppo chapter",
+    "server": "loppo server"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "TypeScript",
+    "tutorial"
+  ],
+  "author": "Ruan Yifeng",
+  "license": "CC-BY-SA-4.0",
   "dependencies": {
+    "gh-pages": "^5.0.0",
     "loppo": "^0.6.25",
     "loppo-theme-wangdoc": "^0.6.4"
   }
