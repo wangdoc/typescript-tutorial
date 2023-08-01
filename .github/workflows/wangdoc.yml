@@ -28,7 +28,6 @@ jobs:
           git-config-email: yifeng.ruan@gmail.com
           repository-name: wangdoc/website
           token: ${{ secrets.WANGDOC_BOT_TOKEN }}
-          base-branch: main
           branch: master # The branch the action should deploy to.
           folder: dist # The folder the action should deploy.
           target-folder: dist/typescript
