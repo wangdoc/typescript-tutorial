@@ -24,14 +24,14 @@ jobs:
       - name: Deploy to website
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          GIT_CONFIG_NAME: wangdoc-bot
-          GIT_CONFIG_EMAIL: yifeng.ruan@gmail.com
-          REPOSITORY_NAME: wangdoc/website
-          ACCESS_TOKEN: ${{ secrets.WANGDOC_BOT_TOKEN }}
-          BASE_BRANCH: main
-          BRANCH: master # The branch the action should deploy to.
-          FOLDER: dist # The folder the action should deploy.
-          TARGET_FOLDER: dist/typescript
-          CLEAN: true # Automatically remove deleted files from the deploy branch
-          COMMIT_MESSAGE: update from TypeScript tutorial
+          git_config_name: wangdoc-bot
+          git_config_email: yifeng.ruan@gmail.com
+          repository_name: wangdoc/website
+          access_token: ${{ secrets.WANGDOC_BOT_TOKEN }}
+          base_branch: main
+          branch: master # The branch the action should deploy to.
+          folder: dist # The folder the action should deploy.
+          target_folder: dist/typescript
+          clean: true # Automatically remove deleted files from the deploy branch
+          commit_message: update from TypeScript tutorial
 
