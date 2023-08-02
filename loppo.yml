@@ -6,5 +6,6 @@ customization: false
 themeDir: loppo-theme
 direction: ltr
 id: typescript
+branch: main
 hasComments: true
 isTutorial: true
