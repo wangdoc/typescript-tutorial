@@ -333,7 +333,7 @@ obj.foo = undefined; // 报错
 
 ### inlineSourceMap
 
-`inlineSourceMap`设置将 SourceMap 文件写入编译后的 JS 文件中，否则会单独生称一个`.js.map`文件。
+`inlineSourceMap`设置将 SourceMap 文件写入编译后的 JS 文件中，否则会单独生成一个`.js.map`文件。
 
 ### inlineSources
 
