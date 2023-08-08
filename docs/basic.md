@@ -175,7 +175,7 @@ tsc 有很多参数，可以调整编译行为。
 $ tsc file1.ts file2.ts --outFile app.js
 ```
 
-上面命令将`file1.ts`和`file2.ts`两个脚本编译成一个 JavaScript 文件`app.ts`。
+上面命令将`file1.ts`和`file2.ts`两个脚本编译成一个 JavaScript 文件`app.js`。
 
 **（2）--outDir**
 
