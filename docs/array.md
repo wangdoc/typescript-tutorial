@@ -32,7 +32,7 @@ let arr:(number|string)[];
 let arr:any[];
 ```
 
-数组类型的第二种写法是使用 TypeScipt 内置的 Array 接口。
+数组类型的第二种写法是使用 TypeScript 内置的 Array 接口。
 
 ```typescript
 let arr:Array<number> = [1, 2, 3];
