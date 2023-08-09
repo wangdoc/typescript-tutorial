@@ -44,6 +44,10 @@ async function fn(): Promise<number> {
 }
 ```
 
+## `PromiseLike<T>`
+
+`PromiseLike` 是一个更泛化的接口，表示任何类 `Promise` 对象，它具有 `then` 方法来注册在异步操作完成时执行的回调函数。这个接口允许你定义自己的类或对象，只要它们提供了 `then` 方法，就可以被视为 `PromiseLike`，换而言之，只要满足 [Promise A+ 规范](https://promisesaplus.com/)，我们就可以认为它是一个 `PromiseLike`，这个概念用于支持扩展的异步库和类。
+
 ## `Iterable<>`
 
 对象只要部署了 Iterator 接口，就可以用`for...of`循环遍历。Generator 函数（生成器）返回的就是一个具有 Iterator 接口的对象。
