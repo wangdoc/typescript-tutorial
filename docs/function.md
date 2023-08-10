@@ -642,6 +642,7 @@ function fail():Error {
 const sing = function():never {
   while (true) {
     console.log('sing');
+  }
 };
 ```
 
