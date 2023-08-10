@@ -130,13 +130,14 @@ const x:null = null;
 上面示例中，变量`x`就属于 null 类型。
 
 注意，如果没有声明类型的变量，被赋值为`undefined`或`null`，它们的类型会被推断为`any`。
+而没有声明类型的常量，被赋值为`undefined`或`null`，它们的类型则会被分别推断为`undefined`和`null`。
 
 ```typescript
 let a = undefined;   // any
-const b = undefined; // any
+const b = undefined; // undefined
 
 let c = null;        // any
-const d = null;      // any
+const d = null;      // null
 ```
 
 如果希望避免这种情况，则需要打开编译选项`strictNullChecks`。
