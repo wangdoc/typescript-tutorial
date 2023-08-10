@@ -261,7 +261,7 @@ tsc 命令的更多参数，详见《tsc 编译器》一章。
 TypeScript 允许将`tsc`的编译参数，写在配置文件`tsconfig.json`。只要当前目录有这个文件，`tsc`就会自动读取，所以运行时可以不写参数。
 
 ```bash
-$ tsc file1.js file2.js --outFile dist/app.js
+$ tsc file1.ts file2.ts --outFile dist/app.js
 ```
 
 上面这个命令写成`tsconfig.json`，就是下面这样。
