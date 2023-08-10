@@ -150,7 +150,7 @@ let c = null;        // any
 const d = null;      // null
 ```
 
-上面示例中，打开编译设置`strictNullChecks`以后，赋值为`undefined`的常量会被推断为`undefined`类型，赋值为`null`的变量会被推断为`null`类型；赋值为`undefined`和`null`的变量都会被推断为`any`类型。
+上面示例中，打开编译设置`strictNullChecks`以后，赋值为`undefined`的常量会被推断为`undefined`类型，赋值为`null`的常量会被推断为`null`类型；赋值为`undefined`和`null`的变量都会被推断为`any`类型。
 
 ## 包装对象类型
 
