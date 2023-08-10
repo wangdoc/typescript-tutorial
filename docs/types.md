@@ -139,18 +139,18 @@ let c = null;        // any
 const d = null;      // any
 ```
 
-即使打开了编译选项`strictNullChecks`，`let`命令声明的变量，还是会被推断为`any`，但`const`命令声明的常量会相应被推断为`undefined`或`null`。
+如果希望避免这种情况，则需要打开编译选项`strictNullChecks`。
 
 ```typescript
-// 打开编译选项 strictNullChecks
-let a = undefined;   // any
+// 打开编译设置 strictNullChecks
+let a = undefined;   // undefined
 const b = undefined; // undefined
 
-let c = null;        // any
+let c = null;        // null
 const d = null;      // null
 ```
 
-上面示例中，打开编译选项`strictNullChecks`以后，`let`命令的推断结果不变，还是`any`，但是`const`命令的推断结果会更精确，相应为`undefined`或`null`。
+上面示例中，打开编译设置`strictNullChecks`以后，赋值为`undefined`的变量会被推断为`undefined`类型，赋值为`null`的变量会被推断为`null`类型。
 
 ## 包装对象类型
 
