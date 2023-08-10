@@ -152,9 +152,9 @@ const p:Point = { x: 0, y: 0 };
 
 上面示例中，`Point`只能作为类型输入，不能当作正常接口使用。
 
-## importsNotUsedAsValues
+## importsNotUsedAsValues 编译设置
 
-输入类型的 import 语句，编译时怎么处理呢？
+TypeScript 特有的输入类型（type）的 import 语句，编译成 JavaScript 时怎么处理呢？
 
 TypeScript 提供了`importsNotUsedAsValues`编译设置项，有三个可能的值。
 
@@ -162,7 +162,7 @@ TypeScript 提供了`importsNotUsedAsValues`编译设置项，有三个可能的
 
 （2）`preserve`：保留输入类型的 import 语句。
 
-（3）`error`：保留输入类型的 import 语句（与`preserve`相同），但是必须写成 import type 的形式，否则报错。
+（3）`error`：保留输入类型的 import 语句（与`preserve`相同），但是必须写成`import type`的形式，否则报错。
 
 请看示例，下面是一个输入类型的 import 语句。
 
@@ -174,18 +174,18 @@ import { TypeA } from './a';
 
 `remove`的编译结果会将该语句删掉。
 
-`preserve`的编译结果会保留该语句，但会把删掉类型的部分。
+`preserve`的编译结果会保留该语句，但会删掉其中涉及类型的部分。
 
 ```typescript
 import './a';
 ```
 
-上面示例中，编译后的 import 语句不从`a.js`输入任何接口，但是会引发`a.js`的执行，因此会保留`a.js`里面的副作用。
+上面就是`preserve`的编译结果，可以看到编译后的`import`语句不从`a.js`输入任何接口（包括类型），但是会引发`a.js`的执行，因此会保留`a.js`里面的副作用。
 
-`error`的结果与`preserve`相同，但是编译过程会报错，因为输入类型的 import 语句必须写成 import type 的形式。原始语句改成下面的形式，就不会报错。
+`error`的编译结果与`preserve`相同，但在编译过程中会报错，因为它要求输入类型的`import`语句必须写成`import type` 的形式。原始语句改成下面的形式，就不会报错。
 
 ```typescript
-import type { TypeA } from './a.js';
+import type { TypeA } from './a';
 ```
 
 ## CommonJS 模块
