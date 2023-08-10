@@ -510,7 +510,7 @@ class C {
 }
 
 const inst = new C();
-inst.@collect // new Set(['toString', Symbol.iterator])
+inst.collectedMethodKeys // new Set(['toString', Symbol.iterator])
 ```
 
 上面示例中，方法装饰器`@collect`会将所装饰的成员名字，加入一个 Set 集合`collectedMethodKeys`。
