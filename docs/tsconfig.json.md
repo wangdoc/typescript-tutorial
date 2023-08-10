@@ -398,7 +398,7 @@ TypeScript 内置的类型描述文件，主要有以下一些，完整的清单
 ```typescript
 {
   "compilerOptions": {
-    "listFiles": true
+    "listEmittedFiles": true
   }
 }
 ```
