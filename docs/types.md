@@ -143,14 +143,14 @@ const d = null;      // any
 
 ```typescript
 // 打开编译设置 strictNullChecks
-let a = undefined;   // undefined
+let a = undefined;   // any
 const b = undefined; // undefined
 
-let c = null;        // null
+let c = null;        // any
 const d = null;      // null
 ```
 
-上面示例中，打开编译设置`strictNullChecks`以后，赋值为`undefined`的变量会被推断为`undefined`类型，赋值为`null`的变量会被推断为`null`类型。
+上面示例中，打开编译设置`strictNullChecks`以后，赋值为`undefined`的常量会被推断为`undefined`类型，赋值为`null`的变量会被推断为`null`类型；赋值为`undefined`和`null`的变量都会被推断为`any`类型。
 
 ## 包装对象类型
 
