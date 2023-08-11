@@ -85,7 +85,7 @@ x = { foo: 'hello' };
 
 由于这个原因，建议使用`let`和`var`声明变量时，如果不赋值，就一定要显式声明类型，否则可能存在安全隐患。
 
-`const`命令没有这个问题，因为 TypeScript 要求`const`声明变量时，必须同时进行初始化（赋值）。
+`const`命令没有这个问题，因为 JavaScript 语言规定`const`声明变量时，必须同时进行初始化（赋值）。
 
 ```typescript
 const x; // 报错
