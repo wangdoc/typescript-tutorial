@@ -285,7 +285,7 @@ type Person = {
 type T = Person['age'|'name'];
 
 // number|string|boolean
-type A = Person[keyof Obj];
+type A = Person[keyof Person];
 ```
 
 上面示例中，方括号里面是属性名的联合类型，所以返回的也是对应的属性值的联合类型。
@@ -444,11 +444,9 @@ type Flatten<Type> =
   Type extends Array<infer Item> ? Item : Type;
 ```
 
-上面示例中，`Type`是外部传入的类型参数，如果它是数组`Array<T>`的子类型，那么就将类型变量`Item`推断为`T`，即`Item`代表数组的成员类型，写成`infer Item`，表示`Item`这个类型参数是从当前信息中推断出来的。
+上面示例中，`infer Item`表示`Item`这个参数是 TypeScript 自己推断出来的，不用显式传入，而`Flatten<Type>`则表示`Type`这个类型参数是外部传入的。`Type extends Array<infer Item>`则表示，如果参数`Type`是一个数组，那么就将该数组的成员类型推断为`Item`，即`Item`是从`Type`推断出来的。
 
-一旦定义了`Item`，后面的代码就可以使用这个类型参数了。
-
-下面是上例的泛型`Flatten<Type>`的用法。
+一旦使用`Infer Item`定义了`Item`，后面的代码就可以直接调用`Item`了。下面是上例的泛型`Flatten<Type>`的用法。
 
 ```typescript
 // string
@@ -458,7 +456,7 @@ type Str = Flatten<string[]>;
 type Num = Flatten<number>;
 ```
 
-上面示例中，第一个例子`Flatten<string[]>`传入的类型参数是`string[]`，可以推断出`Item`的类型是`string`，所以返回的是`string`。第二个例子`Flatten<number>`传入的类型参数是`number`，它不是数组的子类型，所以直接返回自身。
+上面示例中，第一个例子`Flatten<string[]>`传入的类型参数是`string[]`，可以推断出`Item`的类型是`string`，所以返回的是`string`。第二个例子`Flatten<number>`传入的类型参数是`number`，它不是数组，所以直接返回自身。
 
 如果不用`infer`定义类型参数，那么就要传入两个类型参数。
 
@@ -467,7 +465,7 @@ type Flatten<Type, Item> =
   Type extends Array<Item> ? Item : Type;
 ```
 
-上面是不用`infer`的写法，每次使用`Fleatten`的时候，都要传入两个参数，就比较麻烦。
+上面是不使用`infer`的写法，每次调用`Fleatten`的时候，都要传入两个参数，就比较麻烦。
 
 下面的例子使用`infer`，推断函数的参数类型和返回值类型。
 
