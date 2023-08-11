@@ -539,12 +539,12 @@ class Car implements MotorVehicle {
 }
 
 // 写法一
-const c:Car = new Car();
+const c1:Car = new Car();
 // 写法二
-const c:MotorVehicle = new Car();
+const c2:MotorVehicle = new Car();
 ```
 
-上面示例中，变量`c`的类型可以写成类`Car`，也可以写成接口`MotorVehicle`。它们的区别是，如果类`Car`有接口`MotoVehicle`没有的属性和方法，那么只有变量`c1`可以调用这些属性和方法。
+上面示例中，变量的类型可以写成类`Car`，也可以写成接口`MotorVehicle`。它们的区别是，如果类`Car`有接口`MotoVehicle`没有的属性和方法，那么只有变量`c1`可以调用这些属性和方法。
 
 作为类型使用时，类名只能表示实例的类型，不能表示类的自身类型。
 
