@@ -719,7 +719,7 @@ accessor 装饰器的类型如下。
 type ClassAutoAccessorDecorator = (
   value: {
     get: () => unknown;
-    set(value: unknown) => void;
+    set: (value: unknown) => void;
   },
   context: {
     kind: "accessor";
