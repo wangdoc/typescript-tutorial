@@ -322,7 +322,7 @@ interface CountryWithPop extends Country {
 
 ### interface 继承 class
 
-inteface 还可以继承 class，即继承该类的所有成员。关于 class 的详细解释，参见下一章。
+interface 还可以继承 class，即继承该类的所有成员。关于 class 的详细解释，参见下一章。
 
 ```typescript
 class A {
@@ -613,7 +613,7 @@ const obj:A = {
 
 上面示例中，`interface`把类型`A`的两个定义合并在一起。
 
-这表明，inteface 是开放的，可以添加属性，type 是封闭的，不能添加属性，只能定义新的 type。
+这表明，interface 是开放的，可以添加属性，type 是封闭的，不能添加属性，只能定义新的 type。
 
 （4）`interface`不能包含属性映射（mapping），`type`可以，详见《映射》一章。
 
