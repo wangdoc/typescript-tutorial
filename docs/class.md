@@ -278,7 +278,7 @@ class MyClass {
 }
 ```
 
-属性存取器等同于方法，也必须包括在属性索性里面。
+属性存取器等同于方法，也必须包括在属性索引里面。
 
 ```typescript
 class MyClass {
