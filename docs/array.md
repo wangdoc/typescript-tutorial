@@ -24,7 +24,7 @@ let arr:(number|string)[];
 
 上面示例中，数组`arr`的成员类型是`number|string`。
 
-这个例子里面的圆括号是必须的，否则因为竖杠（`|`）的优先级低于`[]`，TypeScript 会把`number|string[]`理解成`number`和`string[]`的联合类型。
+这个例子里面的圆括号是必须的，否则因为竖杠`|`的优先级低于`[]`，TypeScript 会把`number|string[]`理解成`number`和`string[]`的联合类型。
 
 如果数组成员可以是任意类型，写成`any[]`。当然，这种写法是应该避免的。
 
