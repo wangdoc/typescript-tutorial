@@ -237,7 +237,7 @@ function f():never {
 
 let v1:number = f(); // 不报错
 let v2:string = f(); // 不报错
-let v3:string = f(); // 不报错
+let v3:boolean = f(); // 不报错
 ```
 
 上面示例中，函数`f()`会抛错，所以返回值类型可以写成`never`，即不可能返回任何值。各种其他类型的变量都可以赋值为`f()`的运行结果（`never`类型）。
