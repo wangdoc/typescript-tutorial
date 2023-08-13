@@ -413,7 +413,7 @@ function sum(
 }
 ```
 
-参数结构可以结合类型别名（type 命令）一起使用，代码会看起来简洁一些。
+参数解构可以结合类型别名（type 命令）一起使用，代码会看起来简洁一些。
 
 ```typescript
 type ABC = { a:number; b:number; c:number };
