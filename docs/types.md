@@ -235,7 +235,14 @@ Math.abs(n2) // 报错
 
 上面示例中，`Math.abs()`方法的参数类型被定义成小写的`number`，传入大写的`Number`类型就会报错。
 
-上一小节说过，`Symbol()`和`BigInt()`这两个函数不能当作构造函数使用，所以没有办法直接获得 symbol 类型和 bigint 类型的包装对象，因此`Symbol`和`BigInt`这两个类型虽然存在，但是完全没有使用的理由。
+上一小节说过，`Symbol()`和`BigInt()`这两个函数不能当作构造函数使用，所以没有办法直接获得 symbol 类型和 bigint 类型的包装对象，除非使用下面的写法。但是，它们没有使用场景，因此`Symbol`和`BigInt`这两个类型虽然存在，但是完全没有使用的理由。
+
+```typescript
+let a:Symbol = Object(Symbol());
+let b:BigInt = Object(BigInt());
+```
+
+上面示例中，得到的就是 Symbol 和 BigInt 的包装对象，但是没有使用的意义。
 
 ## Object 类型与 object 类型
 
