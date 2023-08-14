@@ -471,7 +471,7 @@ class SecretCar implements SuperCar {
 }
 ```
 
-上面示例中，接口`SuperCar`通过`SuperCar`接口，就间接实现了多个接口。
+上面示例中，类`SecretCar`通过`SuperCar`接口，就间接实现了多个接口。
 
 注意，发生多重实现时（即一个接口同时实现多个接口），不同接口不能有互相冲突的属性。
 
