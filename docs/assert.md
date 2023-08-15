@@ -429,7 +429,7 @@ const aValue:string|number = 'Hello';
 isString(aValue);
 ```
 
-上面示例中，变量`aValue`可能是字符串，也可能是数组。但是，通过调用`isString()`，后面的代码就可以确定，变量`aValue`一定是字符串。
+上面示例中，变量`aValue`可能是字符串，也可能是数字。但是，通过调用`isString()`，后面的代码就可以确定，变量`aValue`一定是字符串。
 
 断言函数的类型可以写成下面这样。
 
