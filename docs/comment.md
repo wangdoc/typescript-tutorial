@@ -31,18 +31,47 @@ console.log(isChceked); // 报错
 
 ## `// @ts-ignore`
 
-`// @ts-ignore`或`// @ts-expect-error`，告诉编译器不对下一行代码进行类型检查，可以用于 TypeScript 脚本，也可以用于 JavaScript 脚本。
+`// @ts-ignore`告诉编译器不对下一行代码进行类型检查，可以用于 TypeScript 脚本，也可以用于 JavaScript 脚本。
 
 ```typescript
 let x:number;
 
 x = 0;
 
-// @ts-expect-error
+// @ts-ignore
 x = false; // 不报错
 ```
 
 上面示例中，最后一行是类型错误，变量`x`的类型是`number`，不能等于布尔值。但是因为前面加上了`// @ts-expect-error`，编译器会跳过这一行的类型检查，所以不会报错。
+
+## `// @ts-expect-error`
+
+`// @ts-expect-error`主要用在测试用例，当下一行有类型错误时，它会压制 TypeScript 的报错信息（即不显示报错信息），把错误留给代码自己处理。
+
+```typescript
+function doStuff(abc: string, xyz: string) {
+  assert(typeof abc === "string");
+  assert(typeof xyz === "string");
+  // do some stuff
+}
+
+// @ts-expect-error
+expect(() => {
+  doStuff(123, 456);
+}).toThrow();
+```
+
+上面示例是一个测试用例，倒数第二行的`doStuff(123, 456)`的参数类型与定义不一致，TypeScript 引擎会报错。但是，测试用例本身测试的就是这个错误，已经有专门的处理代码，所以这里可以使用`// @ts-expect-error`，不显示引擎的报错信息。
+
+如果下一行没有类型错误，`// @ts-expect-error`则会显示一行提示。
+
+```typescript
+// @ts-expect-error
+console.log(1 + 1);
+// 输出 Unused '@ts-expect-error' directive.
+```
+
+上面示例中，第二行是正确代码，这时系统会给出一个提示，表示`@ts-expect-error`没有用到。
 
 ## JSDoc
 
