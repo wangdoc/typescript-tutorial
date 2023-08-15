@@ -465,7 +465,7 @@ interface A {
 }
 ```
 
-上面示例中，`f()`方法有一个类型声明是，参数`x`是字面量类型，这个类型声明的优先级最高，会排在函数重载的最前面。
+上面示例中，`f()`方法有一个类型声明的参数`x`是字面量类型，这个类型声明的优先级最高，会排在函数重载的最前面。
 
 一个实际的例子是 Document 对象的`createElement()`方法，它会根据参数的不同，而生成不同的 HTML 节点对象。
 
@@ -655,7 +655,7 @@ type Foo = {
 ```typescript
 class Calculator implements Foo {
   result = 0;
-  add(num：number) {
+  add(num:number) {
     this.result += num;
     return this;
   }
