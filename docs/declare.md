@@ -100,7 +100,7 @@ function sayHello(name) {
 
 ## declare class
 
-declare 给出 class 的描述描述写法如下。
+declare 给出 class 类型描述的写法如下。
 
 ```typescript
 declare class Animal {
@@ -176,7 +176,7 @@ declare namespace Foo {
 }
 
 declare module 'io' {
- export function readFile(filename:string):string;
+  export function readFile(filename:string):string;
 }
 ```
 
@@ -187,6 +187,7 @@ declare module 'io' {
 ```typescript
 let result = myLib.makeGreeting('你好');
 console.log('欢迎词：' + result);
+
 let count = myLib.numberOfGreetings;
 ```
 
@@ -194,8 +195,8 @@ let count = myLib.numberOfGreetings;
 
 ```typescript
 declare namespace myLib {
-  function makeGreeting(s:string):string;
-  let numberOfGreetings:number;
+  function makeGreeting(s:string): string;
+  let numberOfGreetings: number;
 }
 ```
 
@@ -207,7 +208,7 @@ import { Foo as Bar } from 'moduleA';
 declare module 'moduleA' {
   interface Bar extends Foo {
     custom: {
-      prop1:string;
+      prop1: string;
     }
   }
 }
@@ -254,7 +255,7 @@ declare module "模块名";
 declare module "hot-new-module";
 ```
 
-加上上面的命令以后，外部模块即使没有类型，也可以通过编译。但是，从该模块输入的所有接口都将为`any`类型。
+加上上面的命令以后，外部模块即使没有类型声明，也可以通过编译。但是，从该模块输入的所有接口都将为`any`类型。
 
 declare module 描述的模块名可以使用通配符。
 
