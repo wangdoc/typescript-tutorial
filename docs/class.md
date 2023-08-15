@@ -41,14 +41,22 @@ class Point {
 
 上面示例中，属性`x`和`y`的类型都会被推断为 number。
 
-TypeScript 有一个配置项`strictPropertyInitialization`，只要打开，就会检查属性是否设置了初值，如果没有就报错。
+TypeScript 有一个配置项`strictPropertyInitialization`，只要打开（默认是打开的），就会检查属性是否设置了初值，如果没有就报错。
 
-如果你打开了这个设置，但是某些情况下，不是在声明时赋值或在构造方法里面赋值，为了防止这个设置报错，可以使用非空断言。
+```typescript
+// 打开 strictPropertyInitialization
+class Point {
+  x: number; // 报错
+  y: number; // 报错
+}
+```
+
+上面示例中，如果类的顶层属性不赋值，就会报错。如果不希望出现报错，可以使用非空断言。
 
 ```typescript
 class Point {
-  x!:number;
-  y!:number;
+  x!: number;
+  y!: number;
 }
 ```
 
