@@ -213,21 +213,22 @@ c.name = 'bar'; // 报错
 
 上面示例中，`name`属性没有`set`方法，对该属性赋值就会报错。
 
-（2）`set`方法的参数类型，必须兼容`get`方法的返回值类型，否则报错。
+（2）TypeScript 5.1 版之前，`set`方法的参数类型，必须兼容`get`方法的返回值类型，否则报错。
 
 ```typescript
+// TypeScript 5.1 版之前
 class C {
   _name = '';
-  get name():string {
+  get name():string {  // 报错
     return this._name;
   }
   set name(value:number) {
-    this._name = value; // 报错
+    this._name = String(value);
   }
 }
 ```
 
-上面示例中，`get`方法的返回值类型是字符串，与`set`方法参数类型不兼容，导致报错。
+上面示例中，`get`方法的返回值类型是字符串，与`set`方法的参数类型`number`不兼容，导致报错。改成下面这样，就不会报错。
 
 ```typescript
 class C {
@@ -236,14 +237,14 @@ class C {
     return this._name;
   }
   set name(value:number|string) {
-    this._name = String(value); // 正确
+    this._name = String(value);
   }
 }
 ```
 
-上面示例中，`set`方法的参数类型（`number|string`）兼容`get`方法的返回值类型（`string`），这是允许的。但是，最终赋值的时候，还是必须保证与`get`方法的返回值类型一致。
+上面示例中，`set`方法的参数类型（`number|string`）兼容`get`方法的返回值类型（`string`），这是允许的。
 
-另外，如果`set`方法的参数没有指定类型，那么会推断为与`get`方法返回值类型一致。
+TypeScript 5.1 版做出了[改变](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-1.html#unrelated-types-for-getters-and-setters)，现在两者可以不兼容。
 
 （3）`get`方法与`set`方法的可访问性必须一致，要么都为公开方法，要么都为私有方法。
 
