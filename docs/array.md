@@ -48,6 +48,8 @@ let arr:Array<number|string>;
 
 这种写法本质上属于泛型，这里只要知道怎么写就可以了，详细解释参见《泛型》一章。另外，数组类型还有第三种写法，因为很少用到，本章就省略了，详见《interface 接口》一章。
 
+[ESLINT](https://typescript-eslint.io/) 推荐一致性使用第一种声明方式（`Foo[]`）[lint-rule](https://typescript-eslint.io/rules/array-type/) 。
+
 数组类型声明了以后，成员数量是不限制的，任意数量的成员都可以，也可以是空数组。
 
 ```typescript
