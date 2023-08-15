@@ -41,15 +41,15 @@ class A {} // "hi"
 
 ```typescript
 function simpleDecorator(
-  target:any,
+  value:any,
   context:any
 ) {
-  console.log('hi, this is ' + target);
-  return target;
+  console.log(`hi, this is ${context.kind} ${context.name}`);
+  return value;
 }
 
 @simpleDecorator
-class A {} // "hi, this is class A {}" 
+class A {} // "hi, this is class A"
 ```
 
 上面的代码就可以顺利通过编译了，代码含义这里先不解释。大家只要理解，类`A`在执行前会先执行装饰器`simpleDecorator()`，并且会向装饰器自动传入参数就可以了。
