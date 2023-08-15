@@ -655,7 +655,7 @@ type Foo = {
 ```typescript
 class Calculator implements Foo {
   result = 0;
-  add(num：number) {
+  add(num:number) {
     this.result += num;
     return this;
   }
