@@ -167,13 +167,22 @@ type User = {
 // 等同于
 type User = {
   firstName: string;
-  lastName: string|undefined;
+  lastName?: string|undefined;
 };
 ```
 
-上面示例中，类型`User`的属性`lastName`可以是字符串，也可以是`undefined`，就表示该属性可以省略不写。
+上面示例中，类型`User`的可选属性`lastName`可以是字符串，也可以是`undefined`，即可选属性可以赋值为`undefined`。
 
-同理，读取一个可选属性时，有可能返回`undefined`。
+```typescript
+const obj: {
+  x: number;
+  y?: number;
+} = { x: 1, y: undefined };
+```
+
+上面示例中，可选属性`y`赋值为`undefined`，不会报错。
+
+同样地，读取一个没有赋值的可选属性时，返回`undefined`。
 
 ```typescript
 type MyObj = {
@@ -185,7 +194,7 @@ const obj:MyObj = { x: 'hello' };
 obj.y.toLowerCase() // 报错
 ```
 
-上面示例中，最后一行会报错，因为`obj.y`有可能是`undefined`，无法对其调用`toLowerCase()`。
+上面示例中，最后一行会报错，因为`obj.y`返回`undefined`，无法对其调用`toLowerCase()`。
 
 所以，读取可选属性之前，必须检查一下是否为`undefined`。
 
@@ -215,6 +224,30 @@ let lastName = user.lastName ?? 'Bar';
 ```
 
 上面示例中，写法一使用三元运算符`?:`，判断是否为`undefined`，并设置默认值。写法二使用 Null 判断运算符`??`，与写法一的作用完全相同。
+
+TypeScript 提供编译设置`ExactOptionalPropertyTypes`，只要同时打开这个设置和`strictNullChecks`，可选属性就不能设为`undefined`。
+
+```typescript
+// 打开 ExactOptionsPropertyTypes 和 strictNullChecks
+const obj: {
+  x: number;
+  y?: number;
+} = { x: 1, y: undefined }; // 报错
+```
+
+上面示例中，打开了这两个设置以后，可选属性就不能设为`undefined`了。
+
+注意，可选属性与允许设为`undefined`的必选属性是不等价的。
+
+```typescript
+type A = { x:number, y?:number };
+type B = { x:number, y:number|undefined };
+
+const ObjA:A = { x: 1 }; // 正确
+const ObjB:B = { x: 1 }; // 报错
+```
+
+上面示例中，属性`y`如果是一个可选属性，那就可以省略不写；如果是允许设为`undefined`的必选属性，一旦省略就会报错，必须显式写成`{ x: 1, y: undefined }`。
 
 ## 只读属性
 
