@@ -372,7 +372,7 @@ const enum E {
 enum E {
   A,
 }
-const enum E2 {
+const enum E {
   B = 1,
 }
 ```
