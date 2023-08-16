@@ -386,7 +386,7 @@ TypeScript 内置的类型描述文件，主要有以下一些，完整的清单
 - ES2020
 - ES2021
 - ES2022
-- ESNex
+- ESNext
 - DOM
 - WebWorker
 - ScriptHost
