@@ -414,33 +414,26 @@ class Point {
 断言函数是一种特殊函数，用于保证函数参数符合某种类型。如果函数参数达不到要求，就会抛出错误，中断程序执行；如果达到要求，就不进行任何操作，让代码按照正常流程运行。
 
 ```typescript
-function isString(value) {
-  if (typeof value !== 'string')
-    throw new Error('Not a string');
-}
-```
-
-上面示例中，函数`isString()`就是一个断言函数，用来保证参数`value`是一个字符串。
-
-下面是它的用法。
-
-```typescript
-const aValue:string|number = 'Hello';
-isString(aValue);
-```
-
-上面示例中，变量`aValue`可能是字符串，也可能是数值。但是，通过调用`isString()`，后面的代码就可以确定，变量`aValue`一定是字符串。
-
-断言函数的类型可以写成下面这样。
-
-```typescript
 function isString(value:unknown):void {
   if (typeof value !== 'string')
     throw new Error('Not a string');
 }
 ```
 
-上面代码中，函数参数`value`的类型是`unknown`，返回值类型是`void`，即没有返回值。可以看到，单单从这样的类型声明，很难看出`isString()`是一个断言函数。
+上面示例中，函数`isString()`就是一个断言函数，用来保证参数`value`是一个字符串，否则就会抛出错误，中断程序的执行。
+
+下面是它的用法。
+
+```typescript
+function toUpper(x: string|number) {
+  isString(x);
+  return x.toUpperCase();
+}
+```
+
+上面示例中，函数`toUpper()`的参数`x`，可能是字符串，也可能是数值。但是，函数体的最后一行调用`toUpperCase()`方法，必须保证`x`是字符串，否则报错。所以，这一行前面调用断言函数`isString()`，调用以后 TypeScript 就能确定，变量`x`一定是字符串，不是数值，也就不报错了。
+
+传统的断言函数`isString()`的写法有一个缺点，它的参数类型是`unknown`，返回值类型是`void`（即没有返回值）。单单从这样的类型声明，很难看出`isString()`是一个断言函数。
 
 为了更清晰地表达断言函数，TypeScript 3.7 引入了新的类型写法。
 
