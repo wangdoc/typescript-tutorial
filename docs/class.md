@@ -1351,7 +1351,7 @@ class Box<Type> {
 
 ## 抽象类，抽象成员
 
-TypeScript 允许在类的定义前面，加上关键字`abstract`，表示该类不能被实例化，只能当作其他类的模板。这种类就叫做“抽象类”（abastract class）。
+TypeScript 允许在类的定义前面，加上关键字`abstract`，表示该类不能被实例化，只能当作其他类的模板。这种类就叫做“抽象类”（abstract class）。
 
 ```typescript
 abstract class A {
