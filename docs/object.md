@@ -610,7 +610,7 @@ type Options = {
   darkMode?:boolean;
 };
 
-const Obj:Options = {
+const obj:Options = {
   title: '我的网页',
   darkmode: true, // 报错
 };
@@ -626,7 +626,7 @@ let myOptions = {
   darkmode: true,
 };
 
-const Obj:Options = myOptions;
+const obj:Options = myOptions;
 ```
 
 上面示例中，创建了一个中间变量`myOptions`，就不会触发严格字面量规则，因为这时变量`obj`的赋值，不属于直接字面量赋值。
@@ -634,7 +634,7 @@ const Obj:Options = myOptions;
 如果你确认字面量没有错误，也可以使用类型断言规避严格字面量检查。
 
 ```typescript
-const Obj:Options = {
+const obj:Options = {
   title: '我的网页',
   darkmode: true,
 } as Options;
