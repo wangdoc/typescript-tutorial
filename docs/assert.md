@@ -228,8 +228,7 @@ let s = 'JavaScript';
 setLang(s as const); // 报错
 ```
 
-上面示例中，`as
-const`断言用于变量`s`，就报错了。下面的写法可以更清晰地看出这一点。
+上面示例中，`as const`断言用于变量`s`，就报错了。下面的写法可以更清晰地看出这一点。
 
 ```typescript
 let s1 = 'JavaScript';
