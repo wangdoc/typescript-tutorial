@@ -172,7 +172,7 @@ tsc 的命令行参数，大部分与 tsconfig.json 的属性一一对应。
 
 `--suppressExcessPropertyErrors`：关闭对象字面量的多余参数的报错。
 
-`--target`：指定编译出来的 JS 代码的版本，TypeScirpt 还会在编译时自动加入对应的库类型声明文件。
+`--target`：指定编译出来的 JS 代码的版本，TypeScript 还会在编译时自动加入对应的库类型声明文件。
 
 `--traceResolution`：编译时在终端输出模块解析（moduleResolution）的具体步骤。
 
