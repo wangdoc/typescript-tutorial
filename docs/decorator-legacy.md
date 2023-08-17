@@ -588,7 +588,7 @@ class C {
     @log x:number,
     @log y:number
   ) {
-    console.log(`member Paremeters: ${x} ${y}`);
+    console.log(`member Parameters: ${x} ${y}`);
   }
 }
 
@@ -596,7 +596,7 @@ const c = new C();
 c.member(5, 5);
 // member NO.1 Parameter
 // member NO.0 Parameter 
-// member Paremeters: 5 5 
+// member Parameters: 5 5 
 ```
 
 上面示例中，参数装饰器会输出参数的位置序号。注意，后面的参数会先输出。
