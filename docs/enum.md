@@ -452,7 +452,7 @@ f('One') // 报错
 
 所以，字符串 Enum 作为一种类型，有限定函数参数的作用。
 
-前面说过，数值 Enum 的成员值往往不重要。但是有些场合，开发者可能希望 Enum 成员值可以保存一些有用的信息，所以 TypeScript 才设计了字符串 Enum.
+前面说过，数值 Enum 的成员值往往不重要。但是有些场合，开发者可能希望 Enum 成员值可以保存一些有用的信息，所以 TypeScript 才设计了字符串 Enum。
 
 ```typescript
 const enum MediaTypes {
