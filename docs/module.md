@@ -221,7 +221,7 @@ let obj = { foo: 123 };
 export = obj;
 ```
 
-`export = `语句输出的对象，只能使用`import =`语句加载。
+`export =`语句输出的对象，只能使用`import =`语句加载。
 
 ```typescript
 import obj = require('./a');
