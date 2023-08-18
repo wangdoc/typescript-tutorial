@@ -312,7 +312,7 @@ type T = Obj[string];
 这个语法对于数组也适用，可以使用`number`作为方括号的参数。
 
 ```typescript
-// MyArray 的类型是 { [key:number]：string }
+// MyArray 的类型是 { [key:number]: string }
 const MyArray = ['a','b','c'];
 
 // 等同于 (typeof MyArray)[number]
