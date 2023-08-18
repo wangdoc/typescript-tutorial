@@ -169,7 +169,7 @@ TypeScript 依赖 JavaScript 生态，需要用到很多外部模块。但是，
 
 下面简要介绍 TypeScript 的发展历史。
 
-2012年，微软公司宣布推出 TypeScript 语言，设计者是著名的编程语言设计大师 Anders Hejlsberg，他也是 C# 和 .Net 的设计师。
+2012年，微软公司宣布推出 TypeScript 语言，设计者是著名的编程语言设计大师 Anders Hejlsberg，他也是 C# 和 .NET 的设计师。
 
 微软推出这门语言的主要目的，是让 JavaScript 程序员可以参与 Windows 8 应用程序的开发。
 
