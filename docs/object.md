@@ -504,11 +504,11 @@ function draw({
 只要对象 B 满足 对象 A 的结构特征，TypeScript 就认为对象 B 兼容对象 A 的类型，这称为“结构类型”原则（structural typing）。
 
 ```typescript
-const A = {
+type A = {
   x: number;
 };
 
-const B = {
+type B = {
   x: number;
   y: number;
 };
