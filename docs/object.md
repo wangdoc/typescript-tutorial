@@ -713,7 +713,7 @@ const obj:Options = opts; // 报错
 
 报错原因是，如果某个类型的所有属性都是可选的，那么该类型的对象必须至少存在一个可选属性，不能所有可选属性都不存在。这就叫做“最小可选属性规则”。
 
-如果想规避这条规则，要么在类型里面增加一条索性属性（`[propName: string]: someType`），要么使用类型断言（`opts as Options`）。
+如果想规避这条规则，要么在类型里面增加一条索引属性（`[propName: string]: someType`），要么使用类型断言（`opts as Options`）。
 
 ## 空对象
 
