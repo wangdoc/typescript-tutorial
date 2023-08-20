@@ -498,7 +498,27 @@ interface Swimmable {
 
 ### 类与接口的合并
 
-TypeScript 不允许两个同名的类，但是如果一个类和一个接口同名，那么接口会被合并进类。值得注意的是，合并进类的非空属性，在实际使用中可能为空。
+TypeScript 不允许两个同名的类，但是如果一个类和一个接口同名，那么接口会被合并进类。
+
+```typescript
+class A {
+  x:number = 1;
+}
+
+interface A {
+  y:number;
+}
+
+let a = new A();
+a.y = 10;
+
+a.x // 1
+a.y // 10
+```
+
+上面示例中，类`A`与接口`A`同名，后者会被合并进前者的类型定义。
+
+注意，合并进类的非空属性（上例的`y`），如果在赋值之前读取，会返回`undefined`。
 
 ```typescript
 class A {
@@ -511,14 +531,9 @@ interface A {
 
 let a = new A();
 a.y // undefined
-
-a.y = 10;
-
-a.x // 1
-a.y // 10
 ```
 
-上面示例中，类`A`与接口`A`同名，后者会被合并进前者的类型定义。
+上面示例中，根据类型定义，`y`应该是一个非空属性。但是合并后，`y`有可能是`undefined`。
 
 ## Class 类型
 
