@@ -107,7 +107,7 @@ compute(Operator.ADD, 1, 3) // 4
 
 上面示例中，Enum 结构`Operator`的四个成员表示四则运算“加减乘除”。代码根本不需要用到这四个成员的值，只用成员名就够了。
 
-Enum 作为类型有一个缺点，就是输入任何数值都不报错。
+[TypeScript 5.0](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#enum-overhaul) 之前，Enum 有一个 Bug，就是 Enum 类型的变量可以赋值为任何数值。
 
 ```typescript
 enum Bool {
@@ -119,10 +119,10 @@ function foo(noYes:Bool) {
   // ...
 }
 
-foo(33);  // 不报错
+foo(33);  // TypeScript 5.0 之前不报错
 ```
 
-上面代码中，函数`foo`的参数`noYes`只有两个可用的值，但是输入任意数值，编译都不会报错。
+上面示例中，函数`foo`的参数`noYes`是 Enum 类型，只有两个可用的值。但是，TypeScript 5.0 之前，任何数值作为函数`foo`的参数，编译都不会报错，TypeScript 5.0 纠正了这个问题。
 
 另外，由于 Enum 结构编译后是一个对象，所以不能有与它同名的变量（包括对象、函数、类等）。
 
