@@ -129,9 +129,11 @@ const x:null = null;
 
 上面示例中，变量`x`就属于 null 类型。
 
-注意，如果没有声明类型的变量，被赋值为`undefined`或`null`，它们的类型会被推断为`any`。
+注意，如果没有声明类型的变量，被赋值为`undefined`或`null`，在关闭编译设置`noImplicitAny`和`strictNullChecks`时，它们的类型会被推断为`any`。
 
 ```typescript
+// 关闭 noImplicitAny 和 strictNullChecks
+
 let a = undefined;   // any
 const b = undefined; // any
 
@@ -143,6 +145,7 @@ const d = null;      // any
 
 ```typescript
 // 打开编译设置 strictNullChecks
+
 let a = undefined;   // undefined
 const b = undefined; // undefined
 
