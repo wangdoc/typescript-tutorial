@@ -516,7 +516,7 @@ s.area;   // bigint | number
 
 `interface`命令与`type`命令作用类似，都可以表示对象类型。
 
-很多对象类型即可以用 interface 表示，也可以用 type 表示。而且，两者往往可以换用，几乎所有的 interface 命令都可以改写为 type 命令。
+很多对象类型既可以用 interface 表示，也可以用 type 表示。而且，两者往往可以换用，几乎所有的 interface 命令都可以改写为 type 命令。
 
 它们的相似之处，首先表现在都能为对象类型起名。
 
