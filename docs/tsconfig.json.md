@@ -347,11 +347,13 @@ obj.foo = undefined; // 报错
 
 ### jsx
 
-`jsx`设置如何处理`.tsx`文件。它一般以下三个值。
+`jsx`设置如何处理`.tsx`文件。它可以取以下五个值。
 
-- `preserve`：保持 jsx 语法不变，输出的文件名为 jsx。
+- `preserve`：保持 jsx 语法不变，输出的文件名为`.jsx`。
 - `react`：将`<div />`编译成`React.createElement("div")`，输出的文件名为`.js`。
 - `react-native`：保持 jsx 语法不变，输出的文件后缀名为`.js`。
+- `react-jsx`：将`<div />`编译成`_jsx("div")`，输出的文件名为`.js`。
+- `react-jsxdev`：跟`react-jsx`类似，但是为`_jsx()`加上更多的开发调试项，输出的文件名为`.js`。
 
 ```javascript
 {
