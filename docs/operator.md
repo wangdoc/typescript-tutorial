@@ -148,7 +148,8 @@ function prop(obj, key) {
 
 ```javascript
 function prop(
-  obj:object, key:string
+  obj: { [p:string]: any },
+  key: string
 ):any {
   return obj[key];
 }
