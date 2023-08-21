@@ -342,7 +342,7 @@ type MyEvents<Events extends { kind: string }> = {
   [E in Events as E['kind']]: (event: E) => void;
 }
 
-type Config = MyEvent<S|C>;
+type Config = MyEvents<S|C>;
 // 等同于
 type Config = {
   square: (event:S) => void;
