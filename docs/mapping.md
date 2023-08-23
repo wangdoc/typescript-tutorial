@@ -237,7 +237,7 @@ type A<T> = {
 };
 
 // 等同于
-type B<T> = {
+type A<T> = {
   readonly [P in keyof T]?: T[P];
 };
 ```
