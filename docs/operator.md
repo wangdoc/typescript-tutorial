@@ -665,7 +665,7 @@ const greenComponent = palette.green.substring(1, 6); // 报错
 
 如果要避免报错，要么精确给出变量`palette`每个属性的类型，要么对`palette.green`的值进行类型缩小。两种做法都比较麻烦，也不是很有必要。
 
-这时就可以使用`statisfies`运算符，对`palette`进行类型检测，但是不改变 TypeScript 对`palette`的类型推断。
+这时就可以使用`satisfies`运算符，对`palette`进行类型检测，但是不改变 TypeScript 对`palette`的类型推断。
 
 ```typescript
 type Colors = "red" | "green" | "blue";
@@ -682,7 +682,7 @@ const greenComponent = palette.green.substring(1); // 不报错
 
 上面示例中，变量`palette`的值后面增加了`satisfies Record<Colors, string|RGB>`，表示该值必须满足`Record<Colors, string|RGB>`这个条件，所以能够检测出属性名`bleu`的拼写错误。同时，它不会改变`palette`的类型推断，所以，TypeScript 知道`palette.green`是一个字符串，对其调用`substring()`方法就不会报错。
 
-`statisfies`也可以检测属性值。
+`satisfies`也可以检测属性值。
 
 ```typescript
 const palette = {
