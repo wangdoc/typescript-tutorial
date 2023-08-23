@@ -376,7 +376,7 @@ type T2 = RegExp extends Animal ? number : string;
 
 上面示例中，`Dog`是`Animal`的子类型，所以`T1`的类型是`number`。`RegExp`不是`Animal`的子类型，所以`T2`的类型是`string`。
 
-一般来说，调换`extends`两侧类型，会返回相反的结果。举例来说，有两个类`Dog`和`Animal`，前者是后者的子类型，那么`Cat extends Animal`就为真，而`Animal extends Cat`就为伪。
+一般来说，调换`extends`两侧类型，会返回相反的结果。举例来说，有两个类`Cat`和`Animal`，前者是后者的子类型，那么`Cat extends Animal`就为真，而`Animal extends Cat`就为伪。
 
 如果需要判断的类型是一个联合类型，那么条件运算符会展开这个联合类型。
 
