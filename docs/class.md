@@ -287,19 +287,19 @@ class MyClass {
 }
 ```
 
-属性存取器等同于方法，也必须包括在属性索引里面。
+属性存取器视同属性。
 
 ```typescript
 class MyClass {
   [s:string]: boolean;
 
-  get(s:string) { // 报错
-    return this[s] as boolean;
+  get isInstance() {
+    return true;
   }
 }
 ```
 
-上面示例中，属性索引没有给出方法的类型，导致`get()`方法报错。正确的写法就是本节一开始的那个例子。
+上面示例中，属性`inInstance`的读取器虽然是一个函数方法，但是视同属性，所以属性索引虽然没有涉及方法类型，但是不会报错。
 
 ## 类的 interface 接口
 
