@@ -153,7 +153,7 @@ const Bar = {
   C: 2,
 } as const;
 
-if （x === Foo.A）{}
+if (x === Foo.A) {}
 // 等同于
 if (x === Bar.A) {}
 ```
