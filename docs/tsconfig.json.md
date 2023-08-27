@@ -645,7 +645,7 @@ TypeScript 内置的类型描述文件，主要有以下一些，完整的清单
 
 `strictBindCallApply`设置是否对函数的`call()`、`bind()`、`apply()`这三个方法进行类型检查。
 
-如果不打开`strictBindCallApply`编译选项，编译器不会对以三个方法进行类型检查，参数类型都是`any`，传入任何参数都不会产生编译错误。
+如果不打开`strictBindCallApply`编译选项，编译器不会对以上三个方法进行类型检查，参数类型都是`any`，传入任何参数都不会产生编译错误。
 
 ```typescript
 function fn(x: string) {
