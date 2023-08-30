@@ -44,7 +44,7 @@ async function fn(): Promise<number> {
 }
 ```
 
-## `Iterable<>`
+## `Iterable<T>`
 
 对象只要部署了 Iterator 接口，就可以用`for...of`循环遍历。Generator 函数（生成器）返回的就是一个具有 Iterator 接口的对象。
 
