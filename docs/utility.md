@@ -660,7 +660,7 @@ type ThisParameterType<T> =
   T extends (
     this: infer U,
     ...args: never
-  ) => any ? U : unknown；
+  ) => any ? U : unknown;
 ```
 
 ## `ThisType<Type>`
