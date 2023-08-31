@@ -56,14 +56,6 @@ $ tsc b.ts
 
 上面命令发现`b.ts`依赖`a.ts`，就会自动寻找`a.ts`，也将其同时编译，因此编译产物还是`a.js`和`b.js`两个文件。
 
-如果想将`a.ts`和`b.ts`编译成一个文件，可以使用`--outFile`参数。
-
-```typescript
-$ tsc --outFile result.js b.ts
-```
-
-上面示例将`a.ts`和`b.ts`合并编译为`result.js`。
-
 ## import type 语句
 
 import 在一条语句中，可以同时输入类型和正常接口。
