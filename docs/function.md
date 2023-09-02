@@ -601,7 +601,7 @@ const f3 = function ():void {
 
 上面示例中，函数字面量声明了返回`void`类型，这时只要有返回值（除了`undefined`和`null`）就会报错。
 
-函数的运行结果如果是抛错，也允许将返回值写成`void`。
+函数的运行结果如果是抛出错误，也允许将返回值写成`void`。
 
 ```typescript
 function throwErr():void {
@@ -609,7 +609,7 @@ function throwErr():void {
 }
 ```
 
-上面示例中，函数`throwErr()`会抛错，返回值类型写成`void`是允许的。
+上面示例中，函数`throwErr()`会抛出错误，返回值类型写成`void`是允许的。
 
 除了函数，其他变量声明为`void`类型没有多大意义，因为这时只能赋值为`undefined`或者`null`（假定没有打开`strictNullChecks`) 。
 
@@ -634,7 +634,7 @@ function fail(msg:string):never {
 }
 ```
 
-上面示例中，函数`fail()`会抛错，不会正常退出，所以返回值类型是`never`。
+上面示例中，函数`fail()`会抛出错误，不会正常退出，所以返回值类型是`never`。
 
 注意，只有抛出错误，才是 never 类型。如果显式用`return`语句返回一个 Error 对象，返回值就不是 never 类型。
 
@@ -646,7 +646,7 @@ function fail():Error {
 
 上面示例中，函数`fail()`返回一个 Error 对象，所以返回值类型是 Error。
 
-另外，由于抛错的情况属于`never`类型或`void`类型，所以无法从返回值类型中获知，抛出的是哪一种错误。
+另外，由于抛出错误的情况属于`never`类型或`void`类型，所以无法从返回值类型中获知，抛出的是哪一种错误。
 
 （2）无限执行的函数。
 
@@ -696,7 +696,7 @@ function f(
 
 上面示例中，函数`f()`的参数`x`的类型为`string|undefined`。但是，`x`类型为`undefined`时，调用了`neverReturns()`。这个函数不会返回，因此 TypeScript 可以推断出，判断语句后面的那个`x`，类型一定是`string`。
 
-一个函数如果某些条件下有正常返回值，另一些条件下抛错，这时它的返回值类型可以省略`never`。
+一个函数如果某些条件下有正常返回值，另一些条件下抛出错误，这时它的返回值类型可以省略`never`。
 
 ```typescript
 function sometimesThrow():number {
