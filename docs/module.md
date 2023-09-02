@@ -223,17 +223,21 @@ console.log(obj.foo); // 123
 
 ## 模块定位
 
-模块定位（module resolution）指的是确定 import 语句和 export 语句里面的模块文件位置。
+模块定位（module resolution）指的是一种算法，用来确定 import 语句和 export 语句里面的模块文件位置。
 
 ```typescript
+// 相对模块
 import { TypeA } from './a';
+
+// 非相对模块
+import * as $ from "jquery";
 ```
 
-上面示例中，TypeScript 怎么确定`./a`到底是指哪一个模块，这就叫做“模块定位”。
+上面示例中，TypeScript 怎么确定`./a`或`jquery`到底是指哪一个模块，具体位置在哪里，用到的算法就叫做“模块定位”。
 
-模块定位有两种方法，一种称为 Classic 方法，另一种称为 Node 方法。可以使用编译参数`moduleResolution`，指定使用哪一种方法。
+编译参数`moduleResolution`，用来指定具体使用哪一种定位算法。常用的算法有两种：`Classic`和`Node`。
 
-没有指定定位方法时，就看原始脚本采用什么模块格式。如果模块格式是 CommonJS（即编译时指定`--module commonjs`），那么模块定位采用 Node 方法，否则采用 Classic 方法（模块格式为 es2015、 esnext、amd, system, umd 等等）。
+如果没有指定`moduleResolution`，它的默认值与编译参数`module`有关。`module`设为`commonjs`时（项目脚本采用 CommonJS 模块格式），`moduleResolution`的默认值为`Node`，即采用 Node.js 的模块定位算法。其他情况下（`module`设为 es2015、 esnext、amd, system, umd 等等），就采用`Classic`定位算法。
 
 ### 相对模块，非相对模块
 
@@ -245,26 +249,30 @@ import { TypeA } from './a';
 - `import { DefaultHeaders } from "../constants/http";`
 - `import "/mod";`
 
+相对模块的定位，是根据当前脚本的位置进行计算的，一般用于保存在当前项目目录结构中的模块脚本。
+
 非相对模块指的是不带有路径信息的模块。下面 import 语句加载的模块，都是非相对模块。
 
 - `import * as $ from "jquery";`
 - `import { Component } from "@angular/core";`
 
+非相对模块的定位，是由`baseUrl`属性或模块映射而确定的，通常用于加载外部模块。
+
 ### Classic 方法
 
 Classic 方法以当前脚本的路径作为“基准路径”，计算相对模块的位置。比如，脚本`a.ts`里面有一行代码`import { b } from "./b"`，那么 TypeScript 就会在`a.ts`所在的目录，查找`b.ts`和`b.d.ts`。
 
-至于非相对模块，也是以当前脚本的路径作为起点，一层层查找上级目录。比如，脚本`a.ts`里面有一行代码`import { b } from "b"`，那么就会查找`b.ts`和`b.d.ts`。
+至于非相对模块，也是以当前脚本的路径作为起点，一层层查找上级目录。比如，脚本`a.ts`里面有一行代码`import { b } from "b"`，那么就会依次在每一级上层目录里面，查找`b.ts`和`b.d.ts`。
 
 ### Node 方法
 
-Node 方法就是模拟 Node.js 的模块加载方法。
+Node 方法就是模拟 Node.js 的模块加载方法，也就是`require()`的实现方法。
 
 相对模块依然是以当前脚本的路径作为“基准路径”。比如，脚本文件`a.ts`里面有一行代码`let x = require("./b");`，TypeScript 按照以下顺序查找。
 
-1. 当前目录是否包含`b.ts`、`b.tsx`、`b.d.ts`。
-1. 当前目录是否有子目录`b`，该子目录是否存在文件`package.json`，该文件的`types`字段是否指定了入口文件，如果是的就加载该文件。
-1. 当前目录的子目录`b`是否包含`index.ts`、`index.tsx`、`index.d.ts`。
+1. 当前目录是否包含`b.ts`、`b.tsx`、`b.d.ts`。如果不存在就执行下一步。
+1. 当前目录是否存在子目录`b`，该子目录里面的`package.json`文件是否有`types`字段指定了模块入口文件。如果不存在就执行下一步。
+1. 当前目录的子目录`b`是否包含`index.ts`、`index.tsx`、`index.d.ts`。如果不存在就报错。
 
 非相对模块则是以当前脚本的路径作为起点，逐级向上层目录查找是否存在子目录`node_modules`。比如，脚本文件`a.js`有一行`let x = require("b");`，TypeScript 按照以下顺序进行查找。
 
