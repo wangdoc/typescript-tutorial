@@ -451,7 +451,7 @@ TypeScript 内置的类型描述文件，主要有以下一些，完整的清单
 - `node`：采用 Node.js 的 CommonJS 模块算法。
 - `node16`或`nodenext`：采用 Node.js 的 ECMAScript 模块算法，从 TypeScript 4.7 开始支持。
 - `classic`：TypeScript 1.6 之前的算法，新项目不建议使用。
-- `bundle`：TypeScript 5.0 新增的选项，表示当前代码会被其他打包器（比如 Webpack、Vite、esbuild、Parcel、rollup、swc）处理，从而放宽加载规则，它要求`module`设为`es2015`或更高版本，详见加入该功能的 [PR 说明](https://github.com/microsoft/TypeScript/pull/51669)。
+- `bundler`：TypeScript 5.0 新增的选项，表示当前代码会被其他打包器（比如 Webpack、Vite、esbuild、Parcel、rollup、swc）处理，从而放宽加载规则，它要求`module`设为`es2015`或更高版本，详见加入该功能的 [PR 说明](https://github.com/microsoft/TypeScript/pull/51669)。
 
 它的默认值与`module`属性有关，如果`module`为`AMD`、`UMD`、`System`或`ES6/ES2015`，默认值为`classic`；如果`module`为`node16`或`nodenext`，默认值为这两个值；其他情况下,默认值为`Node`。
 
