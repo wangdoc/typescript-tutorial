@@ -466,7 +466,7 @@ type Flatten<Type, Item> =
   Type extends Array<Item> ? Item : Type;
 ```
 
-上面是不使用`infer`的写法，每次调用`Fleatten`的时候，都要传入两个参数，就比较麻烦。
+上面是不使用`infer`的写法，每次调用`Flatten`的时候，都要传入两个参数，就比较麻烦。
 
 下面的例子使用`infer`，推断函数的参数类型和返回值类型。
 
