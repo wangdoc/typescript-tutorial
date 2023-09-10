@@ -791,7 +791,9 @@ class User {
 
 ### typeRoots
 
-`typeRoots`设置类型模块所在的目录，默认是`node_modules/@types`。
+`typeRoots`设置类型模块所在的目录，默认是`node_modules/@types`，该目录里面的模块会自动加入编译。一旦指定了该属性，就不会再用默认值`node_modules/@types`里面的类型模块。
+
+该属性的值是一个数组，数组的每个成员就是一个目录，它们的路径是相对于`tsconfig.json`位置。
 
 ```typescript
 {
@@ -803,7 +805,7 @@ class User {
 
 ### types
 
-`types`设置`typeRoots`目录下需要包括在编译之中的类型模块。默认情况下，该目录下的所有类型模块，都会自动包括在编译之中。
+默认情况下，`typeRoots`目录下所有模块都会自动加入编译，如果指定了`types`属性，那么只有其中列出的模块才会自动加入编译。
 
 ```typescript
 {
@@ -812,6 +814,10 @@ class User {
   }
 }
 ```
+
+上面的设置表示，默认情况下，只有`./node_modules/@types/node`、`./node_modules/@types/jest`和`./node_modules/@types/express`会自动加入编译，其他`node_modules/@types/`目录下的模块不会加入编译。
+
+如果`"types": []`，就表示不会自动将所有`@types`模块加入编译。
 
 ### useUnknownInCatchVariables
 
