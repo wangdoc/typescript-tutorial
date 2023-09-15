@@ -526,7 +526,7 @@ type Country = {
   capital: string;
 }
 
-interface Coutry {
+interface Country {
   name: string;
   capital: string;
 }
