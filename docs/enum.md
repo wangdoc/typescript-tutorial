@@ -512,15 +512,14 @@ type Foo = keyof typeof MyEnum;
 
 上面示例中，`keyof typeof MyEnum`可以取出`MyEnum`的所有成员名，所以类型`Foo`等同于联合类型`'A'|'B'`。
 
-注意，这里的`typeof`是必需的，否则`keyof MyEnum`相当于`keyof number`。
+注意，这里的`typeof`是必需的，否则`keyof MyEnum`相当于`keyof string`。
 
 ```typescript
 type Foo = keyof MyEnum;
-// "toString" | "toFixed" | "toExponential" |
-// "toPrecision" | "valueOf" | "toLocaleString"
+// number | typeof Symbol.iterator | "toString" | "charAt" | "charCodeAt" | ...
 ```
 
-上面示例中，类型`Foo`等于类型`number`的所有原生属性名组成的联合类型。
+上面示例中，类型`Foo`等于类型`string`的所有原生属性名组成的联合类型。这是`MyEnum`为字符串 Enum 的结果，如果`MyEnum`是数值 Enum，那么`keyof MyEnum`相当于`keyof number`。
 
 这是因为 Enum 作为类型，本质上属于`number`或`string`的一种变体，而`typeof MyEnum`会将`MyEnum`当作一个值处理，从而先其转为对象类型，就可以再用`keyof`运算符返回该对象的所有属性名。
 
