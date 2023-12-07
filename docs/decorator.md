@@ -251,10 +251,10 @@ inst1.count // 1
 
 ```typescript
 function functionCallable(
-  value as any, {kind} as any
-) {
+  value:any, {kind}:any
+):any {
   if (kind === 'class') {
-    return function (...args) {
+    return function (...args:any) {
       if (new.target !== undefined) {
         throw new TypeError('This function can’t be new-invoked');
       }
@@ -265,10 +265,13 @@ function functionCallable(
 
 @functionCallable
 class Person {
-  constructor(name) {
+  name:string;
+  constructor(name:string) {
     this.name = name;
   }
 }
+
+// @ts-ignore
 const robin = Person('Robin');
 robin.name // 'Robin'
 ```
