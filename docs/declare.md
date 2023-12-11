@@ -296,13 +296,13 @@ String.prototype.toSmallString = ():string => {
 
 这个示例第一行的空导出语句`export {}`，作用是强制编译器将这个脚本当作模块处理。这是因为`declare global`必须用在模块里面。
 
-下面的示例是为 window 对象添加一个属性`myAppConfig`。
+下面的示例是为 window 对象（类型接口为`Window`）添加一个属性`myAppConfig`。
 
 ```typescript
 export {};
 
 declare global {
-  interface window {
+  interface Window {
     myAppConfig:object;
   }
 }
