@@ -206,7 +206,7 @@ declare 关键字的另一个用途，是为外部模块添加属性和方法时
 import { Foo as Bar } from 'moduleA';
 
 declare module 'moduleA' {
-  interface Bar extends Foo {
+  interface Bar {
     custom: {
       prop1: string;
     }
