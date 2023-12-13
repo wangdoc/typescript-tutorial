@@ -156,7 +156,7 @@ $ yarn add --dev @tsconfig/deno
 }
 ```
 
-## compileOptions
+## compilerOptions
 
 `compilerOptions`属性用来定制编译行为。这个属性可以省略，这时编译器将使用默认设置。
 
