@@ -206,7 +206,7 @@ declare 关键字的另一个用途，是为外部模块添加属性和方法时
 import { Foo as Bar } from 'moduleA';
 
 declare module 'moduleA' {
-  interface Bar {
+  interface Foo {
     custom: {
       prop1: string;
     }
@@ -214,7 +214,7 @@ declare module 'moduleA' {
 }
 ```
 
-上面示例中，从模块`moduleA`导入了`Foo`接口，将其重命名为`Bar`，并用 declare 关键字为`Bar`增加一个属性`custom`。
+上面示例中，从模块`moduleA`导入了类型`Foo`，它是一个接口（interface），并将其重命名为`Bar`，然后用 declare 关键字为`Foo`增加一个属性`custom`。这里需要注意的是，虽然接口`Foo`改名为`Bar`，但是扩充类型时，还是扩充原始的接口`Foo`，因为同名 interface 会自动合并类型声明。
 
 下面是另一个例子。一个项目有多个模块，可以在一个模块中，对另一个模块的接口进行类型扩展。
 
