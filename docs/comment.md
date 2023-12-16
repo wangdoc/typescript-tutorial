@@ -55,8 +55,8 @@ function doStuff(abc: string, xyz: string) {
   // do some stuff
 }
 
-// @ts-expect-error
 expect(() => {
+  // @ts-expect-error
   doStuff(123, 456);
 }).toThrow();
 ```

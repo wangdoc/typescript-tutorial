@@ -644,7 +644,7 @@ type ReturnType<
 `ThisParameterType<Type>`提取函数类型中`this`参数的类型。
 
 ```typescript
-function toHex(this: Number) {
+function toHex(this:number) {
   return this.toString(16);
 }
 

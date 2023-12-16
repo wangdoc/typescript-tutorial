@@ -629,7 +629,7 @@ TypeScript 内置的类型描述文件，主要有以下一些，完整的清单
 - strictPropertyInitialization
 - noImplicitAny
 - noImplicitThis
-- useUnknownInCatchVaria
+- useUnknownInCatchVariables
 
 打开`strict`的时候，允许单独关闭其中一项。
 
