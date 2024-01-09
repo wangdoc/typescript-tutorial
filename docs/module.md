@@ -84,17 +84,19 @@ import { type A, a } from './a';
 
 上面示例中，import 语句输入的类型`A`前面有`type`关键字，表示这是一个类型。
 
-第二个方法是使用 import type 语句，这个语句只能输入类型，不能输入正常接口。
+第二个方法是使用 import type 语句，这个语句只用来输入类型，不用来输入正常接口。
 
 ```typescript
 // 正确
 import type { A } from './a';
+let b:A = 'hello';
 
 // 报错
 import type { a } from './a';
+let b = a;
 ```
 
-上面示例中，import type 输入类型`A`是正确的，但是输入正常接口`a`就会报错。
+上面示例中，import type 输入类型`A`是正确的，可以把`A`当作类型使用。但是，输入正常接口`a`，并把`a`当作一个值使用，就会报错。这就是说，看到`import type`，你就知道它输入的肯定是类型。
 
 import type 语句也可以输入默认类型。
 
