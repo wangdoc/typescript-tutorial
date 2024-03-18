@@ -114,15 +114,6 @@ const s2:string = value as string; // 正确
 
 上面示例中，unknown 类型的变量`value`不能直接赋值给其他类型的变量，但是可以将它断言为其他类型，这样就可以赋值给别的变量了。
 
-另外，类型断言也适合指定联合类型的值的具体类型。
-
-```typescript
-const s1:number|string = 'hello';
-const s2:number = s1 as number;
-```
-
-上面示例中，变量`s1`是联合类型，可以断言其为联合类型里面的一种具体类型，再将其赋值给变量`s2`。
-
 ## 类型断言的条件
 
 类型断言并不意味着，可以把某个值断言为任意类型。
