@@ -374,7 +374,7 @@ function f(x = 456) {
   return x;
 }
 
-f2(undefined) // 456
+f(undefined) // 456
 ```
 
 具有默认值的参数如果不位于参数列表的末尾，调用时不能省略，如果要触发默认值，必须显式传入`undefined`。
