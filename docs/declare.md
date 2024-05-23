@@ -82,7 +82,7 @@ declare function sayHello(
 sayHello('张三');
 ```
 
-上面示例中，declare 命令给出了`sayHello()`的类型描述，因此可以直接使用它。
+上面示例中，declare 命令给出了`sayHello()`的类型描述，表示这个函数是由外部文件定义的，因此这里可以直接使用该函数。
 
 注意，这种单独的函数类型声明语句，只能用于`declare`命令后面。一方面，TypeScript 不支持单独的函数类型声明语句；另一方面，declare 关键字后面也不能带有函数的具体实现。
 
@@ -91,7 +91,10 @@ sayHello('张三');
 function sayHello(
   name:string
 ):void;
-function sayHello(name) {
+
+let foo = 'bar';
+
+function sayHello(name:string) {
   return '你好，' + name;
 }
 ```
