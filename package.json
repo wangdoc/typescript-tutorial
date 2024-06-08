@@ -20,8 +20,8 @@
   "author": "Ruan Yifeng",
   "license": "CC-BY-SA-4.0",
   "dependencies": {
-    "gh-pages": "^5.0.0",
+    "gh-pages": "6.x",
     "loppo": "^0.6.25",
-    "loppo-theme-wangdoc": "^0.6.6"
+    "loppo-theme-wangdoc": "^0.7.1"
   }
 }
