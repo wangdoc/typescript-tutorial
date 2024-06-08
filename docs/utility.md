@@ -44,7 +44,7 @@ type Awaited<T> =
   } ? F extends (
     value: infer V,
     ...args: infer _
-  ) => any ? Awaited<...> : never:
+  ) => any ? Awaited<V> : never:
   T;
 ```
 
