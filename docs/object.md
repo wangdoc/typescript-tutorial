@@ -489,8 +489,7 @@ let { x: foo, y: bar }
 ```typescript
 function draw({
   shape: Shape,
-  xPos: number = 100,
-  yPos: number = 100
+  xPos: number = 100
 }) {
   let myShape = shape; // 报错
   let x = xPos; // 报错
