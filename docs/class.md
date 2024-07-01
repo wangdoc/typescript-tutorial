@@ -954,65 +954,6 @@ class Test extends getGreeterBase() {
 
 上面示例中，例一和例二的`extends`关键字后面都是构造函数，例三的`extends`关键字后面是一个表达式，执行后得到的也是一个构造函数。
 
-对于那些只设置了类型、没有初值的顶层属性，有一个细节需要注意。
-
-```typescript
-interface Animal {
-  animalStuff: any;
-}
-
-interface Dog extends Animal {
-  dogStuff: any;
-}
-
-class AnimalHouse {
-  resident: Animal;
-
-  constructor(animal:Animal) {
-    this.resident = animal;
-  }
-}
-
-class DogHouse extends AnimalHouse {
-  resident: Dog;
-
-  constructor(dog:Dog) {
-    super(dog);
-  }
-}
-```
-
-上面示例中，类`DogHouse`的顶层成员`resident`只设置了类型（`Dog`），没有设置初值。这段代码在不同的编译设置下，编译结果不一样。
-
-如果编译设置的`target`设成大于等于`ES2022`，或者`useDefineForClassFields`设成`true`，那么下面代码的执行结果是不一样的。
-
-```typescript
-const dog = {
-  animalStuff: 'animal',
-  dogStuff: 'dog'
-};
-
-const dogHouse = new DogHouse(dog);
-
-console.log(dogHouse.resident) // undefined
-```
-
-上面示例中，`DogHouse`实例的属性`resident`输出的是`undefined`，而不是预料的`dog`。原因在于 ES2022 标准的 Class Fields 部分，与早期的 TypeScript 实现不一致，导致子类的那些只设置类型、没有设置初值的顶层成员在基类中被赋值后，会在子类被重置为`undefined`，详细的解释参见《tsconfig.json》一章，以及官方 3.7 版本的[发布说明](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#the-usedefineforclassfields-flag-and-the-declare-property-modifier)。
-
-解决方法就是使用`declare`命令，去声明顶层成员的类型，告诉 TypeScript 这些成员的赋值由基类实现。
-
-```typescript
-class DogHouse extends AnimalHouse {
-  declare resident: Dog;
-
-  constructor(dog:Dog) {
-    super(dog);
-  }
-}
-```
-
-上面示例中，`resident`属性的类型声明前面用了`declare`命令，这样就能确保在编译目标大于等于`ES2022`时（或者打开`useDefineForClassFields`时），代码行为正确。
-
 ## 可访问性修饰符
 
 类的内部成员的外部可访问性，由三个可访问性修饰符（access modifiers）控制：`public`、`private`和`protected`。
@@ -1277,6 +1218,140 @@ class A {
   ) {}
 }
 ```
+
+## 顶层属性的处理方法
+
+对于类的顶层属性，TypeScript 早期的处理方法，与后来的 ES2022 标准不一致。这会导致某些代码的运行结果不一样。
+
+类的顶层属性在 TypeScript 里面，有两种写法。
+
+```typescript
+class User {
+  // 写法一
+  age = 25;
+
+  // 写法二
+  constructor(private currentYear: number) {}
+}
+```
+
+上面示例中，写法一是直接声明一个实例属性`age`，并初始化；写法二是顶层属性的简写形式，直接将构造方法的参数`currentYear`声明为实例属性。
+
+TypeScript 早期的处理方法是，先在顶层声明属性，但不进行初始化，等到运行构造方法时，再完成所有初始化。
+
+```typescript
+class User {
+  age = 25;
+}
+
+// TypeScript 的早期处理方法
+class User {
+  age: number;
+
+  constructor() {
+    this.age = 25;
+  }
+}
+```
+
+上面示例中，TypeScript 早期会先声明顶层属性`age`，然后等到运行构造函数时，再将其初始化为`25`。
+
+ES2022 标准里面的处理方法是，先进行顶层属性的初始化，再运行构造方法。这在某些情况下，会使得同一段代码在 TypeScript 和 JavaScript 下运行结果不一致。
+
+这种不一致一般发生在两种情况。第一种情况是，顶层属性的初始化依赖于其他实例属性。
+
+```typescript
+class User {
+  age = this.currentYear - 1998;
+
+  constructor(private currentYear: number) {
+    // 输出结果将不一致
+    console.log('Current age:', this.age);
+  }
+}
+
+const user = new User(2023);
+```
+
+上面示例中，顶层属性`age`的初始化值依赖于实例属性`this.currentYear`。按照 TypeScript 的处理方法，初始化是在构造方法里面完成的，会输出结果为`25`。但是，按照 ES2022 标准的处理方法，初始化在声明顶层属性时就会完成，这时`this.currentYear`还等于`undefined`，所以`age`的初始化结果为`NaN`，因此最后输出的也是`NaN`。
+
+第二种情况与类的继承有关，子类声明的顶层属性在父类完成初始化。
+
+```typescript
+interface Animal {
+  animalStuff: any;
+}
+
+interface Dog extends Animal {
+  dogStuff: any;
+}
+
+class AnimalHouse {
+  resident: Animal;
+
+  constructor(animal:Animal) {
+    this.resident = animal;
+  }
+}
+
+class DogHouse extends AnimalHouse {
+  resident: Dog;
+
+  constructor(dog:Dog) {
+    super(dog);
+  }
+}
+```
+
+上面示例中，类`DogHouse`继承自`AnimalHouse`。它声明了顶层属性`resident`，但是该属性的初始化是在父类`AnimalHouse`完成的。不同的设置运行下面的代码，结果将不一致。
+
+```typescript
+const dog = {
+  animalStuff: 'animal',
+  dogStuff: 'dog'
+};
+
+const dogHouse = new DogHouse(dog);
+
+console.log(dogHouse.resident) // 输出结果将不一致
+```
+
+上面示例中，TypeScript 的处理方法，会使得`resident`属性能够初始化，所以输出参数对象的值。但是，ES2022 标准的处理方法是，顶层属性的初始化先于构造方法的运行。这使得`resident`属性不会得到赋值，因此输出为`undefined`。
+
+为了解决这个问题，同时保证以前代码的行为一致，TypeScript 从3.7版开始，引入了编译设置`useDefineForClassFields`。这个设置设为`true`，则采用 ES2022 标准的处理方法，否则采用 TypeScript 早期的处理方法。
+
+它的默认值与`target`属性有关，如果输出目标设为`ES2022`或者更高，那么`useDefineForClassFields`的默认值为`true`，否则为`false`。关于这个设置的详细说明，参见官方 3.7 版本的[发布说明](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#the-usedefineforclassfields-flag-and-the-declare-property-modifier)。
+
+如果希望避免这种不一致，让代码在不同设置下的行为都一样，那么可以将所有顶层属性的初始化，都放到构造方法里面。
+
+```typescript
+class User  {
+  age: number;
+
+  constructor(private currentYear: number) {
+    this.age = this.currentYear - 1998;
+    console.log('Current age:', this.age);
+  }
+}
+
+const user = new User(2023);
+```
+
+上面示例中，顶层属性`age`的初始化就放在构造方法里面，那么任何情况下，代码行为都是一致的。
+
+对于类的继承，还有另一种解决方法，就是使用`declare`命令，去声明子类顶层属性的类型，告诉 TypeScript 这些属性的初始化由父类实现。
+
+```typescript
+class DogHouse extends AnimalHouse {
+  declare resident: Dog;
+
+  constructor(dog:Dog) {
+    super(dog);
+  }
+}
+```
+
+上面示例中，`resident`属性的类型声明前面用了`declare`命令。这种情况下，这一行代码在编译成 JavaScript 后就不存在，那么也就不会有行为不一致，无论是否设置`useDefineForClassFields`，输出结果都是一样的。
 
 ## 静态成员
 

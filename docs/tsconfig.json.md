@@ -819,6 +819,12 @@ class User {
 
 如果`"types": []`，就表示不会自动将所有`@types`模块加入编译。
 
+### useDefineForClassFields
+
+`useDefineForClassFields`这个设置针对的是，在类（class）的顶部声明的属性。TypeScript 早先对这一类属性的处理方法，与写入 ES2022 标准的处理方法不一致。这个设置设为`true`，就用来开启 ES2022 的处理方法，设为`false`就是 TypeScript 原有的处理方法。
+
+它的默认值跟`target`属性有关，如果编译目标是`ES2022`或更高，那么`useDefineForClassFields`默认值为`true`，否则为`false`。
+
 ### useUnknownInCatchVariables
 
 `useUnknownInCatchVariables`设置`catch`语句捕获的`try`抛出的返回值类型，从`any`变成`unknown`。
