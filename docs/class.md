@@ -1670,4 +1670,5 @@ class FileSystemObject {
 ## 参考链接
 
 - [TypeScript Constructor in Interface](http://fritzthecat-blog.blogspot.com/2018/06/typescript-constructor-in-interface.html)
+- [TypeScript: useDefineForClassFields – How to avoid future Breaking Changes](https://angular.schule/blog/2022-11-use-define-for-class-fields)
 
