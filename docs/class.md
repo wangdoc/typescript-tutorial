@@ -954,6 +954,48 @@ class Test extends getGreeterBase() {
 
 上面示例中，例一和例二的`extends`关键字后面都是构造函数，例三的`extends`关键字后面是一个表达式，执行后得到的也是一个构造函数。
 
+## override 关键字
+
+子类继承父类时，可以覆盖父类的同名方法。
+
+```typescript
+class A {
+  show() {
+    // ...
+  }
+  hide() {
+    // ...
+  }
+}
+class B extends A {
+  show() {
+    // ...
+  }
+  hide() {
+    // ...
+  }
+}
+```
+
+上面示例中，B 类定义了自己的`show()`方法和`hide()`方法，覆盖了 A 类的同名方法。
+
+但是有些时候，我们继承他人的类，可能会在不知不觉中，就覆盖了他人的方法。为了防止这种情况，TypeScript 4.3 引入了 [override 关键字](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-3.html#override-and-the---noimplicitoverride-flag)。
+
+```typescript
+class B extends A {
+  override show() {
+    // ...
+  }
+  override hide() {
+    // ...
+  }
+}
+```
+
+上面示例中，B 类的`show()`方法和`hide()`方法前面加了 override 关键字，明确表明作者的意图，就是要覆盖 A 类里面的这两个同名方法。这时，如果 A 类没有定义自己的`show()`方法和`hide()`方法，就会报错。
+
+但是，这依然没有解决，子类无意中覆盖父类同名方法的问题。因此，TypeScript 又提供了一个编译参数`noImplicitOverride`。一旦打开这个参数，子类覆盖父类的同名方法就会报错，除非使用了 override 关键字。
+
 ## 可访问性修饰符
 
 类的内部成员的外部可访问性，由三个可访问性修饰符（access modifiers）控制：`public`、`private`和`protected`。
