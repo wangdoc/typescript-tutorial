@@ -490,18 +490,9 @@ function assertIsDefined<T>(
 
 上面示例中，工具类型`NonNullable<T>`对应类型`T`去除空类型后的剩余类型。
 
-如果要将断言函数用于函数表达式，可以采用下面的写法。
+如果要将断言函数用于函数表达式，可以采用下面的写法。根据 TypeScript 的[要求](https://github.com/microsoft/TypeScript/pull/33622)，这时函数表达式所赋予的变量，必须有明确的类型声明。
 
 ```typescript
-// 写法一
-const assertIsNumber = (
-  value:unknown
-):asserts value is number => {
-  if (typeof value !== 'number')
-    throw Error('Not a number');
-};
-
-// 写法二
 type AssertIsNumber =
   (value:unknown) => asserts value is number;
 
