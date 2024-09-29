@@ -312,7 +312,7 @@ enum Foo {
 // 等同于
 enum Foo {
   A,
-  B = 1，
+  B = 1,
   C = 2
 }
 ```
