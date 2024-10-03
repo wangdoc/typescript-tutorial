@@ -252,6 +252,7 @@ const a:A = { x: 0, y: 0 };
 某些第三方模块，原始作者没有提供接口类型，这时可以在自己的脚本顶部加上下面一行命令。
 
 ```typescript
+// 语法
 declare module "模块名";
 
 // 例子
@@ -370,6 +371,17 @@ declare module "path" {
 ```
 
 上面示例中，`url`和`path`都是单独的模块脚本，但是它们的类型都定义在`node.d.ts`这个文件里面。
+
+另一种情况是，使用`declare module`命令，为模块名指定加载路径。
+
+```typescript
+declare module "lodash" {
+  export * from "../../dependencies/lodash";
+  export default from "../../dependencies/lodash";
+}
+```
+
+上面示例中，`declare module "lodash"`为模块`lodash`，指定具体的加载路径。
 
 使用时，自己的脚本使用三斜杠命令，加载这个类型声明文件。
 
