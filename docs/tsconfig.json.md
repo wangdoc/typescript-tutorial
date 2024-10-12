@@ -679,7 +679,7 @@ let func:StringOrNumberFunc = fn;
 
 ### strictNullChecks
 
-不打开`strictNullChecks`的情况下，变量可以设为`undefined`或`null`，而不管其类型是什么。
+不打开`strictNullChecks`的情况下，一个变量不管类型是什么，都可以赋值为`undefined`或`null`。
 
 ```typescript
 // 不打开 strictNullChecks 的情况
@@ -689,9 +689,9 @@ x = undefined; // 不报错
 x = null; // 不报错
 ```
 
-上面示例中，变量`x`的类型是`number`，但是赋值为`undefined`或`null`都不会报错。这是为了继承 JavaScript 的设定：当变量没有赋值时，它的值就为`undefined`。
+上面示例中，不打开`strictNullChecks`时，变量`x`的类型是`number`，但是赋值为`undefined`或`null`都不会报错。这是为了继承 JavaScript 的设定：当变量没有赋值时，它的值就为`undefined`。
 
-一旦打开`strictNullChecks`，就相当于从变量的值里面，排除了`undefined`和`null`，除非变量的类型是这两种类型。
+一旦打开`strictNullChecks`，就使用严格类型，禁止变量赋值为`undefined`和`null`，除非变量原本就是这两种类型。它相当于从变量的值里面，排除了`undefined`和`null`。
 
 ```typescript
 // 打开 strictNullChecks 的情况
@@ -701,6 +701,8 @@ x = undefined; // 报错
 x = null; // 报错
 ```
 
+上面示例中，打开`strictNullChecks`时，变量`x`作为`number`类型，就不能赋值为`undefined`和`null`。
+
 下面是一个例子。
 
 ```typescript
@@ -709,9 +711,9 @@ x = null; // 报错
 type A = unknown extends {} ? string : number;
 ```
 
-上面示例中，`{}`代表了 Object 类型，不打开`strictNullChecks`时，它包括了`undefined`和`null`，就相当于包括了所有类型的值，所以这时`unknown`类型可以赋值给`{}`类型，类型`A`就为`number`。打开`strictNullChecks`时，`{}`就排除掉了`undefined`和`null`，这时`unknown`类型就不能赋值给`{}`类型后，类型`A`就为`string`。
+上面示例中，`{}`代表了 Object 类型，不打开`strictNullChecks`时，它包括了`undefined`和`null`，就相当于包括了所有类型的值，所以这时`unknown`类型可以赋值给`{}`类型，类型`A`就为`string`。打开`strictNullChecks`时，`{}`就排除掉了`undefined`和`null`，这时`unknown`类型就不能赋值给`{}`类型后，类型`A`就为`number`。
 
-另外，`strict`属性包含了`strictNullChecks`，如果打开`strict`属性，就相当于打开了`strictNullChecks`。
+最后，`strict`属性包含了`strictNullChecks`，如果打开`strict`属性，就相当于打开了`strictNullChecks`。
 
 ### strictPropertyInitialization
 
