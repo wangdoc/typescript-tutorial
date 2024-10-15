@@ -378,18 +378,17 @@ type T2 = RegExp extends Animal ? number : string;
 
 一般来说，调换`extends`两侧类型，会返回相反的结果。举例来说，有两个类`Cat`和`Animal`，前者是后者的子类型，那么`Cat extends Animal`就为真，而`Animal extends Cat`就为伪。
 
-如果需要判断的类型是一个联合类型，那么条件运算符会展开这个联合类型。
+如果对泛型使用 extends 条件运算，有一个地方需要注意。当泛型的类型参数是一个联合类型时，那么条件运算符会展开这个类型参数，即`T<A|B> = T<A> | T<B>`，所以 extends 对类型参数的每个部分是分别计算的。
 
 ```typescript
-(A|B) extends U ? X : Y
+type Cond<T> = T extends U ? X : Y;
 
-// 等同于
-
-(A extends U ? X : Y) |
-(B extends U ? X : Y)
+type MyType = Cond<A|B>;
+// 等同于 Cond<A> | Cond<B>
+// 等同于 (A extends U ? X : Y) | (B extends U ? X : Y)
 ```
 
-上面示例中，`A|B`是一个联合类型，进行条件运算时，相当于`A`和`B`分别进行运算符，返回结果组成一个联合类型。
+上面示例中，泛型`Cond`的类型参数`A|B`是一个联合类型，进行条件运算时，相当于`A`和`B`分别进行条件运算，返回结果组成一个联合类型。也就是说，如果类型参数是联合类型，条件运算的返回结果依然是一个联合类型。
 
 如果不希望联合类型被条件运算符展开，可以把`extends`两侧的操作数都放在方括号里面。
 
@@ -398,18 +397,18 @@ type T2 = RegExp extends Animal ? number : string;
 type ToArray<Type> =
   Type extends any ? Type[] : never;
 
-// string[]|number[]
+// 返回结果 string[]|number[]
 type T = ToArray<string|number>;
 
 // 示例二
 type ToArray<Type> =
   [Type] extends [any] ? Type[] : never;
 
-// (string | number)[]
+// 返回结果 (string | number)[]
 type T = ToArray<string|number>;
 ```
 
-上面的示例一，传入`ToArray<Type>`的类型参数是一个联合类型，所以会被展开，返回的也是联合类型。示例二是`extends`两侧的运算数都放在方括号里面，所以传入的联合类型不会展开，返回的是一个数组。
+上面的示例一，泛型`ToArray<Type>`的类型参数`string|number`是一个联合类型，所以会被展开，返回的也是联合类型`string[]|number[]`。示例二是`extends`两侧的运算数都放在方括号里面，左侧是`[Type]`，右侧是`[any]`，这时传入的联合类型不会展开，返回的是一个数组`(string|number)[]`。
 
 条件运算符还可以嵌套使用。
 
