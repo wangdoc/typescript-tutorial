@@ -660,7 +660,7 @@ const palette: Record<Colors, string|RGB> = {
 const greenComponent = palette.green.substring(1, 6); // 报错
 ```
 
-上面示例中，`palette.green`属性调用`substring()`方法会报错，原因是这个方法只有字符串才有，而`palette.green`的类型是`srting|RGB`，除了字符串，还可能是元组`RGB`，而元组并不存在`substring()`方法，所以报错了。
+上面示例中，`palette.green`属性调用`substring()`方法会报错，原因是这个方法只有字符串才有，而`palette.green`的类型是`string|RGB`，除了字符串，还可能是元组`RGB`，而元组并不存在`substring()`方法，所以报错了。
 
 如果要避免报错，要么精确给出变量`palette`每个属性的类型，要么对`palette.green`的值进行类型缩小。两种做法都比较麻烦，也不是很有必要。
 
