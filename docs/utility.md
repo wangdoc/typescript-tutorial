@@ -412,7 +412,7 @@ type T3 = Pick<A, 'x'|'y'>;  // { x: number; y: number }
 
 上面示例中，`Pick<Type, Keys>`会从对象类型`A`里面挑出指定的键名，组成一个新的对象类型。
 
-指定的键名`Keys`必须是对象键名`Type`里面已经存在的键名，否则会报错。
+指定的键名`Keys`必须是对象类型`Type`里面已经存在的键名，否则会报错。
 
 ```typescript
 interface A {
