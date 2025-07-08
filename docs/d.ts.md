@@ -55,7 +55,7 @@ declare const pi: number;
 export= pi;
 ```
 
-上面示例中，模块输出的是一个整数，那么可以用`export default`或`export =`表示输出这个值。
+上面示例中，模块输出的是一个数字，那么可以用`export default`或`export =`表示输出这个值。
 
 下面是一个如何使用类型声明文件的简单例子。有一个类型声明文件`types.d.ts`。
 
@@ -239,7 +239,7 @@ interface Foo {} // 正确
 declare interface Foo {} // 正确
 ```
 
-类型声明文件里面，顶层可以使用`export`命令，也可以不用，除非使用者脚本会显式使用`export`命令输入类型。
+类型声明文件里面，顶层可以使用`export`命令，也可以不用，除非使用者脚本会显式使用`import`命令输入类型。
 
 ```typescript
 export interface Data {
