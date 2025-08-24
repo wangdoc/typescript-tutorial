@@ -102,7 +102,7 @@ const c:unique symbol = b; // 报错
 
 上面示例中，unique symbol 类型（变量`a`）赋值给 symbol 类型（变量`b`）是可以的，但是 symbol 类型（变量`b`）赋值给 unique symbol 类型（变量`c`）会报错。
 
-unique symbol 类型的一个作用，就是用作属性名，这可以保证不会跟其他属性名冲突。如果要把某一个特定的 Symbol 值当作属性名，那么它的类型只能是 unique symbol，不能是 symbol。
+unique symbol 类型的一个作用，就是用作属性名，这可以保证不会跟其他属性名冲突。在 5.8.3 版本之前，如果要把某一个特定的 Symbol 值当作属性名，TypeScript 只允许它的类型是 unique symbol，不能是 symbol，5.8.3 版本之后没有了这个限制。
 
 ```typescript
 const x:unique symbol = Symbol();
@@ -110,11 +110,11 @@ const y:symbol = Symbol();
 
 interface Foo {
   [x]: string; // 正确
-  [y]: string; // 报错
+  [y]: string; // 5.8.3 版本之前报错
 }
 ```
 
-上面示例中，变量`y`当作属性名，但是`y`的类型是 symbol，不是固定不变的值，导致报错。
+上面示例中，变量`y`当作属性名，但是`y`的类型是 symbol，不是固定不变的值，5.8.3 版本之前会报错，之后就不会。
 
 `unique symbol`类型也可以用作类（class）的属性值，但只能赋值给类的`readonly static`属性。
 
