@@ -228,7 +228,7 @@ let lastName = user.lastName ?? 'Bar';
 TypeScript 提供编译设置`ExactOptionalPropertyTypes`，只要同时打开这个设置和`strictNullChecks`，可选属性就不能设为`undefined`。
 
 ```typescript
-// 打开 ExactOptionsPropertyTypes 和 strictNullChecks
+// 打开 ExactOptionalPropertyTypes 和 strictNullChecks
 const obj: {
   x: number;
   y?: number;
