@@ -521,7 +521,7 @@ type Foo = keyof MyEnum;
 
 上面示例中，类型`Foo`等于类型`string`的所有原生属性名组成的联合类型。这是`MyEnum`为字符串 Enum 的结果，如果`MyEnum`是数值 Enum，那么`keyof MyEnum`相当于`keyof number`。
 
-这是因为 Enum 作为类型，本质上属于`number`或`string`的一种变体，而`typeof MyEnum`会将`MyEnum`当作一个值处理，从而先其转为对象类型，就可以再用`keyof`运算符返回该对象的所有属性名。
+这是因为 Enum 作为类型，本质上属于`number`或`string`的一种变体，而`typeof MyEnum`会将`MyEnum`当作一个值处理，从而先将其转为对象类型，就可以再用`keyof`运算符返回该对象的所有属性名。
 
 如果要返回 Enum 所有的成员值，可以使用`in`运算符。
 
