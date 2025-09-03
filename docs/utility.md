@@ -277,7 +277,7 @@ type Omit<T, K extends keyof any>
 `OmitThisParameter<Type>`从函数类型中移除 this 参数。
 
 ```typescript
-function toHex(this: Number) {
+function toHex(this: number) {
   return this.toString(16);
 }
 
