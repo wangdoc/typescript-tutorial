@@ -357,14 +357,16 @@ class C {
 如果方法装饰器返回一个新的函数，就会替代所装饰的原始函数。
 
 ```typescript
-function replaceMethod() {
-  return function () {
+function replaceMethod(value:any, context:ClassMethodDecoratorContext) {
+  return function (this:Person) {
     return `How are you, ${this.name}?`;
   }
 }
 
 class Person {
-  constructor(name) {
+  name: string;
+
+  constructor(name:string) {
     this.name = name;
   }
 
