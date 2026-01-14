@@ -4,7 +4,7 @@
 
 装饰器的旧语法与标准语法，有相当大的差异。旧语法以后会被淘汰，但是目前大量现有项目依然在使用它，本章就介绍旧语法下的装饰器。
 
-## experimentalDecorators 编译选项 
+## experimentalDecorators 编译选项
 
 使用装饰器的旧语法，需要打开`--experimentalDecorators`编译选项。
 
@@ -21,7 +21,8 @@ $ tsc --target ES5 --experimentalDecorators
   "compilerOptions": {
     "target": "ES6",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
   }
 }
 ```
@@ -123,7 +124,7 @@ class A {}
 class BugReport {
   type = "report";
   title: string;
- 
+
   constructor(t:string) {
     this.title = t;
   }
@@ -255,7 +256,7 @@ class Greeter {
   constructor(message:string) {
     this.greeting = message;
   }
- 
+
   @enumerable(false)
   greet() {
     return 'Hello, ' + this.greeting;
@@ -397,10 +398,10 @@ function Min(limit:number) {
 
 class User {
   username: string;
-  
+
   @Min(8)
   password: string;
-  
+
   constructor(username: string, password: string){
     this.username = username;
     this.password = password;
@@ -455,12 +456,12 @@ class Point {
     this._x = x;
     this._y = y;
   }
- 
+
   @configurable(false)
   get x() {
     return this._x;
   }
- 
+
   @configurable(false)
   get y() {
     return this._y;
@@ -480,7 +481,7 @@ function validator(
 ){
   const originalGet = descriptor.get;
   const originalSet = descriptor.set;
-  
+
   if (originalSet) {
     descriptor.set = function (val) {
       if (val > 100) {
@@ -610,9 +611,9 @@ c.member(5, 5);
 执行装饰器时，按照如下顺序执行。
 
 1. 实例相关的装饰器。
-1. 静态相关的装饰器。
-1. 构造方法的参数装饰器。
-1. 类装饰器。
+2. 静态相关的装饰器。
+3. 构造方法的参数装饰器。
+4. 类装饰器。
 
 请看下面的示例。
 
@@ -627,7 +628,7 @@ function f(key:string):any {
 class C {
   @f('静态方法')
   static method() {}
-  
+
   @f('实例方法')
   method() {}
 
@@ -828,4 +829,3 @@ x
 - [Deep introduction to property decorators in TypeScript](https://techsparx.com/nodejs/typescript/decorators/properties.html), by David Herron
 - [Deep introduction to accessor decorators in TypeScript](https://techsparx.com/nodejs/typescript/decorators/accessors.html), by David Herron
 - [Using Property Decorators in Typescript with a real example](https://dev.to/danywalls/using-property-decorators-in-typescript-with-a-real-example-44e), by Dany Paredes
-
