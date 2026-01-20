@@ -746,42 +746,38 @@ accessor 装饰器的`value`参数，是一个包含`get()`方法和`set()`方�
 下面是一个例子。
 
 ```typescript
-class C {
-  @logged accessor x = 1;
-}
-
-function logged(value, { kind, name }) {
-  if (kind === "accessor") {
+function logged<T = any>(value: ClassAccessorDecoratorTarget<unknown, T>, context: ClassAccessorDecoratorContext) {
+    if (context.kind !== "accessor") {
+        throw new TypeError("@logged 只能用于修改 acessor")
+    }
     let { get, set } = value;
 
     return {
-      get() {
-        console.log(`getting ${name}`);
+        get() {
+            console.log(`getting ${String(context.name)}`);
+            return get.call(this)
+        },
+        set(val: any) {
+            console.log(`setting ${String(context.name)} to ${val}`);
 
-        return get.call(this);
-      },
+            return set.call(this, val);
+        },
 
-      set(val) {
-        console.log(`setting ${name} to ${val}`);
+        init(initialValue: any) {
+            console.log(`initializing ${String(context.name)} wiht value ${initialValue}`);
 
-        return set.call(this, val);
-      },
-
-      init(initialValue) {
-        console.log(`initializing ${name} with value ${initialValue}`);
-        return initialValue;
-      }
-    };
-  }
+            return initialValue
+        }
+    }
 }
 
-let c = new C();
+class C {
+    @logged accessor x = 1;
+}
 
-c.x;
-// getting x
-
-c.x = 123;
-// setting x to 123
+const c = new C();
+c.x; // "getging x"
+c.x = 123; // "setting x to 123"
 ```
 
 上面示例中，装饰器`@logged`为属性`x`的存值器和取值器，加上了日志输出。
