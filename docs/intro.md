@@ -173,7 +173,7 @@ TypeScript 依赖 JavaScript 生态，需要用到很多外部模块。但是，
 
 微软推出这门语言的主要目的，是让 JavaScript 程序员可以参与 Windows 8 应用程序的开发。
 
-当时，Windows 8 即将发布，它的应用程序开发除了使用 C# 和 Visual Basic，还可以使用 HTML + JavaScript。微软希望，TypeScript 既能让 JavaScript 程序员快速上手，也能让 .Net 程序员感到熟悉。
+当时，Windows 8 即将发布，它的应用程序开发除了使用 C# 和 Visual Basic，还可以使用 HTML + JavaScript。微软希望，TypeScript 既能让 JavaScript 程序员快速上手，也能让 .NET 程序员感到熟悉。
 
 这就是说，TypeScript 的最初动机是减少 .NET 程序员的转移和学习成本。所以，它的很多语法概念跟 .NET 很类似。
 
