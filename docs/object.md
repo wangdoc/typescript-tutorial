@@ -225,10 +225,10 @@ let lastName = user.lastName ?? 'Bar';
 
 上面示例中，写法一使用三元运算符`?:`，判断是否为`undefined`，并设置默认值。写法二使用 Null 判断运算符`??`，与写法一的作用完全相同。
 
-TypeScript 提供编译设置`ExactOptionalPropertyTypes`，只要同时打开这个设置和`strictNullChecks`，可选属性就不能设为`undefined`。
+TypeScript 提供编译设置`exactOptionalPropertyTypes`，只要同时打开这个设置和`strictNullChecks`，可选属性就不能设为`undefined`。
 
 ```typescript
-// 打开 ExactOptionalPropertyTypes 和 strictNullChecks
+// 打开 exactOptionalPropertyTypes 和 strictNullChecks
 const obj: {
   x: number;
   y?: number;
